@@ -1,0 +1,1 @@
+subjCode,seed,method,expName,trial_number,familiar_stimulus,novel_stimulus,complexity_condition,familiarization_time,familiar_location_1,familiar_location_2,test_time_1,test_time_2,familiarization_time_timeout,total_accumulated_looking_time,elapsed_time,looks,keypress_list,look_list
