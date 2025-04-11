@@ -36,7 +36,7 @@ class Exp:
 
 		# generateTrials(runTimeVars, runTimeVarOrder)
 		# (self.header,self.trialInfo) = importTrialsWithHeader('trials/'+runTimeVars['subjCode']+'_trials.csv', separator=',')
-		(self.header,self.trialInfo) = importTrialsWithHeader('example_trial_list.csv', separator=',')
+		(self.header,self.trialInfo) = importTrialsWithHeader('trial_list_1.csv', separator=',')
 		self.trialInfo = evaluateLists(self.trialInfo) #needed because the choices field is a list
 
 		self.complete_header = runTimeVarOrder + self.header
