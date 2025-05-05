@@ -1,1 +1,0 @@
-mb5_1,10,fixed,mb5,1,fractal_complex_pair1_a,fractal_complex_pair1_b,complex,1,left,right,5,5,0,1.0064611666666679,0,[]
