@@ -40,15 +40,19 @@ class Exp:
 		self.trialInfo = evaluateLists(self.trialInfo) #needed because the choices field is a list
 
 		self.complete_header = runTimeVarOrder + self.header
-		#self.win = visual.Window(fullscr=True,allowGUI=False, color="black", units='pix')
-		self.win = visual.Window([1500,900],allowGUI=True, color="black", units='pix',checkTiming=False)
+		#self.win = visual.Window(fullscr=True,allowGUI=True, color="black", units='pix',screen=2)
+		self.win = visual.Window([1500,900],allowGUI=True, color="black", units='pix',screen=2)
 		
-		#create psychopy window for tracking trials
-		self.win2 = visual.Window([800,800], color="black", allowGUI=True, units='pix',checkTiming=False,screen=1)
+		#create psychopy window for experimenter
+		self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=0)
 		self.win2.flip()
 
+		#create psychopy window for tracking trials
+		self.win3 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=1)
+		self.win3.flip()
+
 		visual.TextStim(win=self.win,text="Loading stimuli...").draw()
-		self.win.flip()
+		#self.win.flip()
 		self.pics =  loadFiles('stimuli/images','.png','image', win=self.win)
 		self.cf_movie_path = "stimuli/movies/ag.mp4"
 		self.cf = visual.MovieStim(win=self.win,filename = self.cf_movie_path,size=(640,360),loop=True)
@@ -66,7 +70,7 @@ class Exp:
 		self.postFixationDelay = 0
 		#self.fam_timeout = 15
 
-		self.position = {'left': (-400,0), 'right': (400,0), 'center':(0,0)}
+		self.position = {'left': (-500,0), 'right': (500,0), 'center':(0,0)}
 		self.size = runTimeVars['image_size']
 
 		self.inputDevice = "keyboard"
@@ -98,9 +102,12 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
+		trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
+		trialInfoStim_3.draw()
 		ag_square_skeleton=visual.Rect(self.win2,lineColor="black",fillColor="yellow",size=[300,200])
 		ag_square_skeleton.draw()
 		self.win2.flip()
+		self.win3.flip()
 
 		event.clearEvents()
 		# present AG
@@ -153,9 +160,12 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
+		trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
+		trialInfoStim_3.draw()
 		cf_skeleton=visual.Circle(self.win2,lineColor="black",fillColor=stim_color,size=[150,150])
 		cf_skeleton.draw()
 		self.win2.flip()
+		self.win3.flip()
 
 		event.clearEvents()
 		# present central fixation stimulus
@@ -204,11 +214,14 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
+		trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
+		trialInfoStim_3.draw()
 		square_skeleton_1=visual.Rect(self.win2,lineColor="black",fillColor="blue",size=[150,150],pos=(-150,0))
 		square_skeleton_2=visual.Rect(self.win2,lineColor="black",fillColor="blue",size=[150,150],pos=(150,0))
 		square_skeleton_1.draw()
 		square_skeleton_2.draw()
 		self.win2.flip()
+		self.win3.flip()
 
 		#show test trial
 		self.create_placeholder(pos=self.position['left'],size=self.size+10).draw()
@@ -249,9 +262,12 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
+		trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
+		trialInfoStim_3.draw()
 		square_skeleton=visual.Rect(self.win2,lineColor="black",fillColor="red",size=[150,150],pos=(0,0))
 		square_skeleton.draw()
 		self.win2.flip()
+		self.win3.flip()
 
 		#show familiarization
 		#show size
