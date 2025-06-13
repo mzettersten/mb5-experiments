@@ -40,15 +40,15 @@ class Exp:
 		self.trialInfo = evaluateLists(self.trialInfo) #needed because the choices field is a list
 
 		self.complete_header = runTimeVarOrder + self.header
-		#self.win = visual.Window(fullscr=True,allowGUI=True, color="black", units='pix',screen=2)
-		self.win = visual.Window([1500,900],allowGUI=True, color="black", units='pix',screen=2)
+		self.win = visual.Window(fullscr=True,allowGUI=True, color="black", units='pix',screen=2)
+		#self.win = visual.Window([1500,900],allowGUI=True, color="black", units='pix',screen=2)
 		
 		#create psychopy window for experimenter
 		self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=0)
 		self.win2.flip()
-
+		
 		#create psychopy window for tracking trials
-		self.win3 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=1)
+		self.win3 = visual.Window(fullscr=True, color="black", allowGUI=True,units='pix',screen=1)
 		self.win3.flip()
 
 		visual.TextStim(win=self.win,text="Loading stimuli...").draw()
@@ -88,7 +88,10 @@ class Exp:
 
 	def show_instructions(self,text):
 		self.win.flip()
-		visual.TextStim(win=self.win,text=text,color="white",height=40,pos=(0,0),wrapWidth=1000).draw()
+		#visual.TextStim(win=self.win,text=text,color="white",height=40,pos=(0,0),wrapWidth=1000).draw()
+		image=visual.ImageStim(self.win, 'stimuli/images/bunnies.png',mask=None,interpolate=True)
+		image.setPos((0,0))
+		image.draw()
 		self.win.flip()
 		event.waitKeys(keyList=['q'])
 	
