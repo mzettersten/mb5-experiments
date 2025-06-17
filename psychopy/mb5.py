@@ -19,8 +19,8 @@ class Exp:
 	def __init__(self):
 
 		while True:
-			runTimeVarOrder = ['subjCode','seed','method']
-			runTimeVars = getRunTimeVars({'subjCode':'mb5_',  'seed':10, 'method':["fixed","contingent"],'image_size': 512},runTimeVarOrder,expName)
+			runTimeVarOrder = ['subjCode','seed','trial_list','method','tv_screen','side_screen','exp_screen','image_size',]
+			runTimeVars = getRunTimeVars({'subjCode':'mb5_',  'seed':10,'trial_list': 1, 'method':["fixed","contingent"],'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 512},runTimeVarOrder,expName)
 			if runTimeVars['subjCode']=='':
 				popupError('Subject code is blank')
 			elif 'Choose' in list(runTimeVars.values()):
@@ -36,29 +36,30 @@ class Exp:
 
 		# generateTrials(runTimeVars, runTimeVarOrder)
 		# (self.header,self.trialInfo) = importTrialsWithHeader('trials/'+runTimeVars['subjCode']+'_trials.csv', separator=',')
-		(self.header,self.trialInfo) = importTrialsWithHeader('trial_list_1.csv', separator=',')
+		(self.header,self.trialInfo) = importTrialsWithHeader('trials/trial_list_'+str(runTimeVars['trial_list'])+'.csv', separator=',')
 		self.trialInfo = evaluateLists(self.trialInfo) #needed because the choices field is a list
 
 		self.complete_header = runTimeVarOrder + self.header
-		self.win = visual.Window(fullscr=True,allowGUI=True, color="black", units='pix',screen=2)
+		self.win = visual.Window(fullscr=True,allowGUI=True, color="black", units='pix',screen=int(runTimeVars['tv_screen']))
 		#self.win = visual.Window([1500,900],allowGUI=True, color="black", units='pix',screen=2)
 		
 		#create psychopy window for experimenter
-		self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=0)
+		self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=int(runTimeVars['exp_screen']))
 		self.win2.flip()
 		
 		#create psychopy window for tracking trials
-		self.win3 = visual.Window(fullscr=True, color="black", allowGUI=True,units='pix',screen=1)
+		self.win3 = visual.Window(fullscr=True, color="black", allowGUI=True,units='pix',screen=int(runTimeVars['side_screen']))
 		self.win3.flip()
 
 		visual.TextStim(win=self.win,text="Loading stimuli...").draw()
 		#self.win.flip()
 		self.pics =  loadFiles('stimuli/images','.png','image', win=self.win)
-		self.cf_movie_path = "stimuli/movies/ag.mp4"
+		self.sounds = loadFiles('stimuli/audio','.wav','sound', win=self.win)
+		self.cf_movie_path = "stimuli/movies/ag_no_audio.mp4"
 		self.cf = visual.MovieStim(win=self.win,filename = self.cf_movie_path,size=(640,360),loop=True)
 		self.cf_duration = .75
 		self.cf_max_duration = 5
-		self.ag_movie_path = "stimuli/movies/laughing_baby.mp4"
+		self.ag_movie_path = "stimuli/movies/laughing_baby_no_audio.mp4"
 		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,size=(640,360),loop=True)
 		self.ag_duration = 2
 		self.ag_max_duration = 10
@@ -118,6 +119,7 @@ class Exp:
 		clock.reset()
 		# Play the movie
 		self.ag.play()
+		self.sounds['laughing_baby']['stim'].play()
 		if not gaze_contingent:
 			while clock.getTime() < self.ag_duration:  
 				#self.ag.play()
@@ -144,6 +146,8 @@ class Exp:
 		#stop the movie
 		self.ag.stop()
 		self.ag.seek(0)
+		self.sounds['laughing_baby']['stim'].stop()
+
 
 		self.win.flip()
 		self.win2.flip()
@@ -176,6 +180,7 @@ class Exp:
 		clock.reset()
 		# Play the movie
 		self.cf.play()
+		self.sounds['ag']['stim'].play()
 		if not gaze_contingent:
 			while clock.getTime() < self.cf_duration:  
 				#self.cf.play()
@@ -202,6 +207,7 @@ class Exp:
 		#stop the movie
 		self.cf.stop()
 		self.cf.seek(0)
+		self.sounds['ag']['stim'].stop()
 		event.clearEvents()
 
 		self.win.flip()
