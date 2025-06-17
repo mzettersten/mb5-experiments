@@ -19,8 +19,8 @@ class Exp:
 	def __init__(self):
 
 		while True:
-			runTimeVarOrder = ['subjCode','seed','trial_list','method','tv_screen','side_screen','exp_screen','image_size',]
-			runTimeVars = getRunTimeVars({'subjCode':'mb5_',  'seed':10,'trial_list': 1, 'method':["fixed","contingent"],'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 512},runTimeVarOrder,expName)
+			runTimeVarOrder = ['subjCode','trial_list','method','tv_screen','side_screen','exp_screen','image_size',]
+			runTimeVars = getRunTimeVars({'subjCode':'mb5_', 'trial_list': 1, 'method':["fixed","contingent"],'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 512},runTimeVarOrder,expName)
 			if runTimeVars['subjCode']=='':
 				popupError('Subject code is blank')
 			elif 'Choose' in list(runTimeVars.values()):
@@ -36,7 +36,7 @@ class Exp:
 
 		# generateTrials(runTimeVars, runTimeVarOrder)
 		# (self.header,self.trialInfo) = importTrialsWithHeader('trials/'+runTimeVars['subjCode']+'_trials.csv', separator=',')
-		(self.header,self.trialInfo) = importTrialsWithHeader('trials/trial_list_'+str(runTimeVars['trial_list'])+'.csv', separator=',')
+		(self.header,self.trialInfo) = importTrialsWithHeader('trials/mb5_trial_list_'+str(runTimeVars['trial_list'])+'.csv', separator=',')
 		self.trialInfo = evaluateLists(self.trialInfo) #needed because the choices field is a list
 
 		self.complete_header = runTimeVarOrder + self.header

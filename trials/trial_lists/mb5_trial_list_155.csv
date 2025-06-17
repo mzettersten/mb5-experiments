@@ -1,0 +1,13 @@
+trial_number,familiar_stimulus,novel_stimulus,familiar_stimulus_item,novel_stimulus_item,complexity_condition,familiarization_time,familiar_location_1,familiar_location_2,test_time_1,test_time_2,familiarization_time_timeout
+1,fractal_complex_pair6_a_bright,fractal_complex_pair6_b_bright,pair6_a,pair6_b,complex,15,left,right,5,5,30
+2,fractal_simple_pair5_a_bright,fractal_simple_pair5_b_bright,pair5_a,pair5_b,simple,5,left,right,5,5,10
+3,fractal_simple_pair4_a_bright,fractal_simple_pair4_b_bright,pair4_a,pair4_b,simple,10,right,left,5,5,20
+4,fractal_complex_pair3_a_bright,fractal_complex_pair3_b_bright,pair3_a,pair3_b,complex,5,right,left,5,5,10
+5,fractal_complex_pair2_a_bright,fractal_complex_pair2_b_bright,pair2_a,pair2_b,complex,10,left,right,5,5,20
+6,fractal_simple_pair1_a_bright,fractal_simple_pair1_b_bright,pair1_a,pair1_b,simple,15,right,left,5,5,30
+7,SimsDiamond_Simple,Pumpkin_Simple,SimsDiamond,Pumpkin,simple,5,left,right,5,5,10
+8,Pyramid_Complex,Gumdrop_Complex,Pyramid,Gumdrop,complex,10,right,left,5,5,20
+9,Crinkle_Simple,Diamond_Simple,Crinkle,Diamond,simple,15,right,left,5,5,30
+10,Tripod_Complex,Bowl_Complex,Tripod,Bowl,complex,15,left,right,5,5,30
+11,Bowtie_Complex,Arrow_Complex,Bowtie,Arrow,complex,10,left,right,5,5,20
+12,Pacman_Simple,Cylinder_Simple,Pacman,Cylinder,simple,5,right,left,5,5,10
