@@ -101,7 +101,7 @@ class Exp:
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
 		trialInfo+="Participant: " + self.runtime_vars_list[0] +"\n"
-		trialInfo+="Trial List: " + self.runtime_vars_list[1] +"\n"
+		trialInfo+="Trial List: " + str(self.runtime_vars_list[1]) +"\n"
 		trialInfo+="Trial Number: " + str(curTrial["trial_number"]) + "\n"
 		trialInfo+="Phase: AG"
 
@@ -158,7 +158,7 @@ class Exp:
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
 		trialInfo+="Participant: " + self.runtime_vars_list[0] +"\n"
-		trialInfo+="Trial List: " + self.runtime_vars_list[1] +"\n"
+		trialInfo+="Trial List: " + str(self.runtime_vars_list[1]) +"\n"
 		trialInfo+="Trial Number: " + str(curTrial["trial_number"]) + "\n"
 		if gaze_contingent:
 			trialInfo+="Phase: CF CONTINGENT"
@@ -220,7 +220,7 @@ class Exp:
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
 		trialInfo+="Participant: " + self.runtime_vars_list[0] +"\n"
-		trialInfo+="Trial List: " + self.runtime_vars_list[1] +"\n"
+		trialInfo+="Trial List: " + str(self.runtime_vars_list[1]) +"\n"
 		trialInfo+="Trial Number: " + str(curTrial["trial_number"]) + "\n"
 		trialInfo+="Phase: TEST"
 
@@ -269,7 +269,7 @@ class Exp:
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
 		trialInfo+="Participant: " + self.runtime_vars_list[0] +"\n"
-		trialInfo+="Trial List: " + self.runtime_vars_list[1] +"\n"
+		trialInfo+="Trial List: " + str(self.runtime_vars_list[1]) +"\n"
 		trialInfo+="Trial Number: " + str(curTrial["trial_number"]) + "\n"
 		trialInfo+="Phase: FAMILIAR"
 
