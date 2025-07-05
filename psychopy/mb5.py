@@ -20,7 +20,7 @@ class Exp:
 
 		while True:
 			runTimeVarOrder = ['subjCode','trial_list','method','tv_screen','side_screen','exp_screen','image_size',]
-			runTimeVars = getRunTimeVars({'subjCode':'mb5_', 'trial_list': 1, 'method':["fixed","contingent"],'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 512},runTimeVarOrder,expName)
+			runTimeVars = getRunTimeVars({'subjCode':'mb5_', 'trial_list': 1, 'method':["fixed","contingent"],'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 512,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
 			if runTimeVars['subjCode']=='':
 				popupError('Subject code is blank')
 			elif 'Choose' in list(runTimeVars.values()):
@@ -78,6 +78,7 @@ class Exp:
 		self.validResponses = {'z':'left','slash':'right'} #change to whatever keys you want to use
 		self.validKeys = ['space']
 		self.method = runTimeVars['method']
+		self.fam_audio=runTimeVars['fam_audio']
 
 		self.runtime_vars_list = [runTimeVars[runtime_var_name] for runtime_var_name in runTimeVarOrder]
 		
@@ -152,6 +153,7 @@ class Exp:
 
 		self.win.flip()
 		self.win2.flip()
+		self.win3.flip()
 
 	def show_cf(self,curTrial,gaze_contingent=False):
 
@@ -214,6 +216,7 @@ class Exp:
 
 		self.win.flip()
 		self.win2.flip()
+		self.win3.flip()
 	
 	def show_test(self,curTrial,position_type=1):
 
@@ -263,8 +266,9 @@ class Exp:
 
 		self.win.flip()
 		self.win2.flip()
+		self.win3.flip()
 
-	def show_familiarization(self,curTrial, gaze_contingent=False):
+	def show_familiarization(self,curTrial, gaze_contingent=False, play_audio=True):
 
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
@@ -289,6 +293,10 @@ class Exp:
 		self.create_placeholder(pos=self.position['center'],size=self.size+10).draw()
 		self.pics[curTrial['familiar_stimulus']]['stim'].pos = self.position['center']
 		self.pics[curTrial['familiar_stimulus']]['stim'].draw()
+
+		#play familiarization audio?
+		if play_audio:
+			self.sounds['amelie_rediscovery_ag']['stim'].play()
 		
 		event.clearEvents()
 		overall_timer = core.Clock()  # Timer to measure overall elapsed time
@@ -344,9 +352,9 @@ class Exp:
 
 				if responded and response[0]=="right" and not looking:
 					clock.reset()
-					time_left = time_left - cur_look_length
-					count_down_timer = core.CountdownTimer(time_left)
 					looking = True
+					#update countdown to reflect current time left
+					count_down_timer = core.CountdownTimer(time_left)
 					print(looking)
 					print(time_left)
 					looks += 1
@@ -361,12 +369,15 @@ class Exp:
 				# 	total_held_time += clock.getTime()
 				# 	clock.reset()
 
-				if responded and response[0]=="left":
+				if responded and response[0]=="left" and looking:
 					clock.reset()
 					looking = False
 					cur_look_length = response[1]
+					#update timing and reset time left
 					total_held_time += cur_look_length
+					time_left = time_left - cur_look_length
 					print(looking)
+					print(time_left)
 
 					#look away: visual feedback on experimenter monitor
 					square_skeleton.color = "red"
@@ -379,14 +390,21 @@ class Exp:
 
 		
 			if looking:
-				total_held_time += time_left
 				cur_look = clock.getTime()
 				print(cur_look)
 				look_list.append(cur_look)
+				#total_held_time += time_left
+				total_held_time += cur_look
+
+
+		# stop audio if playing
+		if play_audio:
+			self.sounds['amelie_rediscovery_ag']['stim'].stop()
 
 		# Clear screen
 		self.win.flip()
 		self.win2.flip()
+		self.win3.flip()
 
 		# Get overall elapsed time
 		elapsed_time = overall_timer.getTime()
@@ -418,11 +436,16 @@ if __name__ == '__main__':
 		fam_contingent = True
 	else:
 		fam_contingent = False
+	
+	if exp.fam_audio == 'audio':
+		play_fam_audio = True
+	else:
+		play_fam_audio = False
 
 	exp.show_instructions(exp.instructions_text)
 	for i,curTrial in enumerate(exp.trialInfo):
 		exp.show_ag(curTrial,gaze_contingent=True)
-		exp.show_familiarization(curTrial, gaze_contingent=fam_contingent)
+		exp.show_familiarization(curTrial, gaze_contingent=fam_contingent,play_audio=play_fam_audio)
 		exp.show_cf(curTrial,gaze_contingent=True)
 		exp.show_test(curTrial,position_type=1)
 		exp.show_cf(curTrial)

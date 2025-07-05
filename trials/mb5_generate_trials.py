@@ -62,7 +62,9 @@ def generate_trials():
 
     trial_list_id = 1
 
-    
+    rel_image_path = 'stimuli/images/'
+    img_ext = ".png"
+
     for cur_test_familiar_location in test_familiar_locations:
         for cur_fribble_set in fribble_sets:
             for cur_fractal_set in fractal_sets:
@@ -117,8 +119,15 @@ def generate_trials():
                                     ordered_cur_familiar_images = handle_reverse_ordering(cur_familiar_images,cur_reverse_order_block,cur_reverse_order_list)
                                     ordered_cur_novel_items = handle_reverse_ordering(cur_novel_items,cur_reverse_order_block,cur_reverse_order_list)
                                     ordered_cur_novel_images = handle_reverse_ordering(cur_novel_images,cur_reverse_order_block,cur_reverse_order_list)
-                                    
 
+                                    ordered_cur_familiar_images_path = [rel_image_path + im + img_ext for im in ordered_cur_familiar_images]
+                                    ordered_cur_novel_images_path = [rel_image_path + im + img_ext for im in ordered_cur_novel_images]
+
+                                    left_image_path_1 = [familiar_item if fam_location == "left" else novel_item for familiar_item, novel_item, fam_location in zip(ordered_cur_familiar_images_path, ordered_cur_novel_images_path,ordered_cur_test_familiar_location_list)]
+                                    right_image_path_1 = [familiar_item if fam_location == "right" else novel_item for familiar_item, novel_item, fam_location in zip(ordered_cur_familiar_images_path, ordered_cur_novel_images_path,ordered_cur_test_familiar_location_list)]
+                                    left_image_path_2 = [familiar_item if fam_location == "left" else novel_item for familiar_item, novel_item, fam_location in zip(ordered_cur_familiar_images_path, ordered_cur_novel_images_path,switched_ordered_cur_test_familiar_location_list)]
+                                    right_image_path_2 = [familiar_item if fam_location == "right" else novel_item for familiar_item, novel_item, fam_location in zip(ordered_cur_familiar_images_path, ordered_cur_novel_images_path,switched_ordered_cur_test_familiar_location_list)]
+                                    
                                     cur_data = {
                                         "trial_number": range(1,trial_num+1),
                                         "familiar_stimulus": ordered_cur_familiar_images,
@@ -127,8 +136,14 @@ def generate_trials():
                                         "novel_stimulus_item": ordered_cur_novel_items,
                                         "complexity_condition": ordered_cur_complexity_list,
                                         "familiarization_time": ordered_fam_time_list,
+                                        "familiar_stimulus_path": ordered_cur_familiar_images_path,
+                                        "novel_stimulus_path": ordered_cur_novel_images_path,
                                         "familiar_location_1": ordered_cur_test_familiar_location_list,
                                         "familiar_location_2": switched_ordered_cur_test_familiar_location_list,
+                                        "left_image_path_1": left_image_path_1,
+                                        "right_image_path_1": right_image_path_1,
+                                        "left_image_path_2": left_image_path_2,
+                                        "right_image_path_2": right_image_path_2,
                                         "test_time_1": [test_time] * trial_num,
                                         "test_time_2": [test_time] * trial_num,
                                         "familiarization_time_timeout": timeout_ordered_fam_time_list}
