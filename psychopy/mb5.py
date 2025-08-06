@@ -1,4 +1,7 @@
-from psychopy import core, visual, prefs, event
+from psychopy import prefs
+prefs.general['measureFrameRate'] = False
+prefs.hardware['disableVideoSyncTest'] = True
+from psychopy import core, visual, event
 import random
 import sys
 import copy
@@ -89,7 +92,7 @@ class Exp:
 	 	return visual.Rect(win=self.win,size=size, pos=pos, lineColor=lineColor, fillColor=fillColor, lineWidth=3)
 
 	def show_instructions(self,text):
-		self.win.flip()
+		#self.win.flip()
 		#visual.TextStim(win=self.win,text=text,color="white",height=40,pos=(0,0),wrapWidth=1000).draw()
 		image=visual.ImageStim(self.win, 'stimuli/images/bunnies.png',mask=None,interpolate=True)
 		image.setPos((0,0))
