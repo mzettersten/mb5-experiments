@@ -1,0 +1,277 @@
+# Trial List Generator (768-Condition Design)
+
+This project generates fully counterbalanced trial lists for ManyBabies 5.
+
+It produces:
+
+- 768 unique trial lists
+- Distributed across 48 labs
+- With 16 balanced orders per lab
+- Balanced, randomized complexity within each trial list
+- Balanced, seeded random location assignment within each trial list
+
+Each trial list contains 12 trials with fully specified stimuli, timing, and positions.
+
+## Output Structure
+
+After running the script, you will get:
+
+```text
+trial_lists_768/
+├── lab_01/
+│   ├── order_001.csv
+│   ├── ...
+│   ├── order_016.csv
+│   └── lab_manifest.csv
+├── lab_02/
+│   └── ...
+├── ...
+├── lab_48/
+│   └── ...
+├── all_order_assignment.csv
+├── lab_balance_report.csv
+├── lab_file_detail_report.csv
+├── lab_item_detail_report.csv
+└── global_item_complexity_report.csv
+
+```
+## What This Code Does
+
+The script:
+
+1. Generates all experimental conditions (768 total) by combining:
+  * stimulus type order (fribble-first vs fractal-first)
+  * familiar vs novel role
+  * time-order variant
+  * location shuffle group
+  * fribble set
+  * trial order reversal rules
+  * balanced random complexity assignment
+
+2. Partitions these into 48 labs, each receiving:
+  * 16 unique trial lists
+  * internally balanced conditions
+
+3. Builds full trial-level CSVs for each condition:
+  * 12 trials per file
+  * all stimuli, timing, and positions specified
+
+4. Generates validation reports to confirm balance
+
+## Experimental Design
+Global design (768 total orders)
+
+The full design crosses:
+
+  * 2 fribble sets
+  * 2 block reversal settings
+  * 2 list reversal settings
+  * 3 familiarization-time pair groups
+  * 2 complexity polarity labels (normal vs inverse)
+  * 2 stimulus type orders
+  * 2 familiar roles
+  * 2 location shuffle groups
+  * 2 time orders within each pair
+
+Total:
+
+48 (lab-level) × 16 (within-lab) = 768
+
+### Within each lab (16 orders)
+
+Each lab receives 16 trial lists that are balanced across four key factors:
+
+| Factor                    | What it means |
+|---------------------------|:------------------|
+| Stimulus type order       | Whether the first half of trials contains fribble objects first or fractal images first. |
+|  Familiar role            |  Which item in each pair is familiar. If familiar_role = 0, the first item in the pair is familiar; if familiar_role = 1, the second item is familiar.|
+|  Time-order variant       |  Which of the two time orders in the lab-level pair is used.|
+|  Location shuffle group   |  A balancing label for two independently seeded location shuffles. The actual left/right assignment is a fresh balanced shuffle in every file, with 6 left and 6 right trials.|
+
+Across the 16 trial lists in a lab:
+  * 8 are fribble-first, 8 are fractal-first
+  * 8 use familiar_role = 0, 8 use familiar_role = 1
+  * 8 use time-order variant 1, 8 use time-order variant 2
+  * 8 use location shuffle group 1, 8 use location shuffle group 2
+
+### Complexity Design
+
+Complexity is generated dynamically with constraints.
+
+#### Within each trial list
+  * 12 trials total
+  * 6 simple + 6 complex
+
+For each stimulus type separately:
+
+  * Fribbles:
+    * one 5s simple
+    * one 10s simple
+    * one 15s simple
+    * one 5s complex
+    * one 10s complex
+    * one 15s complex
+  * Fractals:
+    * one 5s simple
+    * one 10s simple
+    * one 15s simple
+    * one 5s complex
+    * one 10s complex
+    * one 15s complex
+
+#### Across labs
+
+Labs are paired:
+
+  * one uses normal complexity polarity
+  * one uses inverse complexity polarity
+
+This ensures:
+
+  * each item appears equally often as simple and complex across the full dataset
+
+### Location Assignment
+
+Location assignment is not drawn from a fixed set of side-order templates.
+
+Instead, each file gets a seeded balanced shuffle:
+
+  * 6 left trials
+  * 6 right trials
+
+The seed is stored in the file and in the lab manifest so the exact location order can be reproduced.
+
+### File Types
+
+#### 1. Trial files (used in experiment)
+
+`lab_##/order_###.csv`
+
+  * One file = one experimental condition
+  * One row = one trial (12 total)
+  * Used directly in experiment software
+
+Key columns:
+
+  * trial_number
+  * familiar_stimulus, novel_stimulus
+  * familiarization_time
+  * complexity_condition
+  * row_type
+  * familiar_location_*
+  * image paths
+  * order_id (1–768)
+  * lab_number
+  * complexity_polarity
+  * location_shuffle_group
+  * location_seed
+
+#### 2. Lab-level assignment
+
+`lab_##/lab_manifest.csv`
+
+Lists the 16 orders assigned to a lab.
+
+Use this to:
+
+  * assign participants to conditions
+  * verify within-lab balance
+
+#### 3. Global assignment
+
+`all_order_assignment.csv`
+
+Master table of all 768 orders.
+
+Each row:
+
+  * one order_id
+  * full condition specification
+  * lab assignment
+
+Use this for:
+
+  * reproducibility
+  * analysis mapping
+
+#### 4. Validation reports
+
+`lab_balance_report.csv`
+
+One row per lab:
+
+  * checks whether balancing constraints are met
+  * includes overall pass/fail
+
+`lab_file_detail_report.csv`
+
+One row per trial list:
+
+  * 6 fribble / 6 fractal trials
+  * 6 left / 6 right
+  * 4 trials per time (5/10/15)
+  * 6 simple / 6 complex
+  * strict per-type/time complexity balance
+
+`lab_item_detail_report.csv`
+
+One row per item per lab:
+
+  * counts appearances as familiar and novel
+  * confirms each item appears in both roles
+
+`lab_item_side_report.csv`
+
+One row per item per lab:
+
+  * counts appearances on the left and right
+  * flags whether left/right use is approximately balanced
+
+`global_item_complexity_report.csv`
+
+One row per item across the full 768-list design:
+
+  * counts of simple and complex occurrences
+  * confirms each item is equally often simple and complex
+
+#### What “Balanced” Means Here
+
+Each lab ensures:
+
+  * equal representation of key experimental factors
+  * each stimulus appears as both familiar and novel
+  * complexity is balanced within each trial list
+  * each stimulus type has one simple and one complex trial at each time point
+  * trial structure is internally consistent
+  * location is balanced with 6 left and 6 right trials in every file
+  * item-side use is approximately balanced within each lab
+
+Across all labs:
+
+  * full factorial coverage of all conditions
+  * each item appears equally often as simple and complex
+
+### How to Run
+
+In R:
+
+generate_trials()
+check_all_labs()
+
+This will:
+
+  * generate all 768 CSVs
+  * create all reports
+  * print a summary of balance
+
+### Important Notes
+  * Always run in a clean output folder
+  * Complexity is randomized but constrained
+  * Location assignment is randomized but balanced within each file
+  * Trial order reversals are systematic, not random
+
+### Conceptual Summary
+  * Order files → what participants see
+  * Lab manifests → what each lab gets
+  * Assignment file → full experimental design
+  * Reports → verify everything is correct

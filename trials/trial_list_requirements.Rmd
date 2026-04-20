@@ -1,0 +1,99 @@
+---
+title: "Trial List Generator Requirements"
+output: word_document
+---
+
+## General Requirements
+
+- each lab uses only one of **two fribble stimulus sets (set_1 and set_2)**  
+  → Different labs are assigned different fribble sets so that individual items are not confounded with specific labs or conditions, and each item is used across the full design. 
+  
+- each lab uses the same **one fractal stimulus set**  
+  → Fractal pairs are held constant across labs, with familiar vs novel role counterbalanced.
+
+- create **768 total trial-list CSVs**  
+  → All possible condition combinations are generated so the full design space is covered without duplication.
+
+- distribute them across **48 labs**  
+  → Each lab receives a unique subset of the design so that the full experiment is distributed across sites.
+
+- each lab receives **16 unique orders**  
+  → Each lab receives 16 different trial lists. 
+
+- keep the **order numbers global from 1–768**  
+  → Each CSV has a unique `order_id` so conditions can be tracked across all labs (i.e., which of the 768 orders is represented in that CSV).
+
+- include the **full 12-trial structure** in every CSV  
+  → Each file contains 12 rows (trials), including stimulus identity, familiar/novel role, complexity, time (5/10/15), and left/right placement; trials are structured as 6 fribbles and 6 fractals.
+
+- add a **lab number** to each file and folder  
+  → Each CSV includes `lab_number`, and files are organized into `lab_01` through `lab_48` folders.
+
+- balance **fribble-first vs fractal-first**  
+  → Half the lists start with fribbles, half with fractals, so stimulus type is not confounded with trial position.
+
+- balance **familiar_role 0 vs 1**  
+  → `0` means the first item in each pair is familiar and `1` means the second item is familiar; this is balanced so no item is always familiar or always novel.
+
+- balance **familiarization-time patterns**  
+  → The sequence of 5s, 10s, and 15s trials varies across lists so timing is not tied to specific positions or stimuli.
+
+- make **location order of familiar / novel stimulus randomized but balanced**  
+  → Each list uses a randomized (but reproducible) left/right sequence with exactly 6 left and 6 right trials.
+
+- enforce **strict complexity balance within each list**  
+  → For each stimulus type separately, each time (5, 10, 15) appears once as simple and once as complex.
+
+### Counterbalanced within each lab
+
+These factors vary across the 16 CSVs inside a single lab:
+
+- **Stimulus type order**  
+  → Eight lists are fribble-first and eight are fractal-first.
+
+- **Familiar role (`0` vs `1`)**  
+  → Eight lists treat the first item in each pair as familiar, and eight treat the second item as familiar.
+
+- **Time-order variant**  
+  → Eight lists use one familiarization-time sequence and eight use the paired alternative, uses two timing sequences within each lab, but full coverage across labs of all timing permutations (kind of confusing to explain, but varies 5, 10, and 15s familiarization times so that they don’t end up with shorter times at the beginning and longer times at the end). 
+
+- **Location shuffle group**  
+  → Eight lists use one seed group and eight use the other, while the actual left/right sequence is randomized within each fil. A location shuffle group assigns trial lists to different controlled sets of random seeds so that left/right placements are both randomized within each list and evenly balanced across the design.
+
+### Balanced within each individual file
+
+These constraints are enforced inside every CSV rather than across the 16 lists:
+
+- **Complexity**  
+  → Every file has 6 simple trials and 6 complex trials.
+
+- **Complexity by stimulus type and time**  
+  → For fribbles and fractals separately, each of the three time points (5s, 10s, 15s) appears once as simple and once as complex.
+
+- **Left/right location overall**  
+  → Every file has exactly 6 left placements and 6 right placements of the novel object.
+
+### Counterbalanced across labs
+
+These factors are fixed within a lab but vary across labs:
+
+- **Fribble set (`set_1` vs `set_2`)**
+  → We have two possible sets of fribble pairs, each lab gets only one of those sets.
+  
+- **Complexity polarity (`normal` vs `inverse`)**
+  → some labs use one version of a simple/complex assignment and other labs use the inverse of that assignment to ensure that each item is sometimes simple and sometimes complex. Within a lab, the simple/complex assignment varies across orders.
+
+- **Time pair group**
+  → each lab uses 2 of 6 possible time groupings distributed across trials so that there is no systematic effect of longer or shorter trials being early or late. 
+  
+- **Block reversal and full-list reversal settings**
+  → completely or partially reverses the order of trials to balance them across the 738 total orders
+
+### Summary
+
+The design works in three layers:
+
+1. **Within each trial list**: structure is tightly controlled.
+2. **Within each lab**: the main experimental factors are balanced across 16 lists.
+3. **Across labs**: the remaining factors are counterbalanced globally to complete the full 768-condition design.
+

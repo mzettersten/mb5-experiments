@@ -1,0 +1,91 @@
+# Experiment Trial Lists: Quick Lab Guide
+
+## What you received
+
+Each lab has a folder named:
+
+`lab_XX/`
+
+Inside are:
+
+  * 16 CSV files named `order_###.csv`
+  * a `lab_manifest.csv`
+
+## What to do for each participant
+
+1. Assign each participant to one CSV file.
+2. Use all 16 files evenly across participants.
+3. Run the experiment using that file.
+
+## What is balanced within your lab
+
+Each lab has 16 trial lists that are balanced across key factors:
+
+### Stimulus type order
+* 8 lists are fribble*first
+* 8 lists are fractal*first
+
+### Familiar vs. novel role
+* In 8 lists, the first item is familiar
+* In 8 lists, the second item is familiar
+
+### Time Order variant
+* 8 lists use time order variant 1
+* 8 lists use time order variant 2
+
+### Location shuffle group
+* 8 lists use location shuffle group 1
+* 8 lists use location shuffle group 2
+
+## Location assignment
+
+The left/right order is already randomized and balanced in each file.
+
+Each trial list has:
+
+* 6 left placements
+* 6 right placements
+
+You do not need to edit or rebuild these sequences.
+
+## Complexity
+
+Complexity is already built into the files.
+
+Each trial list has:
+
+* 6 simple trials
+* 6 complex trials
+
+For each stimulus type separately:
+
+* one 5s simple trial
+* one 10s simple trial
+* one 15s simple trial
+* one 5s complex trial
+* one 10s complex trial
+* one 15s complex trial
+
+## What each trial shows
+
+Each trial presents:
+
+* one familiar item
+* one novel item
+* left/right placement that varies by trial
+* a specific familiarization time
+
+## Important
+
+* Do not edit the CSV files
+* Use each order evenly
+* Use the correct `lab_XX` folder
+* The location order is already balanced inside each file
+
+## If something looks wrong
+
+Check:
+
+* the correct lab folder is being used
+* all 16 files are present
+* no files are duplicated

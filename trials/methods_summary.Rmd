@@ -1,0 +1,56 @@
+
+## Trial List Generation and Counterbalancing
+
+Stimulus presentation was controlled using a fully counterbalanced set of pre-generated trial lists. A total of 768 unique trial lists were constructed and distributed across 48 labs, with each lab receiving 16 lists.
+
+### Experimental factors
+
+The design crossed the following factors:
+
+- stimulus type order (fribble-first vs. fractal-first)
+- familiar vs. novel item assignment
+- time-order variant (i.e., combonation of 5, 10, 15s familiarization times)
+- location shuffle group (i.e., pattern of 6 left and 6 right placements of novel object at test)
+- fribble stimulus set (two sets)
+- trial order reversal (block-wise and full-list reversal)
+- complexity polarity (normal vs. inverse)
+
+These factors were fully crossed at the global level to produce 768 unique conditions.
+
+### Lab-level assignment
+
+Each lab was assigned a subset of 16 trial lists such that:
+
+- stimulus type order was balanced (8 fribble-first, 8 fractal-first)
+- familiar/novel role was balanced (8 of each)
+- time-order variant was balanced (8 of each)
+- location shuffle group was balanced (8 of each)
+
+Location assignment was not drawn from a fixed set of side-order templates. Instead, each trial list used a seeded balanced shuffle that produced exactly 6 left and 6 right placements within the 12 trials. The location shuffle group served as a balancing label to preserve the 16-list-per-lab structure.
+
+### Complexity manipulation
+
+Complexity was generated using constrained randomization within each trial list. Each file contained 12 trials total. For each stimulus type separately (fribbles and fractals), the six trials were arranged so that each familiarization time (5, 10, and 15 seconds) appeared once in a simple form and once in a complex form. This yielded, within every file, one simple and one complex trial at each time point for each stimulus type.
+
+To ensure global balance, labs were paired such that one lab used a normal complexity polarity and its matched lab used the inverse polarity. This preserved equal representation of simple and complex versions across the full dataset.
+
+### Trial structure
+
+Each trial consisted of:
+- a familiar and a novel stimulus
+- presented simultaneously on the left and right side
+- with side assignment determined by a seeded balanced shuffle
+
+Stimuli included fribble objects and fractal images, each rendered in simple and complex variants.
+
+### Implementation
+
+All trial lists were generated programmatically in R and exported as CSV files. Each file contained 12 trials with fully specified parameters, including stimulus identity, complexity, timing, and spatial configuration.
+
+Validation scripts confirmed that:
+- all within-lab balancing constraints were satisfied
+- each stimulus appeared as both familiar and novel
+- each stimulus type had balanced simple/complex assignments at each time point
+- each item was equally often simple and complex across the full dataset
+- each file contained exactly 6 left and 6 right placements
+- item-side use was approximately balanced within each lab
