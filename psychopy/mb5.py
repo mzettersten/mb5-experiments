@@ -330,6 +330,8 @@ class Exp:
 		if not gaze_contingent:
 
 			core.wait(int(curTrial['familiarization_time']))
+			#set total_held_time to length of trial by default - a convention, just be aware when processing data
+			total_held_time = int(curTrial['familiarization_time'])
 		
 		else:
 			#procedure for gaze contingency
@@ -405,7 +407,8 @@ class Exp:
 
 		
 			if looking:
-				cur_look = clock.getTime()
+				#being extra careful here, to also resolve small discrepancies between clock time and time left
+				cur_look = min(clock.getTime(), max(0,time_left))
 				print(cur_look)
 				look_list.append(cur_look)
 				#total_held_time += time_left
