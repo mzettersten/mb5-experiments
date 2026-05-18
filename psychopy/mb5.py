@@ -19,8 +19,8 @@ class Exp:
 	def __init__(self):
 
 		while True:
-			runTimeVarOrder = ['subjCode','trial_list','method','tv_screen','side_screen','exp_screen','image_size',]
-			runTimeVars = getRunTimeVars({'subjCode':'mb5_', 'trial_list': 1, 'method':["fixed","contingent"],'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 512,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
+			runTimeVarOrder = ['subjCode','trial_list','method','num_screens','tv_screen','side_screen','exp_screen','image_size']
+			runTimeVars = getRunTimeVars({'subjCode':'mb5_', 'trial_list': 1, 'method':["fixed","contingent"],'num_screens': 3,'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 512,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
 			if runTimeVars['subjCode']=='':
 				popupError('Subject code is blank')
 			elif 'Choose' in list(runTimeVars.values()):
@@ -40,16 +40,18 @@ class Exp:
 		self.trialInfo = evaluateLists(self.trialInfo) #needed because the choices field is a list
 
 		self.complete_header = runTimeVarOrder + self.header
-		self.win = visual.Window(fullscr=True,allowGUI=True, color="black", units='pix',screen=int(runTimeVars['tv_screen']))
+		self.win = visual.Window(fullscr=True,allowGUI=True, color="#888888", units='pix',screen=int(runTimeVars['tv_screen']))
 		#self.win = visual.Window([1500,900],allowGUI=True, color="black", units='pix',screen=2)
 		
 		#create psychopy window for experimenter
 		self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=int(runTimeVars['exp_screen']))
 		self.win2.flip()
 		
-		#create psychopy window for tracking trials
-		self.win3 = visual.Window(fullscr=True, color="black", allowGUI=True,units='pix',screen=int(runTimeVars['side_screen']))
-		self.win3.flip()
+		if int(runTimeVars['num_screens']) == 3:
+			#creating third screen
+			#create psychopy window for tracking trials
+			self.win3 = visual.Window(fullscr=True, color="black", allowGUI=True,units='pix',screen=int(runTimeVars['side_screen']))
+			self.win3.flip()
 
 		visual.TextStim(win=self.win,text="Loading stimuli...").draw()
 		#self.win.flip()
@@ -108,12 +110,14 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
-		trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
-		trialInfoStim_3.draw()
+		if self.runtime_vars_list[3]:
+			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
+			trialInfoStim_3.draw()
 		ag_square_skeleton=visual.Rect(self.win2,lineColor="black",fillColor="yellow",size=[300,200])
 		ag_square_skeleton.draw()
 		self.win2.flip()
-		self.win3.flip()
+		if self.runtime_vars_list[3]:
+			self.win3.flip()
 
 		event.clearEvents()
 		# present AG
@@ -153,7 +157,8 @@ class Exp:
 
 		self.win.flip()
 		self.win2.flip()
-		self.win3.flip()
+		if self.runtime_vars_list[3]:
+			self.win3.flip()
 
 	def show_cf(self,curTrial,gaze_contingent=False):
 
@@ -171,12 +176,14 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
-		trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
-		trialInfoStim_3.draw()
+		if self.runtime_vars_list[3]:
+			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
+			trialInfoStim_3.draw()
 		cf_skeleton=visual.Circle(self.win2,lineColor="black",fillColor=stim_color,size=[150,150])
 		cf_skeleton.draw()
 		self.win2.flip()
-		self.win3.flip()
+		if self.runtime_vars_list[3]:
+			self.win3.flip()
 
 		event.clearEvents()
 		# present central fixation stimulus
@@ -216,7 +223,8 @@ class Exp:
 
 		self.win.flip()
 		self.win2.flip()
-		self.win3.flip()
+		if self.runtime_vars_list[3]:
+			self.win3.flip()
 	
 	def show_test(self,curTrial,position_type=1):
 
@@ -229,18 +237,21 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
-		trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
-		trialInfoStim_3.draw()
+		if self.runtime_vars_list[3]:
+			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
+			trialInfoStim_3.draw()
 		square_skeleton_1=visual.Rect(self.win2,lineColor="black",fillColor="blue",size=[150,150],pos=(-150,0))
 		square_skeleton_2=visual.Rect(self.win2,lineColor="black",fillColor="blue",size=[150,150],pos=(150,0))
 		square_skeleton_1.draw()
 		square_skeleton_2.draw()
 		self.win2.flip()
-		self.win3.flip()
+		if self.runtime_vars_list[3]:
+			self.win3.flip()
 
 		#show test trial
-		self.create_placeholder(pos=self.position['left'],size=self.size+10).draw()
-		self.create_placeholder(pos=self.position['right'],size=self.size+10).draw()
+		#no longer showing square backgrounds - toggle to bring back white background
+		#self.create_placeholder(pos=self.position['left'],size=self.size+10).draw()
+		#self.create_placeholder(pos=self.position['right'],size=self.size+10).draw()
 
 		#set positions
 		if position_type == 1:
@@ -266,7 +277,8 @@ class Exp:
 
 		self.win.flip()
 		self.win2.flip()
-		self.win3.flip()
+		if self.runtime_vars_list[3]:
+			self.win3.flip()
 
 	def show_familiarization(self,curTrial, gaze_contingent=False, play_audio=True):
 
@@ -279,18 +291,21 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
-		trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
-		trialInfoStim_3.draw()
+		if self.runtime_vars_list[3]:
+			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
+			trialInfoStim_3.draw()
 		square_skeleton=visual.Rect(self.win2,lineColor="black",fillColor="red",size=[150,150],pos=(0,0))
 		square_skeleton.draw()
 		self.win2.flip()
-		self.win3.flip()
+		if self.runtime_vars_list[3]:
+			self.win3.flip()
 
 		#show familiarization
 		#show size
 		self.pics[curTrial['familiar_stimulus']]['stim'].size = self.size
 		print(self.pics[curTrial['familiar_stimulus']]['stim'].size)
-		self.create_placeholder(pos=self.position['center'],size=self.size+10).draw()
+		#no longer showing square backgrounds - toggle to bring back white background
+		#self.create_placeholder(pos=self.position['center'],size=self.size+10).draw()
 		self.pics[curTrial['familiar_stimulus']]['stim'].pos = self.position['center']
 		self.pics[curTrial['familiar_stimulus']]['stim'].draw()
 
@@ -404,7 +419,8 @@ class Exp:
 		# Clear screen
 		self.win.flip()
 		self.win2.flip()
-		self.win3.flip()
+		if self.runtime_vars_list[3]:
+			self.win3.flip()
 
 		# Get overall elapsed time
 		elapsed_time = overall_timer.getTime()
