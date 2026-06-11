@@ -81,7 +81,7 @@ class Exp:
 
 		self.inputDevice = "keyboard"
 		self.validResponses = {'z':'left','slash':'right'} #change to whatever keys you want to use
-		self.validKeys = ['space']
+		self.validKeys = ['space','escape']
 		self.method = runTimeVars['method']
 		self.fam_audio=runTimeVars['fam_audio']
 		self.keyboard = runTimeVars['keyboard']
@@ -92,7 +92,23 @@ class Exp:
 
 		self.runtime_vars_list = [runTimeVars[runtime_var_name] for runtime_var_name in runTimeVarOrder]
 		
-		self.instructions_text = "Welcome to the ManyBabies 5 demo!\n\nWhen you see the laughing baby, hit space to advance to the next trial.\n\nDuring familiarization, for contingent trials, press the right arrow key when the infant is looking to the screen and the left arrow key when they look away. Otherwise, for fixed durations, the experiment will proceed at the end of the familiarization time.\n\nAfter the familiarization, a central fixation will appear. Hit the space bar to advance (once the infant is looking). The second central fixation in between the two test trial phases advances automatically.\n\nHit q to start the experiment!"
+		self.instructions_text = "Welcome to the ManyBabies 5 demo!\n\nWhen you see the laughing baby, hit space to advance to the next trial.\n\nDuring familiarization, for contingent trials, press the right arrow key when the infant is looking to the screen and the left arrow key when they look away. Otherwise, for fixed durations, the experiment will proceed at the end of the familiarization time.\n\nAfter the familiarization, a central fixation will appear. Hit the space bar to advance (once the infant is looking). The second central fixation in between the two test trial phases advances automatically.\n\nHit q to start the experiment! Press esc at any time to quit."
+		
+	def check_for_quit(self):
+		# Allows the experimenter to quit cleanly with esc from any active loop.
+		if 'escape' in event.getKeys(keyList=['escape']):
+			core.quit()
+		if self.kb is not None:
+			if self.kb.getKeys(keyList=['escape'], clear=True):
+				core.quit()
+
+	def wait_with_quit(self, duration):
+		# Replacement for core.wait() when we want esc to remain active.
+		wait_timer = core.Clock()
+		wait_timer.reset()
+		while wait_timer.getTime() < duration:
+			self.check_for_quit()
+			core.wait(.01)
 		
 	# may need to remove the /2 when running on the lab computer. Retina screen resolution issue..
 	def create_placeholder(self,lineColor="black", fillColor="white",size=(525,525),pos=(0,0)):
@@ -105,7 +121,9 @@ class Exp:
 		image.setPos((0,0))
 		image.draw()
 		self.win.flip()
-		event.waitKeys(keyList=['q'])
+		keys = event.waitKeys(keyList=['q','escape'])
+		if keys and keys[0] == 'escape':
+			core.quit()
 	
 	def show_ag(self,curTrial,gaze_contingent=False):
 		
@@ -136,6 +154,7 @@ class Exp:
 		self.sounds['laughing_baby']['stim'].play()
 		if not gaze_contingent:
 			while clock.getTime() < self.ag_duration:  
+				self.check_for_quit()
 				#self.ag.play()
 				self.ag.draw()
 				self.win.flip()
@@ -146,13 +165,12 @@ class Exp:
 				#self.ag.play()
 				self.ag.draw()
 				self.win.flip()
-				keys = event.getKeys()
-				if keys:
-					key = keys[0]
-					print(key)
-					if key in self.validKeys:
-						key_pressed = True  
-						print(key_pressed)   
+				keys = event.getKeys(keyList=self.validKeys)
+				if 'escape' in keys:
+					self.quit_experiment()
+				if 'space' in keys:
+					key_pressed = True
+
 				if clock.getTime() >= self.ag_max_duration:
 					timeout = True 
 					print(clock.getTime())
@@ -202,6 +220,7 @@ class Exp:
 		self.sounds['ag']['stim'].play()
 		if not gaze_contingent:
 			while clock.getTime() < self.cf_duration:  
+				self.check_for_quit()
 				#self.cf.play()
 				self.cf.draw()
 				self.win.flip()
@@ -212,13 +231,11 @@ class Exp:
 				#self.ag.play()
 				self.cf.draw()
 				self.win.flip()
-				keys = event.getKeys()
-				if keys:
-					key = keys[0]
-					print(key)
-					if key in self.validKeys:
-						key_pressed = True  
-						print(key_pressed)   
+				keys = event.getKeys(keyList=self.validKeys)
+				if 'escape' in keys:
+					self.quit_experiment()
+				if 'space' in keys:
+					key_pressed = True
 				if clock.getTime() >= self.cf_max_duration:
 					timeout = True 
 					print(clock.getTime())
@@ -281,7 +298,7 @@ class Exp:
 		self.win.flip()
 		
         # present for test time
-		core.wait(test_time)
+		self.wait_with_quit(test_time)
 
 		self.win.flip()
 		self.win2.flip()
@@ -337,7 +354,7 @@ class Exp:
 		#no gaze contingency
 		if not gaze_contingent:
 
-			core.wait(int(curTrial['familiarization_time']))
+			self.wait_with_quit(int(curTrial['familiarization_time']))
 		
 		#gaze contingency
 		else:
@@ -358,6 +375,7 @@ class Exp:
 				#(a) there's still familiarization time left or the infant is not looking
 				#(b) and the familiarization max time/ timeout has not yet been reached
 				while (count_down_timer.getTime() > 0 or not looking) and overall_timer.getTime()<int(curTrial['familiarization_time_timeout']):
+					self.check_for_quit()
 					space_down = self.kb.getState('space') #get the current state of the space bar
 					print(space_down)
 
@@ -408,6 +426,7 @@ class Exp:
 				#(a) there's still familiarization time left or the infant is not looking
 				#(b) and the familiarization max time/ timeout has not yet been reached
 				while (count_down_timer.getTime() > 0 or not looking) and overall_timer.getTime()<int(curTrial['familiarization_time_timeout']):
+					self.check_for_quit()
 					responded = event.getKeys(keyList=['right','left'], timeStamped=overall_timer) #store key presses relative to the overall timer
 					keypress_list.extend(responded)
 					if responded:
@@ -450,6 +469,8 @@ class Exp:
 
 						#store last look
 						look_list.append(cur_look_length)
+					
+					core.wait(0.001, hogCPUperiod=0)
 			
 			#clean up and add final look if the infant is still looking when the while loop ends
 			if looking:
