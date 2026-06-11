@@ -19,8 +19,8 @@ class Exp:
 	def __init__(self):
 
 		while True:
-			runTimeVarOrder = ['subjCode','trial_list','method','num_screens','tv_screen','side_screen','exp_screen','image_size']
-			runTimeVars = getRunTimeVars({'subjCode':'mb5_', 'trial_list': 1, 'method':["fixed","contingent"],'num_screens': 3,'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 512,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
+			runTimeVarOrder = ['subjCode','trial_list','method','num_screens','tv_screen','side_screen','exp_screen','image_size','keyboard']
+			runTimeVars = getRunTimeVars({'subjCode':'', 'trial_list': 1, 'method':["fixed","contingent"],'keyboard': ["default","event"],'num_screens': 3,'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 512,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
 			if runTimeVars['subjCode']=='':
 				popupError('Subject code is blank')
 			elif 'Choose' in list(runTimeVars.values()):
@@ -40,9 +40,12 @@ class Exp:
 		self.trialInfo = evaluateLists(self.trialInfo) #needed because the choices field is a list
 
 		self.complete_header = runTimeVarOrder + self.header
-		self.win = visual.Window(fullscr=True,allowGUI=True, color="#888888", units='pix',screen=int(runTimeVars['tv_screen']))
+		self.win = visual.Window(fullscr=True,allowGUI=True, color="#808080", units='pix',screen=int(runTimeVars['tv_screen']))
 		#self.win = visual.Window([1500,900],allowGUI=True, color="black", units='pix',screen=2)
-		
+		screenWidth = self.win.size[0]
+		screenHeight = self.win.size[1]
+		print(screenWidth)
+		print(screenHeight)
 		#create psychopy window for experimenter
 		self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=int(runTimeVars['exp_screen']))
 		self.win2.flip()
@@ -57,11 +60,11 @@ class Exp:
 		#self.win.flip()
 		self.pics =  loadFiles('stimuli/images','.png','image', win=self.win)
 		self.sounds = loadFiles('stimuli/audio','.wav','sound', win=self.win)
-		self.cf_movie_path = "stimuli/movies/ag_no_audio.mp4"
+		self.cf_movie_path = "stimuli/movies/ag_no_audio_grey.mp4"
 		self.cf = visual.MovieStim(win=self.win,filename = self.cf_movie_path,size=(640,360),loop=True)
 		self.cf_duration = .75
 		self.cf_max_duration = 5
-		self.ag_movie_path = "stimuli/movies/laughing_baby_no_audio.mp4"
+		self.ag_movie_path = "stimuli/movies/laughing_baby_no_audio_grey.mp4"
 		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,size=(640,360),loop=True)
 		self.ag_duration = 2
 		self.ag_max_duration = 10
@@ -81,6 +84,11 @@ class Exp:
 		self.validKeys = ['space']
 		self.method = runTimeVars['method']
 		self.fam_audio=runTimeVars['fam_audio']
+		self.keyboard = runTimeVars['keyboard']
+		if self.keyboard == "default":
+			self.kb = keyboard.Keyboard()
+		else:
+			self.kb = None
 
 		self.runtime_vars_list = [runTimeVars[runtime_var_name] for runtime_var_name in runTimeVarOrder]
 		
@@ -309,7 +317,7 @@ class Exp:
 		self.pics[curTrial['familiar_stimulus']]['stim'].pos = self.position['center']
 		self.pics[curTrial['familiar_stimulus']]['stim'].draw()
 
-		#play familiarization audio?
+		#play familiarization audio
 		if play_audio:
 			self.sounds['amelie_rediscovery_ag']['stim'].play()
 		
@@ -318,9 +326,9 @@ class Exp:
 		# Start overall timer
 		overall_timer.reset()
 		total_held_time = 0  # Accumulated time the infant has been registered as looking to the stimulus
-		looks = 0
-		keypress_list = []
-		look_list = []
+		looks = 0 # how many looks the infant has made to the screen
+		keypress_list = [] #list of distinct keypresses
+		look_list = [] # list of distinct onscreen looks (looking times)
 
 		self.win.flip()
 
@@ -330,82 +338,120 @@ class Exp:
 		if not gaze_contingent:
 
 			core.wait(int(curTrial['familiarization_time']))
-			#set total_held_time to length of trial by default - a convention, just be aware when processing data
-			total_held_time = int(curTrial['familiarization_time'])
 		
+		#gaze contingency
 		else:
-			#procedure for gaze contingency
 			looking = False  # Track if infant is currently looking
-			clock = core.Clock()
-			# while total_held_time < int(curTrial['familiarization_time']) and overall_timer.getTime()<self.fam_timeout:
-			# 	responded = event.getKeys(keyList=['right','left'], timeStamped=overall_timer)
-			# 	look_list.extend(responded)
-			# 	if responded:
-			# 		response = responded[0]
-			# 		print(response)
-
-			# 	if responded and response[0]=="right" and not looking:
-			# 		clock.reset()
-			# 		looking = True
-			# 		print(looking)
-			# 		looks += 1
-
-			# 	if looking:
-			# 		total_held_time += clock.getTime()
-			# 		clock.reset()
-
-			# 	if responded and response[0]=="left":
-			# 		looking = False
-			# 		print(looking)
-			cur_look_length = 0
+			clock = core.Clock() #clock for tracking individual onscreen look durations
+			
+			cur_look_length = 0 #keeps track of the length of the current on screen look
 			time_left = int(curTrial['familiarization_time'])
-			count_down_timer = core.CountdownTimer(time_left)
-			while (count_down_timer.getTime() > 0 or not looking) and overall_timer.getTime()<int(curTrial['familiarization_time_timeout']):
-				responded = event.getKeys(keyList=['right','left'], timeStamped=clock)
-				keypress_list.extend(responded)
-				if responded:
-					response = responded[0]
-					print(response)
+			count_down_timer = core.CountdownTimer(time_left) #begins familiarization time count down
 
-				if responded and response[0]=="right" and not looking:
-					clock.reset()
-					looking = True
-					#update countdown to reflect current time left
-					count_down_timer = core.CountdownTimer(time_left)
-					print(looking)
-					print(time_left)
-					looks += 1
+			if self.keyboard == "default":
+				# Press-and-hold contingent coding (based on key pressed down)
+				# holding space = infant is looking; releasing space = infant looked away.
+				self.kb.clearEvents()
+				self.kb.clock.reset()
 
-					#looking: visual feedback on experimenter monitor
-					square_skeleton.color = "green"
-					trialInfoStim.draw()
-					square_skeleton.draw()
-					self.win2.flip()
+				#while loop that continues while:
+				#(a) there's still familiarization time left or the infant is not looking
+				#(b) and the familiarization max time/ timeout has not yet been reached
+				while (count_down_timer.getTime() > 0 or not looking) and overall_timer.getTime()<int(curTrial['familiarization_time_timeout']):
+					space_down = self.kb.getState('space') #get the current state of the space bar
+					print(space_down)
 
-				# if looking:
-				# 	total_held_time += clock.getTime()
-				# 	clock.reset()
+					#what to do if the infant previously wasn't looking and now is registered as looking
+					if space_down and not looking:
+						clock.reset()
+						looking = True
+						#update countdown to reflect current time left (and start counting down)
+						count_down_timer = core.CountdownTimer(time_left)
+						#add a new keypress to the keypress list
+						keypress_list.append(('space_down', overall_timer.getTime())) # store timing of keypresses relative to overall time
+						print(looking)
+						print(time_left)
+						looks += 1 #add a new look to the look counter
 
-				if responded and response[0]=="left" and looking:
-					clock.reset()
-					looking = False
-					cur_look_length = response[1]
-					#update timing and reset time left
-					total_held_time += cur_look_length
-					time_left = time_left - cur_look_length
-					print(looking)
-					print(time_left)
+						#looking: visual feedback on experimenter monitor
+						square_skeleton.color = "green"
+						trialInfoStim.draw()
+						square_skeleton.draw()
+						self.win2.flip()
+					
+					#if the infant was previously looking but now is no longer registered as looking
+					if not space_down and looking:
+						cur_look_length = clock.getTime()
+						clock.reset()
+						looking = False
+						#update timing parameters of the (now completed) looking period and reset time left (for when countdown timer restarts)
+						total_held_time += cur_look_length
+						time_left = time_left - cur_look_length #countdown timer to use when the next look begins
+						keypress_list.append(('space_up', overall_timer.getTime())) # store timing of keypresses relative to overall time
+						print(looking)
+						print(time_left)
 
-					#look away: visual feedback on experimenter monitor
-					square_skeleton.color = "red"
-					trialInfoStim.draw()
-					square_skeleton.draw()
-					self.win2.flip()
+						#look away: visual feedback on experimenter monitor
+						square_skeleton.color = "red"
+						trialInfoStim.draw()
+						square_skeleton.draw()
+						self.win2.flip()
 
-					#store last look
-					look_list.append(cur_look_length)
+						#store last look
+						look_list.append(cur_look_length)
 
-		
+			else:
+				# right-left contingent looking coding (based on keypress only)
+				# right = infant started looking; left = infant looked away
+
+				#while loop that continues while:
+				#(a) there's still familiarization time left or the infant is not looking
+				#(b) and the familiarization max time/ timeout has not yet been reached
+				while (count_down_timer.getTime() > 0 or not looking) and overall_timer.getTime()<int(curTrial['familiarization_time_timeout']):
+					responded = event.getKeys(keyList=['right','left'], timeStamped=overall_timer) #store key presses relative to the overall timer
+					keypress_list.extend(responded)
+					if responded:
+						response = responded[0]
+						print(response)
+					
+					#if the the right key is pressed (onscreen look registered) 
+					# and the infant was previously NOT looking
+					if responded and response[0]=="right" and not looking:
+						clock.reset()
+						looking = True
+						#update countdown to reflect current time left
+						count_down_timer = core.CountdownTimer(time_left)
+						print(looking)
+						print(time_left)
+						looks += 1
+
+						#looking: visual feedback on experimenter monitor
+						square_skeleton.color = "green"
+						trialInfoStim.draw()
+						square_skeleton.draw()
+						self.win2.flip()
+					
+					#if the infant was previously looking and now as registered as looking away (left arrow pushed)
+					if responded and response[0]=="left" and looking:
+						cur_look_length = clock.getTime()
+						clock.reset()
+						looking = False
+						#update timing and reset time left
+						total_held_time += cur_look_length
+						time_left = time_left - cur_look_length
+						print(looking)
+						print(time_left)
+
+						#look away: visual feedback on experimenter monitor
+						square_skeleton.color = "red"
+						trialInfoStim.draw()
+						square_skeleton.draw()
+						self.win2.flip()
+
+						#store last look
+						look_list.append(cur_look_length)
+			
+			#clean up and add final look if the infant is still looking when the while loop ends
 			if looking:
 				#being extra careful here, to also resolve small discrepancies between clock time and time left
 				cur_look = min(clock.getTime(), max(0,time_left))
@@ -448,7 +494,7 @@ if __name__ == '__main__':
 	exp = Exp()
 
 	train_header = exp.complete_header[:] #assign list by value since we're extending it below and don't want to change the orig header list
-	train_header.extend(('total_accumulated_looking_time','elapsed_time','looks','keypress_list','look_list'))
+	train_header.extend(('total_accumulated_looking_time','elapsed_time','number_of_looks','keypress_list','look_duration_list'))
 	printHeader(train_header,headerFile="familiarization_header.txt",separator=",")
 
 	if exp.method == "contingent":
