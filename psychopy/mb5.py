@@ -20,7 +20,7 @@ class Exp:
 
 		while True:
 			runTimeVarOrder = ['subjCode','trial_list','method','num_screens','tv_screen','side_screen','exp_screen','image_size','keyboard']
-			runTimeVars = getRunTimeVars({'subjCode':'', 'trial_list': 1, 'method':["fixed","contingent"],'keyboard': ["default","event"],'num_screens': 3,'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 512,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
+			runTimeVars = getRunTimeVars({'subjCode':'', 'trial_list': 1, 'method':["fixed","contingent"],'keyboard': ["default","event"],'num_screens': 3,'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 0.65,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
 			if runTimeVars['subjCode']=='':
 				popupError('Subject code is blank')
 			elif 'Choose' in list(runTimeVars.values()):
@@ -40,8 +40,7 @@ class Exp:
 		self.trialInfo = evaluateLists(self.trialInfo) #needed because the choices field is a list
 
 		self.complete_header = runTimeVarOrder + self.header
-		self.win = visual.Window(fullscr=True,allowGUI=True, color="#808080", units='pix',screen=int(runTimeVars['tv_screen']))
-		#self.win = visual.Window([1500,900],allowGUI=True, color="black", units='pix',screen=2)
+		self.win = visual.Window(fullscr=True,allowGUI=True, color="#808080", units='height',screen=int(runTimeVars['tv_screen']))
 		screenWidth = self.win.size[0]
 		screenHeight = self.win.size[1]
 		print(screenWidth)
@@ -65,20 +64,16 @@ class Exp:
 		self.cf_duration = .75
 		self.cf_max_duration = 5
 		self.ag_movie_path = "stimuli/movies/laughing_baby_no_audio_grey.mp4"
-		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,size=(640,360),loop=True)
+		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,size=(1920,1080),loop=True)
 		self.ag_duration = 2
 		self.ag_max_duration = 10
 		#self.sounds =  loadFiles('stimuli/sounds','.wav','sound', win=self.win)
-		self.waitForTarget = visual.TextStim(win=self.win,text="",color="black",height=40)
-		self.fixationCross = visual.TextStim(win=self.win,text="+",color="black",height=40)
 
 		self.preFixationDelay = .75
 		self.postFixationDelay = 0
-		#self.fam_timeout = 15
 
-		self.position = {'left': (-500,0), 'right': (500,0), 'center':(0,0)}
-		self.size = runTimeVars['image_size']
-
+		self.position = {'left': (-0.5,0), 'right': (0.5,0), 'center':(0,0)}
+		self.size = float(runTimeVars['image_size'])
 		self.inputDevice = "keyboard"
 		self.validResponses = {'z':'left','slash':'right'} #change to whatever keys you want to use
 		self.validKeys = ['space','escape']
@@ -111,8 +106,10 @@ class Exp:
 			core.wait(.01)
 		
 	# may need to remove the /2 when running on the lab computer. Retina screen resolution issue..
-	def create_placeholder(self,lineColor="black", fillColor="white",size=(525,525),pos=(0,0)):
-	 	return visual.Rect(win=self.win,size=size, pos=pos, lineColor=lineColor, fillColor=fillColor, lineWidth=3)
+	def create_placeholder(self,lineColor="black", fillColor="white",size=None,pos=(0,0)):
+		if size is None:
+			size = (self.size + 0.01, self.size + 0.01)
+		return visual.Rect(win=self.win,size=size, pos=pos, lineColor=lineColor, fillColor=fillColor, lineWidth=3)
 
 	def show_instructions(self,text):
 		self.win.flip()
@@ -275,8 +272,8 @@ class Exp:
 
 		#show test trial
 		#no longer showing square backgrounds - toggle to bring back white background
-		#self.create_placeholder(pos=self.position['left'],size=self.size+10).draw()
-		#self.create_placeholder(pos=self.position['right'],size=self.size+10).draw()
+		#(pos=self.position['left'],size=self.size+0.01).draw()
+		#self.create_placeholder(pos=self.position['right'],size=self.size+0.01).draw()
 
 		#set positions
 		if position_type == 1:
@@ -330,7 +327,7 @@ class Exp:
 		self.pics[curTrial['familiar_stimulus']]['stim'].size = self.size
 		print(self.pics[curTrial['familiar_stimulus']]['stim'].size)
 		#no longer showing square backgrounds - toggle to bring back white background
-		#self.create_placeholder(pos=self.position['center'],size=self.size+10).draw()
+		#self.create_placeholder(pos=self.position['center'],size=self.size+0.01).draw()
 		self.pics[curTrial['familiar_stimulus']]['stim'].pos = self.position['center']
 		self.pics[curTrial['familiar_stimulus']]['stim'].draw()
 
