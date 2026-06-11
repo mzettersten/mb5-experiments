@@ -55,7 +55,7 @@ class Exp:
 			self.win3 = visual.Window(fullscr=True, color="black", allowGUI=True,units='pix',screen=int(runTimeVars['side_screen']))
 			self.win3.flip()
 
-		visual.TextStim(win=self.win,text="Loading stimuli...").draw()
+		#visual.TextStim(win=self.win,text="Loading stimuli...").draw()
 		#self.win.flip()
 		self.pics =  loadFiles('stimuli/images','.png','image', win=self.win)
 		self.sounds = loadFiles('stimuli/audio','.wav','sound', win=self.win)
