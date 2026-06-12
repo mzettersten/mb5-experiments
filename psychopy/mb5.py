@@ -1,4 +1,7 @@
-from psychopy import core, visual, prefs, event
+from psychopy import prefs
+prefs.general['measureFrameRate'] = False
+prefs.hardware['disableVideoSyncTest'] = True
+from psychopy import core, visual, event
 import random
 import sys
 import copy
@@ -112,7 +115,7 @@ class Exp:
 		return visual.Rect(win=self.win,size=size, pos=pos, lineColor=lineColor, fillColor=fillColor, lineWidth=3)
 
 	def show_instructions(self,text):
-		self.win.flip()
+		#self.win.flip()
 		#visual.TextStim(win=self.win,text=text,color="white",height=40,pos=(0,0),wrapWidth=1000).draw()
 		image=visual.ImageStim(self.win, 'stimuli/images/bunnies.png',mask=None,interpolate=True)
 		image.setPos((0,0))
@@ -218,14 +221,12 @@ class Exp:
 		if not gaze_contingent:
 			while clock.getTime() < self.cf_duration:  
 				self.check_for_quit()
-				#self.cf.play()
 				self.cf.draw()
 				self.win.flip()
 		elif gaze_contingent:
 			key_pressed = False
 			timeout = False
 			while (not key_pressed) and (not timeout):
-				#self.ag.play()
 				self.cf.draw()
 				self.win.flip()
 				keys = event.getKeys(keyList=self.validKeys)
@@ -467,6 +468,7 @@ class Exp:
 						#store last look
 						look_list.append(cur_look_length)
 					
+					#helps increase reliability of left/right recording a bit
 					core.wait(0.001, hogCPUperiod=0)
 			
 			#clean up and add final look if the infant is still looking when the while loop ends
