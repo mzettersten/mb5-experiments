@@ -63,11 +63,17 @@ class Exp:
 		self.pics =  loadFiles('stimuli/images','.png','image', win=self.win)
 		self.sounds = loadFiles('stimuli/audio','.wav','sound', win=self.win)
 		self.cf_movie_path = "stimuli/movies/ag_no_audio_grey.mp4"
-		self.cf = visual.MovieStim(win=self.win,filename = self.cf_movie_path,size=(640,360),loop=True)
+		self.cf = visual.MovieStim(win=self.win,filename = self.cf_movie_path,units = "height",size=(None,0.4),loop=True,color="#808080")
+		self.cf_still=visual.ImageStim(self.win, 'stimuli/images/ag_no_audio_grey.png',units = "height",size=(0.7111112,0.4),mask=None,interpolate=True)
+		self.cf_still.setPos((0,0))
 		self.cf_duration = .75
 		self.cf_max_duration = 5
 		self.ag_movie_path = "stimuli/movies/laughing_baby_no_audio_grey.mp4"
-		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,size=(1920,1080),loop=True)
+		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,units = "height",size=(None,0.75),loop=True)
+		self.ag_still=visual.ImageStim(self.win, 'stimuli/images/laughing_baby_no_audio_grey.png',units = "height",size=(1.333334,0.75),mask=None,interpolate=True)
+		self.ag_still.setPos((0,0))
+		self.ag_movie_border = visual.Rect(win=self.win,units="height",size=(1.333334,0.75),pos=(0.0,0.0),lineWidth=10, lineColor = "#808080",fillColor=None)
+		self.ag_first_time = 1
 		self.ag_duration = 2
 		self.ag_max_duration = 10
 		#self.sounds =  loadFiles('stimuli/sounds','.wav','sound', win=self.win)
@@ -117,7 +123,7 @@ class Exp:
 	def show_instructions(self,text):
 		#self.win.flip()
 		#visual.TextStim(win=self.win,text=text,color="white",height=40,pos=(0,0),wrapWidth=1000).draw()
-		image=visual.ImageStim(self.win, 'stimuli/images/bunnies.png',mask=None,interpolate=True)
+		image=visual.ImageStim(self.win, 'stimuli/images/bunnies.png',size=(None,1),mask=None,interpolate=True)
 		image.setPos((0,0))
 		image.draw()
 		self.win.flip()
@@ -125,7 +131,17 @@ class Exp:
 		if keys and keys[0] == 'escape':
 			core.quit()
 	
-	def show_ag(self,curTrial,gaze_contingent=False):
+	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0.2):
+
+		#preload phase
+		#set first frame of video while video loads
+		self.ag_still.draw()
+		self.ag_movie_border.autoDraw = True
+		self.win.flip()
+		core.wait(video_still_dur)
+		#load movie
+		print(self.ag_movie_path)
+		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,units = "height",size=(1.333334,0.75),loop=True)
 		
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
@@ -179,6 +195,7 @@ class Exp:
 		self.ag.stop()
 		self.ag.seek(0)
 		self.sounds['laughing_baby']['stim'].stop()
+		self.ag_movie_border.autoDraw = False
 
 
 		self.win.flip()
@@ -186,7 +203,15 @@ class Exp:
 		if self.runtime_vars_list[3]:
 			self.win3.flip()
 
-	def show_cf(self,curTrial,gaze_contingent=False):
+	def show_cf(self,curTrial,gaze_contingent=False,video_still_dur = 0.2):
+		
+		#preload phase
+		#set first frame of video while video loads
+		self.cf_still.draw()
+		self.win.flip()
+		core.wait(video_still_dur)
+		#load movie
+		self.cf = visual.MovieStim(win=self.win,filename = self.cf_movie_path,units = "height",size=(0.7111112,0.4),loop=True)
 
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
@@ -219,7 +244,8 @@ class Exp:
 		self.cf.play()
 		self.sounds['ag']['stim'].play()
 		if not gaze_contingent:
-			while clock.getTime() < self.cf_duration:  
+			#subtract any time waiting to load the video
+			while clock.getTime() < (self.cf_duration-video_still_dur):  
 				self.check_for_quit()
 				self.cf.draw()
 				self.win.flip()
