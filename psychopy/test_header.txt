@@ -1,0 +1,1 @@
+subjCode,trial_list,method,num_screens,tv_screen,exp_screen,side_screen,image_size,keyboard,expName,trial_number,familiar_stimulus,novel_stimulus,familiar_stimulus_item,novel_stimulus_item,complexity_condition,familiarization_time,familiar_location_1,familiar_location_2,test_time_1,test_time_2,familiarization_time_timeout,position_type,elapsed_time

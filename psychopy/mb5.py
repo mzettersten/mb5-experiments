@@ -22,8 +22,8 @@ class Exp:
 	def __init__(self):
 
 		while True:
-			runTimeVarOrder = ['subjCode','trial_list','method','num_screens','tv_screen','side_screen','exp_screen','image_size','keyboard']
-			runTimeVars = getRunTimeVars({'subjCode':'', 'trial_list': 1, 'method':["fixed","contingent"],'keyboard': ["default","event"],'num_screens': 3,'tv_screen': 2,'side_screen': 1,'exp_screen': 0,'image_size': 0.65,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
+			runTimeVarOrder = ['subjCode','trial_list','method','num_screens','tv_screen','exp_screen','side_screen','image_size','keyboard']
+			runTimeVars = getRunTimeVars({'subjCode':'', 'trial_list': 1, 'method':["contingent","fixed"],'keyboard': ["default","event"],'num_screens': 3,'tv_screen': 2,'exp_screen': 0,'side_screen': 1,'image_size': 0.65,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
 			if runTimeVars['subjCode']=='':
 				popupError('Subject code is blank')
 			elif 'Choose' in list(runTimeVars.values()):
@@ -32,7 +32,8 @@ class Exp:
 				try:
 					createDirectories(['data','trials'])
 					self.outputFile = openOutputFile('data/'+runTimeVars['subjCode'],expName+'_familiarization')
-					if self.outputFile: #files were opened for writing
+					self.testOutputFile = openOutputFile('data/'+runTimeVars['subjCode'],expName+'_test')
+					if self.outputFile and self.testOutputFile: #files were opened for writing
 						break
 				except:
 					popupError('Output file(s) could not be opened for writing')
@@ -51,8 +52,8 @@ class Exp:
 		#create psychopy window for experimenter
 		self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=int(runTimeVars['exp_screen']))
 		self.win2.flip()
-		
-		if int(runTimeVars['num_screens']) == 3:
+		self.num_screens = int(runTimeVars['num_screens'])
+		if self.num_screens == 3:
 			#creating third screen
 			#create psychopy window for tracking trials
 			self.win3 = visual.Window(fullscr=True, color="black", allowGUI=True,units='pix',screen=int(runTimeVars['side_screen']))
@@ -73,7 +74,6 @@ class Exp:
 		self.ag_still=visual.ImageStim(self.win, 'stimuli/images/laughing_baby_no_audio_grey.png',units = "height",size=(1.333334,0.75),mask=None,interpolate=True)
 		self.ag_still.setPos((0,0))
 		self.ag_movie_border = visual.Rect(win=self.win,units="height",size=(1.333334,0.75),pos=(0.0,0.0),lineWidth=10, lineColor = "#808080",fillColor=None)
-		self.ag_first_time = 1
 		self.ag_duration = 2
 		self.ag_max_duration = 10
 		#self.sounds =  loadFiles('stimuli/sounds','.wav','sound', win=self.win)
@@ -101,10 +101,37 @@ class Exp:
 	def check_for_quit(self):
 		# Allows the experimenter to quit cleanly with esc from any active loop.
 		if 'escape' in event.getKeys(keyList=['escape']):
+			#close windows
+			self.win.close()
+			self.win2.close()
+			if self.num_screens == 3:
+				self.win3.close()
+			#explicitly close files
+			self.outputFile.close()
+			self.testOutputFile.close()
 			core.quit()
 		if self.kb is not None:
 			if self.kb.getKeys(keyList=['escape'], clear=True):
+				#close windows
+				self.win.close()
+				self.win2.close()
+				if self.num_screens == 3:
+					self.win3.close()
+				#explicitly close files
+				self.outputFile.close()
+				self.testOutputFile.close()
 				core.quit()
+
+	def quit_experiment(self):
+		#close windows
+		self.win.close()
+		self.win2.close()
+		if self.num_screens == 3:
+			self.win3.close()
+		#explicitly close files
+		self.outputFile.close()
+		self.testOutputFile.close()
+		core.quit()
 
 	def wait_with_quit(self, duration):
 		# Replacement for core.wait() when we want esc to remain active.
@@ -129,9 +156,17 @@ class Exp:
 		self.win.flip()
 		keys = event.waitKeys(keyList=['q','escape'])
 		if keys and keys[0] == 'escape':
+			#close windows
+			self.win.close()
+			self.win2.close()
+			if self.num_screens == 3:
+				self.win3.close()
+			#explicitly close files
+			self.outputFile.close()
+			self.testOutputFile.close()
 			core.quit()
 	
-	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0.2):
+	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0.1):
 
 		#preload phase
 		#set first frame of video while video loads
@@ -152,13 +187,13 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
 			trialInfoStim_3.draw()
 		ag_square_skeleton=visual.Rect(self.win2,lineColor="black",fillColor="yellow",size=[300,200])
 		ag_square_skeleton.draw()
 		self.win2.flip()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			self.win3.flip()
 
 		event.clearEvents()
@@ -200,10 +235,10 @@ class Exp:
 
 		self.win.flip()
 		self.win2.flip()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			self.win3.flip()
 
-	def show_cf(self,curTrial,gaze_contingent=False,video_still_dur = 0.2):
+	def show_cf(self,curTrial,gaze_contingent=False,video_still_dur = 0.1):
 		
 		#preload phase
 		#set first frame of video while video loads
@@ -227,13 +262,13 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
 			trialInfoStim_3.draw()
 		cf_skeleton=visual.Circle(self.win2,lineColor="black",fillColor=stim_color,size=[150,150])
 		cf_skeleton.draw()
 		self.win2.flip()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			self.win3.flip()
 
 		event.clearEvents()
@@ -272,7 +307,7 @@ class Exp:
 
 		self.win.flip()
 		self.win2.flip()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			self.win3.flip()
 	
 	def show_test(self,curTrial,position_type=1):
@@ -286,7 +321,7 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
 			trialInfoStim_3.draw()
 		square_skeleton_1=visual.Rect(self.win2,lineColor="black",fillColor="blue",size=[150,150],pos=(-150,0))
@@ -294,7 +329,7 @@ class Exp:
 		square_skeleton_1.draw()
 		square_skeleton_2.draw()
 		self.win2.flip()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			self.win3.flip()
 
 		#show test trial
@@ -319,6 +354,11 @@ class Exp:
 		self.pics[curTrial['familiar_stimulus']]['stim'].size = self.size
 		self.pics[curTrial['familiar_stimulus']]['stim'].draw()
 		self.pics[curTrial['novel_stimulus']]['stim'].draw()
+
+		overall_test_timer = core.Clock()  # Timer to measure overall elapsed time
+		# Start overall timer
+		overall_test_timer.reset()
+
 		self.win.flip()
 		
         # present for test time
@@ -326,8 +366,21 @@ class Exp:
 
 		self.win.flip()
 		self.win2.flip()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			self.win3.flip()
+		
+		# Get overall elapsed time
+		elapsed_test_time = overall_test_timer.getTime()
+		
+		#write data to output file
+		curTrial['header']=self.header
+		trial_responses=[curTrial[_] for _ in curTrial['header']]
+		test_responses=self.runtime_vars_list+trial_responses
+		#write dep variables
+		test_responses.extend([
+			position_type,
+			elapsed_test_time])
+		writeToFile(self.testOutputFile,test_responses,writeNewLine=True,separator=",")
 
 	def show_familiarization(self,curTrial, gaze_contingent=False, play_audio=True):
 
@@ -340,13 +393,13 @@ class Exp:
 
 		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
 		trialInfoStim.draw()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
 			trialInfoStim_3.draw()
 		square_skeleton=visual.Rect(self.win2,lineColor="black",fillColor="red",size=[150,150],pos=(0,0))
 		square_skeleton.draw()
 		self.win2.flip()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			self.win3.flip()
 
 		#show familiarization
@@ -514,7 +567,7 @@ class Exp:
 		# Clear screen
 		self.win.flip()
 		self.win2.flip()
-		if self.runtime_vars_list[3]:
+		if self.num_screens == 3:
 			self.win3.flip()
 
 		# Get overall elapsed time
@@ -539,9 +592,14 @@ class Exp:
 if __name__ == '__main__':
 	exp = Exp()
 
+	#file headers
 	train_header = exp.complete_header[:] #assign list by value since we're extending it below and don't want to change the orig header list
 	train_header.extend(('total_accumulated_looking_time','elapsed_time','number_of_looks','keypress_list','look_duration_list'))
 	printHeader(train_header,headerFile="familiarization_header.txt",separator=",")
+
+	test_header = exp.complete_header[:] 
+	test_header.extend(('position_type','elapsed_time'))
+	printHeader(test_header,headerFile="test_header.txt",separator=",")
 
 	if exp.method == "contingent":
 		fam_contingent = True
@@ -561,6 +619,9 @@ if __name__ == '__main__':
 		exp.show_test(curTrial,position_type=1)
 		exp.show_cf(curTrial)
 		exp.show_test(curTrial,position_type=2)
+	
+	#shut down experiment
+	exp.quit_experiment()
 
 
 
