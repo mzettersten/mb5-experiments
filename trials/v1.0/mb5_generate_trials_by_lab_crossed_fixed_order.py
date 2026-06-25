@@ -115,7 +115,7 @@ def generate_trials(cur_seed=seed, num_labs=12):
     fribble_sets = ["set_1", "set_2"]
 
     fractal_dict = {
-        'set_1': [["pair1_a", "pair1_b"], ["pair2_a", "pair2_b"], ["pair3_a", "pair3_b"], ["pair4_a", "pair4_b"], ["pair5_a", "pair5_b"], ["pair6_a", "pair6_b"]]
+        'set_1': [["1A", "1B"], ["2A", "2B"], ["3A", "3B"], ["4A", "4B"], ["5A", "5B"], ["6A", "6B"]]
     }
     fractal_sets = ["set_1"]
 
@@ -197,7 +197,7 @@ def generate_trials(cur_seed=seed, num_labs=12):
                                     for i in range(len(cur_familiar_fribble_items))
                                 ]
                                 cur_familiar_fractal_images = [
-                                    "fractal_" + cur_complexity_list_2[i] + "_" + cur_familiar_fractal_items[i] + "_bright"
+                                    "Frac" + cur_familiar_fractal_items[i]+ "_" + cur_complexity_list_2[i].capitalize()  
                                     for i in range(len(cur_familiar_fractal_items))
                                 ]
                                 cur_familiar_images = cur_familiar_fribble_images + cur_familiar_fractal_images
@@ -218,7 +218,7 @@ def generate_trials(cur_seed=seed, num_labs=12):
                                     for i in range(len(cur_novel_fribble_items))
                                 ]
                                 cur_novel_fractal_images = [
-                                    "fractal_" + cur_complexity_list_2[i] + "_" + cur_novel_fractal_items[i] + "_bright"
+                                    "Frac" + cur_novel_fractal_items[i]+ "_" + cur_complexity_list_2[i].capitalize()
                                     for i in range(len(cur_novel_fractal_items))
                                 ]
                                 cur_novel_images = cur_novel_fribble_images + cur_novel_fractal_images
@@ -253,7 +253,7 @@ def generate_trials(cur_seed=seed, num_labs=12):
                                 ordered_cur_familiar_images = [
                                     item + "_" + complexity.capitalize()
                                     if trial_type == "fribble"
-                                    else "fractal_" + complexity + "_" + item + "_bright"
+                                    else "Frac" + item + "_" + complexity.capitalize()
                                     for item, complexity, trial_type in zip(
                                         ordered_cur_familiar_items,
                                         ordered_cur_complexity_list,
@@ -263,7 +263,7 @@ def generate_trials(cur_seed=seed, num_labs=12):
                                 ordered_cur_novel_images = [
                                     item + "_" + complexity.capitalize()
                                     if trial_type == "fribble"
-                                    else "fractal_" + complexity + "_" + item + "_bright"
+                                    else "Frac" + item + "_" + complexity.capitalize()
                                     for item, complexity, trial_type in zip(
                                         ordered_cur_novel_items,
                                         ordered_cur_complexity_list,
