@@ -97,29 +97,58 @@ class Exp:
 		self.runtime_vars_list = [runTimeVars[runtime_var_name] for runtime_var_name in runTimeVarOrder]
 		
 		self.instructions_text = "Welcome to the ManyBabies 5 demo!\n\nWhen you see the laughing baby, hit space to advance to the next trial.\n\nDuring familiarization, for contingent trials, press the right arrow key when the infant is looking to the screen and the left arrow key when they look away. Otherwise, for fixed durations, the experiment will proceed at the end of the familiarization time.\n\nAfter the familiarization, a central fixation will appear. Hit the space bar to advance (once the infant is looking). The second central fixation in between the two test trial phases advances automatically.\n\nHit q to start the experiment! Press esc at any time to quit."
+
+	def cleanup(self):
+		print("cleanup started")
+		for stim_name in ["ag", "cf"]:
+			stim = getattr(self, stim_name, None)
+			if stim is not None:
+				try:
+					stim.stop()
+				except Exception:
+					pass
+				try:
+					stim._unload()
+				except Exception:
+					pass
+				setattr(self, stim_name, None)
 		
+		for snd in self.sounds.values():
+			try:
+				snd["stim"].stop()
+			except Exception:
+				pass
+		
+		try:
+			if self.kb is not None:
+				self.kb.clearEvents()
+		except Exception:
+			pass
+		
+		for f in [self.outputFile, self.testOutputFile]:
+			try:
+				f.flush()
+				f.close()
+			except Exception:
+				pass
+		
+		for w in [getattr(self, "win3", None), self.win2, self.win]:
+			try:
+				if w is not None:
+					w.close()
+			except Exception:
+				pass
+			
+		print("cleanup done")
+
 	def check_for_quit(self):
 		# Allows the experimenter to quit cleanly with esc from any active loop.
 		if 'escape' in event.getKeys(keyList=['escape']):
-			#close windows
-			self.win.close()
-			self.win2.close()
-			if self.num_screens == 3:
-				self.win3.close()
-			#explicitly close files
-			self.outputFile.close()
-			self.testOutputFile.close()
+			self.cleanup()
 			core.quit()
 		if self.kb is not None:
 			if self.kb.getKeys(keyList=['escape'], clear=True):
-				#close windows
-				self.win.close()
-				self.win2.close()
-				if self.num_screens == 3:
-					self.win3.close()
-				#explicitly close files
-				self.outputFile.close()
-				self.testOutputFile.close()
+				self.cleanup()
 				core.quit()
 
 	def quit_experiment(self):
@@ -621,7 +650,8 @@ if __name__ == '__main__':
 		exp.show_test(curTrial,position_type=2)
 	
 	#shut down experiment
-	exp.quit_experiment()
+	exp.cleanup()
+	core.quit()
 
 
 
