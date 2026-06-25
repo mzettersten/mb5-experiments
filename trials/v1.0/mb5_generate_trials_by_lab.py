@@ -1,0 +1,191 @@
+import random
+import os
+import pandas
+
+seed = 10
+
+# function for reverse ordering blockwise
+def split_and_reverse(lst):
+    if len(lst) % 2 != 0:
+        raise ValueError("List length must be even to split evenly in half.")
+
+    mid = len(lst) // 2
+    first_half = lst[:mid][::-1]
+    second_half = lst[mid:][::-1]
+
+    return first_half + second_half
+
+# function for handling both within block reverse ordering and full trial list reverse ordering based on parameters
+def handle_reverse_ordering(trial_list_element, reverse_order_block, reverse_order_list):
+    # reverse block and reverse order
+    if reverse_order_block == "base_rev":
+        if reverse_order_list == "rev":
+            return split_and_reverse(trial_list_element)[::-1]
+        else:
+            return split_and_reverse(trial_list_element)
+    else:
+        if reverse_order_list == "rev":
+            return trial_list_element[::-1]
+        else:
+            return trial_list_element
+
+# apply the same shuffled base order to every trial-level list
+def reorder_by_index(lst, order):
+    return [lst[i] for i in order]
+
+def generate_trials(cur_seed=seed, num_labs=3):
+    # define trial parameters
+    familiarization_time_sets = [[5, 10, 15], [10, 15, 5], [15, 5, 10]] # familiarization times
+    reverse_order_block = ["base_block", "base_rev"]
+    reverse_order_list = ["base", "rev"] # reverse order
+    familiar_role = [0, 1] # which item in pair is familiar
+    test_time = 5
+    trial_num_set = 6
+    trial_num = 12
+
+    fribble_dict = {
+        'set_1': [["Tripod", "Diamond"], ["SimsDiamond", "Cylinder"], ["Pyramid", "Bowtie"], ["Pacman", "Arrow"], ["Crinkle", "Pumpkin"], ["Bowl", "Gumdrop"]],
+        'set_2': [["Pacman", "Cylinder"], ["Bowtie", "Arrow"], ["Tripod", "Bowl"], ["Crinkle", "Diamond"], ["Pyramid", "Gumdrop"], ["SimsDiamond", "Pumpkin"]]
+    }
+    fribble_sets = ["set_1", "set_2"]
+
+    fractal_dict = {
+        'set_1': [["pair1_a", "pair1_b"], ["pair2_a", "pair2_b"], ["pair3_a", "pair3_b"], ["pair4_a", "pair4_b"], ["pair5_a", "pair5_b"], ["pair6_a", "pair6_b"]]
+    }
+    fractal_sets = ["set_1"]
+
+    complexity_order_dict = {
+        'order_1': ["simple", "complex", "complex", "simple", "complex", "simple", "simple", "complex", "complex", "simple", "simple", "complex"],
+        'order_2': ["complex", "simple", "simple", "complex", "simple", "complex", "complex", "simple", "simple", "complex", "complex", "simple"]
+    }
+    complexity_orders = ["order_1", "order_2"]
+
+    test_familiar_location_dict = {
+        'loc_order_1': ["left", "right", "right", "left", "left", "right", "left", "right", "left", "left", "right", "right"],
+        'loc_order_2': ["right", "left", "left", "right", "right", "left", "right", "left", "right", "right", "left", "left"]
+    }
+    test_familiar_locations = ['loc_order_1', 'loc_order_2']
+
+    rel_image_path = 'stimuli/images/'
+    img_ext = ".png"
+
+    cur_test_familiar_location = "loc_order_1"
+    cur_fribble_set = "set_1"
+
+    # Make one shuffled base order per lab. All trial lists for a lab are derived
+    # from that same shuffled base order, preserving the reverse-ordering structure.
+    for lab_i in range(1, num_labs + 1):
+        lab_name = f"lab{lab_i}"
+        lab_seed = cur_seed + lab_i - 1
+        lab_rng = random.Random(lab_seed)
+        lab_base_order = list(range(trial_num))
+        lab_rng.shuffle(lab_base_order)
+
+        lab_trial_lists_dir = os.path.join(os.getcwd(), 'trial_lists', lab_name)
+        os.makedirs(lab_trial_lists_dir, exist_ok=True)
+
+        print(f"Creating trial lists for {lab_name} with seed {lab_seed}")
+        trial_list_id = 1
+
+        # for cur_test_familiar_location in test_familiar_locations:
+        # for cur_fribble_set in fribble_sets:
+        for cur_fractal_set in fractal_sets:
+            for cur_reverse_order_block in reverse_order_block:
+                for cur_complexity_order in complexity_orders:
+                    for cur_reverse_order_list in reverse_order_list:
+                        for cur_familiarization_time_set in familiarization_time_sets:
+                            for cur_familiar_role in familiar_role:
+                                print(lab_name, trial_list_id)
+
+                                # handle familiarization_times
+                                fam_time_1 = cur_familiarization_time_set[0]
+                                fam_time_2 = cur_familiarization_time_set[1]
+                                fam_time_3 = cur_familiarization_time_set[2]
+                                fam_time_list = [fam_time_2, fam_time_3, fam_time_1, fam_time_1, fam_time_3, fam_time_2, fam_time_1, fam_time_3, fam_time_2, fam_time_3, fam_time_2, fam_time_1]
+
+                                # create complexity and test location order lists
+                                cur_complexity_list = complexity_order_dict[cur_complexity_order]
+                                cur_complexity_list_1 = cur_complexity_list[:trial_num_set]
+                                cur_complexity_list_2 = cur_complexity_list[trial_num_set:]
+                                cur_test_familiar_location_list = test_familiar_location_dict[cur_test_familiar_location]
+
+                                # handle familiar items
+                                cur_familiar_fribble_items = [pair[cur_familiar_role] for pair in fribble_dict[cur_fribble_set]]
+                                cur_familiar_fractal_items = [pair[cur_familiar_role] for pair in fractal_dict[cur_fractal_set]]
+                                cur_familiar_items = cur_familiar_fribble_items + cur_familiar_fractal_items
+                                # convert to image names
+                                cur_familiar_fribble_images = [cur_familiar_fribble_items[i] + "_" + cur_complexity_list_1[i].capitalize() for i in range(len(cur_familiar_fribble_items))]
+                                cur_familiar_fractal_images = ["fractal_" + cur_complexity_list_2[i] + "_" + cur_familiar_fractal_items[i] + "_bright" for i in range(len(cur_familiar_fractal_items))]
+                                cur_familiar_images = cur_familiar_fribble_images + cur_familiar_fractal_images
+
+                                # handle novel items
+                                if cur_familiar_role == 0:
+                                    cur_novel_role = 1
+                                else:
+                                    cur_novel_role = 0
+                                cur_novel_fribble_items = [pair[cur_novel_role] for pair in fribble_dict[cur_fribble_set]]
+                                cur_novel_fractal_items = [pair[cur_novel_role] for pair in fractal_dict[cur_fractal_set]]
+                                cur_novel_items = cur_novel_fribble_items + cur_novel_fractal_items
+                                # convert to image names
+                                cur_novel_fribble_images = [cur_novel_fribble_items[i] + "_" + cur_complexity_list_1[i].capitalize() for i in range(len(cur_novel_fribble_items))]
+                                cur_novel_fractal_images = ["fractal_" + cur_complexity_list_2[i] + "_" + cur_novel_fractal_items[i] + "_bright" for i in range(len(cur_novel_fractal_items))]
+                                cur_novel_images = cur_novel_fribble_images + cur_novel_fractal_images
+
+                                # shuffle the base trial order once per lab, before applying
+                                # the existing blockwise/list reverse-ordering logic
+                                cur_complexity_list = reorder_by_index(cur_complexity_list, lab_base_order)
+                                cur_test_familiar_location_list = reorder_by_index(cur_test_familiar_location_list, lab_base_order)
+                                fam_time_list = reorder_by_index(fam_time_list, lab_base_order)
+                                cur_familiar_items = reorder_by_index(cur_familiar_items, lab_base_order)
+                                cur_familiar_images = reorder_by_index(cur_familiar_images, lab_base_order)
+                                cur_novel_items = reorder_by_index(cur_novel_items, lab_base_order)
+                                cur_novel_images = reorder_by_index(cur_novel_images, lab_base_order)
+
+                                # reverse block and reverse order
+                                ordered_cur_complexity_list = handle_reverse_ordering(cur_complexity_list, cur_reverse_order_block, cur_reverse_order_list)
+                                ordered_cur_test_familiar_location_list = handle_reverse_ordering(cur_test_familiar_location_list, cur_reverse_order_block, cur_reverse_order_list)
+                                switched_ordered_cur_test_familiar_location_list = ["right" if x == "left" else "left" for x in ordered_cur_test_familiar_location_list]
+                                ordered_fam_time_list = handle_reverse_ordering(fam_time_list, cur_reverse_order_block, cur_reverse_order_list)
+                                timeout_ordered_fam_time_list = [2 * t for t in ordered_fam_time_list]
+                                ordered_cur_familiar_items = handle_reverse_ordering(cur_familiar_items, cur_reverse_order_block, cur_reverse_order_list)
+                                ordered_cur_familiar_images = handle_reverse_ordering(cur_familiar_images, cur_reverse_order_block, cur_reverse_order_list)
+                                ordered_cur_novel_items = handle_reverse_ordering(cur_novel_items, cur_reverse_order_block, cur_reverse_order_list)
+                                ordered_cur_novel_images = handle_reverse_ordering(cur_novel_images, cur_reverse_order_block, cur_reverse_order_list)
+
+                                ordered_cur_familiar_images_path = [rel_image_path + im + img_ext for im in ordered_cur_familiar_images]
+                                ordered_cur_novel_images_path = [rel_image_path + im + img_ext for im in ordered_cur_novel_images]
+
+                                left_image_path_1 = [familiar_item if fam_location == "left" else novel_item for familiar_item, novel_item, fam_location in zip(ordered_cur_familiar_images_path, ordered_cur_novel_images_path, ordered_cur_test_familiar_location_list)]
+                                right_image_path_1 = [familiar_item if fam_location == "right" else novel_item for familiar_item, novel_item, fam_location in zip(ordered_cur_familiar_images_path, ordered_cur_novel_images_path, ordered_cur_test_familiar_location_list)]
+                                left_image_path_2 = [familiar_item if fam_location == "left" else novel_item for familiar_item, novel_item, fam_location in zip(ordered_cur_familiar_images_path, ordered_cur_novel_images_path, switched_ordered_cur_test_familiar_location_list)]
+                                right_image_path_2 = [familiar_item if fam_location == "right" else novel_item for familiar_item, novel_item, fam_location in zip(ordered_cur_familiar_images_path, ordered_cur_novel_images_path, switched_ordered_cur_test_familiar_location_list)]
+
+                                cur_data = {
+                                    "trial_number": range(1, trial_num + 1),
+                                    "familiar_stimulus": ordered_cur_familiar_images,
+                                    "novel_stimulus": ordered_cur_novel_images,
+                                    "familiar_stimulus_item": ordered_cur_familiar_items,
+                                    "novel_stimulus_item": ordered_cur_novel_items,
+                                    "complexity_condition": ordered_cur_complexity_list,
+                                    "familiarization_time": ordered_fam_time_list,
+                                    "familiar_stimulus_path": ordered_cur_familiar_images_path,
+                                    "novel_stimulus_path": ordered_cur_novel_images_path,
+                                    "familiar_location_1": ordered_cur_test_familiar_location_list,
+                                    "familiar_location_2": switched_ordered_cur_test_familiar_location_list,
+                                    "left_image_path_1": left_image_path_1,
+                                    "right_image_path_1": right_image_path_1,
+                                    "left_image_path_2": left_image_path_2,
+                                    "right_image_path_2": right_image_path_2,
+                                    "test_time_1": [test_time] * trial_num,
+                                    "test_time_2": [test_time] * trial_num,
+                                    "familiarization_time_timeout": timeout_ordered_fam_time_list
+                                }
+                                cur_df = pandas.DataFrame(cur_data)
+                                cur_df.to_csv(os.path.join(lab_trial_lists_dir, 'mb5_trial_list_' + str(trial_list_id) + '.csv'), index=False)
+                                # update trial list id
+                                trial_list_id += 1
+
+    return True
+
+if __name__ == '__main__':
+    generate_trials(num_labs=3)

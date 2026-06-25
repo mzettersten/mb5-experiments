@@ -44,7 +44,7 @@ def generate_trials():
     fribble_sets = ["set_1", "set_2"]
 
     fractal_dict = {
-        'set_1': [["pair1_a", "pair1_b"], ["pair2_a", "pair2_b"], ["pair3_a", "pair3_b"], ["pair4_a", "pair4_b"], ["pair5_a", "pair5_b"], ["pair6_a", "pair6_b"]]
+        'set_1': [["1A", "1B"], ["2A", "2B"], ["3A", "3B"], ["4A", "4B"], ["5A", "5B"], ["6A", "6B"]]
     }
     fractal_sets = ["set_1"]
 
@@ -93,7 +93,7 @@ def generate_trials():
                                     cur_familiar_items = cur_familiar_fribble_items + cur_familiar_fractal_items
                                     # convert to image names
                                     cur_familiar_fribble_images = [cur_familiar_fribble_items[i]+"_"+cur_complexity_list_1[i].capitalize() for i in range(len(cur_familiar_fribble_items))]
-                                    cur_familiar_fractal_images = ["fractal_"+cur_complexity_list_2[i]+"_"+cur_familiar_fractal_items[i]+"_bright" for i in range(len(cur_familiar_fractal_items))]
+                                    cur_familiar_fractal_images = ["Frac"+cur_familiar_fractal_items[i]+"_"+cur_complexity_list_2[i].capitalize() for i in range(len(cur_familiar_fractal_items))]
                                     cur_familiar_images = cur_familiar_fribble_images + cur_familiar_fractal_images
 
                                     #handle novel items
@@ -106,7 +106,7 @@ def generate_trials():
                                     cur_novel_items = cur_novel_fribble_items + cur_novel_fractal_items
                                     # convert to image names
                                     cur_novel_fribble_images = [cur_novel_fribble_items[i]+"_"+cur_complexity_list_1[i].capitalize() for i in range(len(cur_novel_fribble_items))]
-                                    cur_novel_fractal_images = ["fractal_"+cur_complexity_list_2[i]+"_"+cur_novel_fractal_items[i]+"_bright" for i in range(len(cur_novel_fractal_items))]
+                                    cur_novel_fractal_images = ["Frac"+cur_novel_fractal_items[i]+"_"+cur_complexity_list_2[i].capitalize() for i in range(len(cur_novel_fractal_items))]
                                     cur_novel_images = cur_novel_fribble_images + cur_novel_fractal_images
 
                                     # reverse block and reverse order
