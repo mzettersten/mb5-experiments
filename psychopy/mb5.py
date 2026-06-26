@@ -140,14 +140,45 @@ class Exp:
 				pass
 			
 		print("cleanup done")
+		
+	def clear_keys(self):
+		if self.keyboard == "default":
+			self.kb.clearEvents()
+		else:
+			event.clearEvents()
+	
+	def get_keys(self, keyList=None, clear=True, timeStamped=False):
+		if self.keyboard == "default":
+			return self.kb.getKeys(
+				keyList=keyList,
+				clear=clear,
+				waitRelease=False
+				)
+		else:
+			return event.getKeys(
+				keyList=keyList,
+				timeStamped=timeStamped
+				)
+	
+	def wait_keys(self, keyList=None):
+		if self.keyboard == "default":
+			while True:
+				keys = self.kb.getKeys(keyList=keyList, clear=True, waitRelease=False)
+				if keys:
+					return [k.name for k in keys]
+				core.wait(0.01)
+		else:
+			return event.waitKeys(keyList=keyList)
 
 	def check_for_quit(self):
-		# Allows the experimenter to quit cleanly with esc from any active loop.
-		if 'escape' in event.getKeys(keyList=['escape']):
-			self.cleanup()
-			core.quit()
-		if self.kb is not None:
-			if self.kb.getKeys(keyList=['escape'], clear=True):
+		if self.keyboard == "default":
+			if self.kb is not None:
+				if self.kb.getKeys(keyList=['escape'], clear=True):
+					self.cleanup()
+					core.quit()
+		else:
+			# Allows the experimenter to quit cleanly with esc from any active loop.
+			if 'escape' in event.getKeys(keyList=['escape']):
 				self.cleanup()
 				core.quit()
 
@@ -183,16 +214,10 @@ class Exp:
 		image.setPos((0,0))
 		image.draw()
 		self.win.flip()
-		keys = event.waitKeys(keyList=['q','escape'])
+		keys = self.wait_keys(keyList=['q','escape'])
 		if keys and keys[0] == 'escape':
-			#close windows
-			self.win.close()
-			self.win2.close()
-			if self.num_screens == 3:
-				self.win3.close()
-			#explicitly close files
-			self.outputFile.close()
-			self.testOutputFile.close()
+			#self.quit_experiment()
+			self.cleanup()
 			core.quit()
 	
 	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0.1):
@@ -225,7 +250,7 @@ class Exp:
 		if self.num_screens == 3:
 			self.win3.flip()
 
-		event.clearEvents()
+		self.clear_keys()
 		# present AG
 		clock = core.Clock()  # Create a clock to track time
 		clock.reset()
@@ -245,10 +270,13 @@ class Exp:
 				#self.ag.play()
 				self.ag.draw()
 				self.win.flip()
-				keys = event.getKeys(keyList=self.validKeys)
-				if 'escape' in keys:
-					self.quit_experiment()
-				if 'space' in keys:
+				keys = self.get_keys(keyList=self.validKeys, clear=True)
+				key_names = [k.name for k in keys] if self.keyboard == "default" else keys
+				if "escape" in key_names:
+					#self.quit_experiment()
+					self.cleanup()
+					core.quit()
+				if "space" in key_names:
 					key_pressed = True
 
 				if clock.getTime() >= self.ag_max_duration:
@@ -300,7 +328,7 @@ class Exp:
 		if self.num_screens == 3:
 			self.win3.flip()
 
-		event.clearEvents()
+		self.clear_keys()
 		# present central fixation stimulus
 		clock = core.Clock()  # Create a clock to track time
 		clock.reset()
@@ -319,10 +347,13 @@ class Exp:
 			while (not key_pressed) and (not timeout):
 				self.cf.draw()
 				self.win.flip()
-				keys = event.getKeys(keyList=self.validKeys)
-				if 'escape' in keys:
-					self.quit_experiment()
-				if 'space' in keys:
+				keys = self.get_keys(keyList=self.validKeys, clear=True)
+				key_names = [k.name for k in keys] if self.keyboard == "default" else keys
+				if "escape" in key_names:
+					#self.quit_experiment()
+					self.cleanup()
+					core.quit()
+				if "space" in key_names:
 					key_pressed = True
 				if clock.getTime() >= self.cf_max_duration:
 					timeout = True 
@@ -332,7 +363,7 @@ class Exp:
 		self.cf.stop()
 		self.cf.seek(0)
 		self.sounds['ag']['stim'].stop()
-		event.clearEvents()
+		self.clear_keys()
 
 		self.win.flip()
 		self.win2.flip()
@@ -444,7 +475,7 @@ class Exp:
 		if play_audio:
 			self.sounds['amelie_rediscovery_ag']['stim'].play()
 		
-		event.clearEvents()
+		self.clear_keys()
 		overall_timer = core.Clock()  # Timer to measure overall elapsed time
 		# Start overall timer
 		overall_timer.reset()
