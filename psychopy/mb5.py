@@ -2,6 +2,7 @@ from psychopy import prefs
 prefs.general['measureFrameRate'] = False
 prefs.hardware['disableVideoSyncTest'] = True
 from psychopy import core, visual, event
+import os
 import random
 import sys
 import copy
@@ -11,9 +12,8 @@ from useful_functions_python3 import getKeyboardResponse, showText, setAndPresen
 # from generateTrials import *
 from psychopy.hardware import keyboard
 
-
-from psychopy import logging
-logging.console.setLevel(logging.CRITICAL)
+#from psychopy import logging
+#logging.console.setLevel(logging.CRITICAL)
 
 expName='mb5'
 
@@ -175,12 +175,20 @@ class Exp:
 			if self.kb is not None:
 				if self.kb.getKeys(keyList=['escape'], clear=True):
 					self.cleanup()
-					core.quit()
+					#core.quit()
+					if self.keyboard == "default":
+						os._exit(0)
+					else:
+						core.quit()
 		else:
 			# Allows the experimenter to quit cleanly with esc from any active loop.
 			if 'escape' in event.getKeys(keyList=['escape']):
 				self.cleanup()
-				core.quit()
+				#core.quit()
+				if self.keyboard == "default":
+					os._exit(0)
+				else:
+					core.quit()
 
 	def quit_experiment(self):
 		#close windows
@@ -191,7 +199,11 @@ class Exp:
 		#explicitly close files
 		self.outputFile.close()
 		self.testOutputFile.close()
-		core.quit()
+		#core.quit()
+		if self.keyboard == "default":
+			os._exit(0)
+		else:
+			core.quit()
 
 	def wait_with_quit(self, duration):
 		# Replacement for core.wait() when we want esc to remain active.
@@ -218,7 +230,11 @@ class Exp:
 		if keys and keys[0] == 'escape':
 			#self.quit_experiment()
 			self.cleanup()
-			core.quit()
+			#core.quit()
+			if self.keyboard == "default":
+				os._exit(0)
+			else:
+				core.quit()
 	
 	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0.1):
 
@@ -275,7 +291,11 @@ class Exp:
 				if "escape" in key_names:
 					#self.quit_experiment()
 					self.cleanup()
-					core.quit()
+					#core.quit()
+					if self.keyboard == "default":
+						os._exit(0)
+					else:
+						core.quit()
 				if "space" in key_names:
 					key_pressed = True
 
@@ -352,7 +372,11 @@ class Exp:
 				if "escape" in key_names:
 					#self.quit_experiment()
 					self.cleanup()
-					core.quit()
+					#core.quit()
+					if self.keyboard == "default":
+						os._exit(0)
+					else:
+						core.quit()
 				if "space" in key_names:
 					key_pressed = True
 				if clock.getTime() >= self.cf_max_duration:
@@ -682,7 +706,12 @@ if __name__ == '__main__':
 	
 	#shut down experiment
 	exp.cleanup()
-	core.quit()
+	#core.quit()
+	if self.keyboard == "default":
+		os._exit(0)
+	else:
+		core.quit()
+	
 
 
 
