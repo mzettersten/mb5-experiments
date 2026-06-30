@@ -66,12 +66,14 @@ class Exp:
 		self.cf = visual.MovieStim(win=self.win,filename = self.cf_movie_path,units = "height",size=(None,0.4),loop=True,color="#808080")
 		self.cf_still=visual.ImageStim(self.win, 'stimuli/images/ag_no_audio_grey.png',units = "height",size=(0.7111112,0.4),mask=None,interpolate=True)
 		self.cf_still.setPos((0,0))
+		self.cf_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/ag_no_audio_grey_first_frame.mp4",units = "height",size=(None,0.4),loop=True)
 		self.cf_duration = .75
 		self.cf_max_duration = 5
 		self.ag_movie_path = "stimuli/movies/laughing_baby_no_audio_grey.mp4"
 		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,units = "height",size=(None,0.75),loop=True)
 		self.ag_still=visual.ImageStim(self.win, 'stimuli/images/laughing_baby_no_audio_grey.png',units = "height",size=(1.333334,0.75),mask=None,interpolate=True)
 		self.ag_still.setPos((0,0))
+		self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/laughing_baby_no_audio_grey_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
 		self.ag_movie_border = visual.Rect(win=self.win,units="height",size=(1.333334,0.75),pos=(0.0,0.0),lineWidth=10, lineColor = "#808080",fillColor=None)
 		self.ag_duration = 2
 		self.ag_max_duration = 10
@@ -177,7 +179,9 @@ class Exp:
 
 		#preload phase
 		#set first frame of video while video loads
-		self.ag_still.draw()
+		#self.ag_still.draw()
+		self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/ag_no_audio_grey_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
+		self.ag_placeholder.play()
 		self.ag_movie_border.autoDraw = True
 		self.win.flip()
 		core.wait(video_still_dur)
@@ -249,7 +253,9 @@ class Exp:
 		
 		#preload phase
 		#set first frame of video while video loads
-		self.cf_still.draw()
+		#self.cf_still.draw()
+		self.cf_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/ag_no_audio_grey_first_frame.mp4",units = "height",size=(None,0.4),loop=True)
+		self.cf_placeholder.play()
 		self.win.flip()
 		core.wait(video_still_dur)
 		#load movie
