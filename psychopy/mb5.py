@@ -2,7 +2,6 @@ from psychopy import prefs
 prefs.general['measureFrameRate'] = False
 prefs.hardware['disableVideoSyncTest'] = True
 from psychopy import core, visual, event
-import os
 import random
 import sys
 import copy
@@ -12,8 +11,8 @@ from useful_functions_python3 import getKeyboardResponse, showText, setAndPresen
 # from generateTrials import *
 from psychopy.hardware import keyboard
 
-#from psychopy import logging
-#logging.console.setLevel(logging.CRITICAL)
+from psychopy import logging
+logging.console.setLevel(logging.CRITICAL)
 
 expName='mb5'
 
@@ -47,8 +46,8 @@ class Exp:
 		self.win = visual.Window(fullscr=True,allowGUI=True, color="#808080", units='height',screen=int(runTimeVars['tv_screen']))
 		screenWidth = self.win.size[0]
 		screenHeight = self.win.size[1]
-		print(screenWidth)
-		print(screenHeight)
+		#print(screenWidth)
+		#print(screenHeight)
 		#create psychopy window for experimenter
 		self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=int(runTimeVars['exp_screen']))
 		self.win2.flip()
@@ -76,15 +75,12 @@ class Exp:
 		self.ag_movie_border = visual.Rect(win=self.win,units="height",size=(1.333334,0.75),pos=(0.0,0.0),lineWidth=10, lineColor = "#808080",fillColor=None)
 		self.ag_duration = 2
 		self.ag_max_duration = 10
-		#self.sounds =  loadFiles('stimuli/sounds','.wav','sound', win=self.win)
-
 		self.preFixationDelay = .75
 		self.postFixationDelay = 0
 
 		self.position = {'left': (-0.5,0), 'right': (0.5,0), 'center':(0,0)}
 		self.size = float(runTimeVars['image_size'])
 		self.inputDevice = "keyboard"
-		self.validResponses = {'z':'left','slash':'right'} #change to whatever keys you want to use
 		self.validKeys = ['space','escape']
 		self.method = runTimeVars['method']
 		self.fam_audio=runTimeVars['fam_audio']
@@ -140,70 +136,16 @@ class Exp:
 				pass
 			
 		print("cleanup done")
-		
-	def clear_keys(self):
-		if self.keyboard == "default":
-			self.kb.clearEvents()
-		else:
-			event.clearEvents()
-	
-	def get_keys(self, keyList=None, clear=True, timeStamped=False):
-		if self.keyboard == "default":
-			return self.kb.getKeys(
-				keyList=keyList,
-				clear=clear,
-				waitRelease=False
-				)
-		else:
-			return event.getKeys(
-				keyList=keyList,
-				timeStamped=timeStamped
-				)
-	
-	def wait_keys(self, keyList=None):
-		if self.keyboard == "default":
-			while True:
-				keys = self.kb.getKeys(keyList=keyList, clear=True, waitRelease=False)
-				if keys:
-					return [k.name for k in keys]
-				core.wait(0.01)
-		else:
-			return event.waitKeys(keyList=keyList)
 
 	def check_for_quit(self):
-		if self.keyboard == "default":
-			if self.kb is not None:
-				if self.kb.getKeys(keyList=['escape'], clear=True):
-					self.cleanup()
-					#core.quit()
-					if self.keyboard == "default":
-						os._exit(0)
-					else:
-						core.quit()
-		else:
-			# Allows the experimenter to quit cleanly with esc from any active loop.
-			if 'escape' in event.getKeys(keyList=['escape']):
-				self.cleanup()
-				#core.quit()
-				if self.keyboard == "default":
-					os._exit(0)
-				else:
-					core.quit()
-
-	def quit_experiment(self):
-		#close windows
-		self.win.close()
-		self.win2.close()
-		if self.num_screens == 3:
-			self.win3.close()
-		#explicitly close files
-		self.outputFile.close()
-		self.testOutputFile.close()
-		#core.quit()
-		if self.keyboard == "default":
-			os._exit(0)
-		else:
+		# Allows the experimenter to quit cleanly with esc from any active loop.
+		if 'escape' in event.getKeys(keyList=['escape']):
+			self.cleanup()
 			core.quit()
+		if self.kb is not None:
+			if self.kb.getKeys(keyList=['escape'], clear=True):
+				self.cleanup()
+				core.quit()
 
 	def wait_with_quit(self, duration):
 		# Replacement for core.wait() when we want esc to remain active.
@@ -226,15 +168,10 @@ class Exp:
 		image.setPos((0,0))
 		image.draw()
 		self.win.flip()
-		keys = self.wait_keys(keyList=['q','escape'])
+		keys = event.waitKeys(keyList=['q','escape'])
 		if keys and keys[0] == 'escape':
-			#self.quit_experiment()
 			self.cleanup()
-			#core.quit()
-			if self.keyboard == "default":
-				os._exit(0)
-			else:
-				core.quit()
+			core.quit()
 	
 	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0.1):
 
@@ -245,7 +182,6 @@ class Exp:
 		self.win.flip()
 		core.wait(video_still_dur)
 		#load movie
-		print(self.ag_movie_path)
 		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,units = "height",size=(1.333334,0.75),loop=True)
 		
 		########build and present text screen for hand coding######
@@ -266,7 +202,7 @@ class Exp:
 		if self.num_screens == 3:
 			self.win3.flip()
 
-		self.clear_keys()
+		event.clearEvents()
 		# present AG
 		clock = core.Clock()  # Create a clock to track time
 		clock.reset()
@@ -286,22 +222,16 @@ class Exp:
 				#self.ag.play()
 				self.ag.draw()
 				self.win.flip()
-				keys = self.get_keys(keyList=self.validKeys, clear=True)
-				key_names = [k.name for k in keys] if self.keyboard == "default" else keys
-				if "escape" in key_names:
-					#self.quit_experiment()
+				keys = event.getKeys(keyList=self.validKeys)
+				if 'escape' in keys:
 					self.cleanup()
-					#core.quit()
-					if self.keyboard == "default":
-						os._exit(0)
-					else:
-						core.quit()
-				if "space" in key_names:
+					core.quit()
+				if 'space' in keys:
 					key_pressed = True
 
 				if clock.getTime() >= self.ag_max_duration:
 					timeout = True 
-					print(clock.getTime())
+					#print(clock.getTime())
 		
 		#stop the movie
 		self.ag.stop()
@@ -348,7 +278,7 @@ class Exp:
 		if self.num_screens == 3:
 			self.win3.flip()
 
-		self.clear_keys()
+		event.clearEvents()
 		# present central fixation stimulus
 		clock = core.Clock()  # Create a clock to track time
 		clock.reset()
@@ -367,27 +297,21 @@ class Exp:
 			while (not key_pressed) and (not timeout):
 				self.cf.draw()
 				self.win.flip()
-				keys = self.get_keys(keyList=self.validKeys, clear=True)
-				key_names = [k.name for k in keys] if self.keyboard == "default" else keys
-				if "escape" in key_names:
-					#self.quit_experiment()
+				keys = event.getKeys(keyList=self.validKeys)
+				if 'escape' in keys:
 					self.cleanup()
-					#core.quit()
-					if self.keyboard == "default":
-						os._exit(0)
-					else:
-						core.quit()
-				if "space" in key_names:
+					core.quit()
+				if 'space' in keys:
 					key_pressed = True
 				if clock.getTime() >= self.cf_max_duration:
 					timeout = True 
-					print(clock.getTime())
+					#print(clock.getTime())
 		
 		#stop the movie
 		self.cf.stop()
 		self.cf.seek(0)
 		self.sounds['ag']['stim'].stop()
-		self.clear_keys()
+		event.clearEvents()
 
 		self.win.flip()
 		self.win2.flip()
@@ -489,7 +413,7 @@ class Exp:
 		#show familiarization
 		#show size
 		self.pics[curTrial['familiar_stimulus']]['stim'].size = self.size
-		print(self.pics[curTrial['familiar_stimulus']]['stim'].size)
+		#print(self.pics[curTrial['familiar_stimulus']]['stim'].size)
 		#no longer showing square backgrounds - toggle to bring back white background
 		#self.create_placeholder(pos=self.position['center'],size=self.size+0.01).draw()
 		self.pics[curTrial['familiar_stimulus']]['stim'].pos = self.position['center']
@@ -499,7 +423,7 @@ class Exp:
 		if play_audio:
 			self.sounds['amelie_rediscovery_ag']['stim'].play()
 		
-		self.clear_keys()
+		event.clearEvents()
 		overall_timer = core.Clock()  # Timer to measure overall elapsed time
 		# Start overall timer
 		overall_timer.reset()
@@ -510,6 +434,10 @@ class Exp:
 
 		self.win.flip()
 
+		#print out some key info to terminal/ console in case useful
+		print("Trial Number:")
+		print(str(curTrial["trial_number"]))
+		print("Familiarization Time:")
 		print(int(curTrial['familiarization_time']))
 
 		#no gaze contingency
@@ -538,7 +466,7 @@ class Exp:
 				while (count_down_timer.getTime() > 0 or not looking) and overall_timer.getTime()<int(curTrial['familiarization_time_timeout']):
 					self.check_for_quit()
 					space_down = self.kb.getState('space') #get the current state of the space bar
-					print(space_down)
+					#print(space_down) #IMPORTANT: only uncomment this when debugging - logging these print statements can lead to lag on closing experiment in PsychoPy
 
 					#what to do if the infant previously wasn't looking and now is registered as looking
 					if space_down and not looking:
@@ -548,8 +476,8 @@ class Exp:
 						count_down_timer = core.CountdownTimer(time_left)
 						#add a new keypress to the keypress list
 						keypress_list.append(('space_down', overall_timer.getTime())) # store timing of keypresses relative to overall time
-						print(looking)
-						print(time_left)
+						#print(looking)
+						#print(time_left)
 						looks += 1 #add a new look to the look counter
 
 						#looking: visual feedback on experimenter monitor
@@ -567,8 +495,8 @@ class Exp:
 						total_held_time += cur_look_length
 						time_left = time_left - cur_look_length #countdown timer to use when the next look begins
 						keypress_list.append(('space_up', overall_timer.getTime())) # store timing of keypresses relative to overall time
-						print(looking)
-						print(time_left)
+						#print(looking)
+						#print(time_left)
 
 						#look away: visual feedback on experimenter monitor
 						square_skeleton.color = "red"
@@ -592,7 +520,7 @@ class Exp:
 					keypress_list.extend(responded)
 					if responded:
 						response = responded[0]
-						print(response)
+						#print(response)
 					
 					#if the the right key is pressed (onscreen look registered) 
 					# and the infant was previously NOT looking
@@ -601,8 +529,8 @@ class Exp:
 						looking = True
 						#update countdown to reflect current time left
 						count_down_timer = core.CountdownTimer(time_left)
-						print(looking)
-						print(time_left)
+						#print(looking)
+						#print(time_left)
 						looks += 1
 
 						#looking: visual feedback on experimenter monitor
@@ -619,8 +547,8 @@ class Exp:
 						#update timing and reset time left
 						total_held_time += cur_look_length
 						time_left = time_left - cur_look_length
-						print(looking)
-						print(time_left)
+						#print(looking)
+						#print(time_left)
 
 						#look away: visual feedback on experimenter monitor
 						square_skeleton.color = "red"
@@ -638,7 +566,7 @@ class Exp:
 			if looking:
 				#being extra careful here, to also resolve small discrepancies between clock time and time left
 				cur_look = min(clock.getTime(), max(0,time_left))
-				print(cur_look)
+				#print(cur_look)
 				look_list.append(cur_look)
 				#total_held_time += time_left
 				total_held_time += cur_look
@@ -657,9 +585,9 @@ class Exp:
 		# Get overall elapsed time
 		elapsed_time = overall_timer.getTime()
 
-		print(total_held_time)
-		print(looks)
-		print(elapsed_time)
+		#print(total_held_time)
+		#print(looks)
+		#print(elapsed_time)
 
 		#write data to output file
 		curTrial['header']=self.header
@@ -706,15 +634,4 @@ if __name__ == '__main__':
 	
 	#shut down experiment
 	exp.cleanup()
-	#core.quit()
-	if self.keyboard == "default":
-		os._exit(0)
-	else:
-		core.quit()
-	
-
-
-
-
-
-
+	core.quit()
