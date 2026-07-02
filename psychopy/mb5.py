@@ -46,8 +46,8 @@ class Exp:
 		self.win = visual.Window(fullscr=True,allowGUI=True, color="#808080", units='height',screen=int(runTimeVars['tv_screen']))
 		screenWidth = self.win.size[0]
 		screenHeight = self.win.size[1]
-		#print(screenWidth)
-		#print(screenHeight)
+		print(screenWidth)
+		print(screenHeight)
 		#create psychopy window for experimenter
 		self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=int(runTimeVars['exp_screen']))
 		self.win2.flip()
@@ -60,8 +60,10 @@ class Exp:
 
 		#visual.TextStim(win=self.win,text="Loading stimuli...").draw()
 		#self.win.flip()
+		#load images and sounds
 		self.pics =  loadFiles('stimuli/images','.png','image', win=self.win)
 		self.sounds = loadFiles('stimuli/audio','.wav','sound', win=self.win)
+		#create central fixation related variables
 		self.cf_movie_path = "stimuli/movies/ag_no_audio_grey.mp4"
 		self.cf = visual.MovieStim(win=self.win,filename = self.cf_movie_path,units = "height",size=(None,0.4),loop=True,color="#808080")
 		self.cf_still=visual.ImageStim(self.win, 'stimuli/images/ag_no_audio_grey.png',units = "height",size=(0.7111112,0.4),mask=None,interpolate=True)
@@ -69,6 +71,7 @@ class Exp:
 		self.cf_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/ag_no_audio_grey_first_frame.mp4",units = "height",size=(None,0.4),loop=True)
 		self.cf_duration = .75
 		self.cf_max_duration = 5
+		#create attention getter related variables
 		self.ag_movie_path = "stimuli/movies/laughing_baby_no_audio_grey.mp4"
 		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,units = "height",size=(None,0.75),loop=True)
 		self.ag_still=visual.ImageStim(self.win, 'stimuli/images/laughing_baby_no_audio_grey.png',units = "height",size=(1.333334,0.75),mask=None,interpolate=True)
@@ -77,9 +80,8 @@ class Exp:
 		self.ag_movie_border = visual.Rect(win=self.win,units="height",size=(1.333334,0.75),pos=(0.0,0.0),lineWidth=10, lineColor = "#808080",fillColor=None)
 		self.ag_duration = 2
 		self.ag_max_duration = 10
-		self.preFixationDelay = .75
-		self.postFixationDelay = 0
 
+		#other useful variables
 		self.position = {'left': (-0.5,0), 'right': (0.5,0), 'center':(0,0)}
 		self.size = float(runTimeVars['image_size'])
 		self.inputDevice = "keyboard"
@@ -87,13 +89,15 @@ class Exp:
 		self.method = runTimeVars['method']
 		self.fam_audio=runTimeVars['fam_audio']
 		self.keyboard = runTimeVars['keyboard']
+		self.runtime_vars_list = [runTimeVars[runtime_var_name] for runtime_var_name in runTimeVarOrder]
+
+		#create keyboard object if using default kb
 		if self.keyboard == "default":
 			self.kb = keyboard.Keyboard()
 		else:
 			self.kb = None
 
-		self.runtime_vars_list = [runTimeVars[runtime_var_name] for runtime_var_name in runTimeVarOrder]
-		
+		#old instruction message
 		self.instructions_text = "Welcome to the ManyBabies 5 demo!\n\nWhen you see the laughing baby, hit space to advance to the next trial.\n\nDuring familiarization, for contingent trials, press the right arrow key when the infant is looking to the screen and the left arrow key when they look away. Otherwise, for fixed durations, the experiment will proceed at the end of the familiarization time.\n\nAfter the familiarization, a central fixation will appear. Hit the space bar to advance (once the infant is looking). The second central fixation in between the two test trial phases advances automatically.\n\nHit q to start the experiment! Press esc at any time to quit."
 
 	def cleanup(self):
@@ -164,6 +168,8 @@ class Exp:
 		return visual.Rect(win=self.win,size=size, pos=pos, lineColor=lineColor, fillColor=fillColor, lineWidth=3)
 
 	def show_instructions(self,text):
+
+		## now just a procedure to present a starting image
 		#self.win.flip()
 		#visual.TextStim(win=self.win,text=text,color="white",height=40,pos=(0,0),wrapWidth=1000).draw()
 		image=visual.ImageStim(self.win, 'stimuli/images/bunnies.png',size=(None,1),mask=None,interpolate=True)
@@ -175,19 +181,31 @@ class Exp:
 			self.cleanup()
 			core.quit()
 	
-	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0.1):
+	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0, video_preload="movie"):
 
+		#parameters controlling presentation duration
+		cur_ag_duration = self.ag_duration
+		cur_ag_max_duration = self.ag_max_duration
+
+		overall_clock = core.Clock()
+		overall_clock.reset()
 		#preload phase
-		#set first frame of video while video loads
-		#self.ag_still.draw()
-		self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/ag_no_audio_grey_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
-		self.ag_placeholder.play()
-		self.ag_movie_border.autoDraw = True
-		self.win.flip()
-		core.wait(video_still_dur)
-		#load movie
-		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,units = "height",size=(1.333334,0.75),loop=True)
-		
+		if video_preload != "none":
+			if video_preload == "image":
+				#set first frame of video while video loads
+				self.ag_still.draw()
+			elif video_preload == "movie":
+				self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/ag_no_audio_grey_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
+				self.ag_placeholder.play()
+			self.win.flip()
+			core.wait(video_still_dur)
+			#load movie
+			self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,units = "height",size=(1.333334,0.75),loop=True)
+			preload_time = overall_clock.getTime()
+			cur_ag_duration = cur_ag_duration - preload_time
+			cur_ag_max_duration = cur_ag_max_duration - preload_time
+		print(f"preload for {preload_time:.6f} s")
+
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
 		trialInfo+="Participant: " + self.runtime_vars_list[0] +"\n"
@@ -205,16 +223,16 @@ class Exp:
 		self.win2.flip()
 		if self.num_screens == 3:
 			self.win3.flip()
-
 		event.clearEvents()
 		# present AG
 		clock = core.Clock()  # Create a clock to track time
 		clock.reset()
 		# Play the movie
+		self.ag_movie_border.autoDraw = True
 		self.ag.play()
 		self.sounds['laughing_baby']['stim'].play()
 		if not gaze_contingent:
-			while clock.getTime() < self.ag_duration:  
+			while clock.getTime() < self.cur_ag_duration:  
 				self.check_for_quit()
 				#self.ag.play()
 				self.ag.draw()
@@ -233,33 +251,49 @@ class Exp:
 				if 'space' in keys:
 					key_pressed = True
 
-				if clock.getTime() >= self.ag_max_duration:
+				if clock.getTime() >= cur_ag_max_duration:
 					timeout = True 
 					#print(clock.getTime())
 		
+		print(f"initiate stop after {clock.getTime():.6f} s")
 		#stop the movie
 		self.ag.stop()
 		self.ag.seek(0)
 		self.sounds['laughing_baby']['stim'].stop()
 		self.ag_movie_border.autoDraw = False
 
+		print(f"Movie played for {clock.getTime():.6f} s")
+		print(f"Trial played for {overall_clock.getTime():.6f} s")
 
 		self.win.flip()
 		self.win2.flip()
 		if self.num_screens == 3:
 			self.win3.flip()
 
-	def show_cf(self,curTrial,gaze_contingent=False,video_still_dur = 0.1):
+	def show_cf(self,curTrial,gaze_contingent=False,video_still_dur = 0, video_preload = "movie"):
 		
+		#parameters controlling presentation duration
+		cur_cf_duration = self.cf_duration
+		cur_cf_max_duration = self.cf_max_duration
+
+		overall_clock = core.Clock()
+		overall_clock.reset()
 		#preload phase
-		#set first frame of video while video loads
-		#self.cf_still.draw()
-		self.cf_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/ag_no_audio_grey_first_frame.mp4",units = "height",size=(None,0.4),loop=True)
-		self.cf_placeholder.play()
-		self.win.flip()
-		core.wait(video_still_dur)
-		#load movie
-		self.cf = visual.MovieStim(win=self.win,filename = self.cf_movie_path,units = "height",size=(0.7111112,0.4),loop=True)
+		if video_preload != "none":
+			if video_preload == "image":
+				#set first frame of video while video loads
+				self.cf_still.draw()
+			elif video_preload == "movie":
+				self.cf_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/ag_no_audio_grey_first_frame.mp4",units = "height",size=(None,0.4),loop=True)
+				self.cf_placeholder.play()
+			self.win.flip()
+			core.wait(video_still_dur)
+			#load movie
+			self.cf = visual.MovieStim(win=self.win,filename = self.cf_movie_path,units = "height",size=(0.7111112,0.4),loop=True)
+			preload_time = overall_clock.getTime()
+			cur_cf_duration = cur_cf_duration - preload_time
+			cur_cf_max_duration = cur_cf_max_duration - preload_time
+		print(f"preload for {overall_clock.getTime():.6f} s")
 
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
@@ -293,7 +327,7 @@ class Exp:
 		self.sounds['ag']['stim'].play()
 		if not gaze_contingent:
 			#subtract any time waiting to load the video
-			while clock.getTime() < (self.cf_duration-video_still_dur):  
+			while clock.getTime() < (cur_cf_duration):  
 				self.check_for_quit()
 				self.cf.draw()
 				self.win.flip()
@@ -309,15 +343,19 @@ class Exp:
 					core.quit()
 				if 'space' in keys:
 					key_pressed = True
-				if clock.getTime() >= self.cf_max_duration:
+				if clock.getTime() >= cur_cf_max_duration:
 					timeout = True 
 					#print(clock.getTime())
-		
+
+		print(f"initiate stop after {clock.getTime():.6f} s")
 		#stop the movie
 		self.cf.stop()
 		self.cf.seek(0)
 		self.sounds['ag']['stim'].stop()
 		event.clearEvents()
+
+		print(f"Movie played for {clock.getTime():.6f} s")
+		print(f"Trial played for {overall_clock.getTime():.6f} s")
 
 		self.win.flip()
 		self.win2.flip()
