@@ -204,7 +204,7 @@ class Exp:
 			preload_time = overall_clock.getTime()
 			cur_ag_duration = cur_ag_duration - preload_time
 			cur_ag_max_duration = cur_ag_max_duration - preload_time
-		print(f"preload for {preload_time:.6f} s")
+			print(f"preload for {preload_time:.6f} s")
 
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
@@ -293,7 +293,7 @@ class Exp:
 			preload_time = overall_clock.getTime()
 			cur_cf_duration = cur_cf_duration - preload_time
 			cur_cf_max_duration = cur_cf_max_duration - preload_time
-		print(f"preload for {overall_clock.getTime():.6f} s")
+			print(f"preload for {overall_clock.getTime():.6f} s")
 
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
