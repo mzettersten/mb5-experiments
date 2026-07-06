@@ -48,10 +48,11 @@ class Exp:
 		screenHeight = self.win.size[1]
 		print(screenWidth)
 		print(screenHeight)
-		#create psychopy window for experimenter
-		self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=int(runTimeVars['exp_screen']))
-		self.win2.flip()
 		self.num_screens = int(runTimeVars['num_screens'])
+		if self.num_screens > 1:
+			#create psychopy window for experimenter
+			self.win2 = visual.Window([800,800], color="black", allowGUI=True,units='pix',screen=int(runTimeVars['exp_screen']))
+			self.win2.flip()
 		if self.num_screens == 3:
 			#creating third screen
 			#create psychopy window for tracking trials
@@ -134,7 +135,7 @@ class Exp:
 			except Exception:
 				pass
 		
-		for w in [getattr(self, "win3", None), self.win2, self.win]:
+		for w in [getattr(self, "win3", None), getattr(self, "win2", None), self.win]:
 			try:
 				if w is not None:
 					w.close()
@@ -213,14 +214,16 @@ class Exp:
 		trialInfo+="Trial Number: " + str(curTrial["trial_number"]) + "\n"
 		trialInfo+="Phase: AG"
 
-		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
-		trialInfoStim.draw()
+		if self.num_screens > 1:
+			trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
+			trialInfoStim.draw()
+			ag_square_skeleton=visual.Rect(self.win2,lineColor="black",fillColor="yellow",size=[300,200])
+			ag_square_skeleton.draw()
 		if self.num_screens == 3:
 			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
 			trialInfoStim_3.draw()
-		ag_square_skeleton=visual.Rect(self.win2,lineColor="black",fillColor="yellow",size=[300,200])
-		ag_square_skeleton.draw()
-		self.win2.flip()
+		if self.num_screens > 1:
+			self.win2.flip()
 		if self.num_screens == 3:
 			self.win3.flip()
 		event.clearEvents()
@@ -266,7 +269,8 @@ class Exp:
 		print(f"Trial played for {overall_clock.getTime():.6f} s")
 
 		self.win.flip()
-		self.win2.flip()
+		if self.num_screens > 1:
+			self.win2.flip()
 		if self.num_screens == 3:
 			self.win3.flip()
 
@@ -306,15 +310,16 @@ class Exp:
 		else:
 			trialInfo+="Phase: CF"
 			stim_color="white"
-
-		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
-		trialInfoStim.draw()
+		if self.num_screens > 1:
+			trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
+			trialInfoStim.draw()
+			cf_skeleton=visual.Circle(self.win2,lineColor="black",fillColor=stim_color,size=[150,150])
+			cf_skeleton.draw()
 		if self.num_screens == 3:
 			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
 			trialInfoStim_3.draw()
-		cf_skeleton=visual.Circle(self.win2,lineColor="black",fillColor=stim_color,size=[150,150])
-		cf_skeleton.draw()
-		self.win2.flip()
+		if self.num_screens > 1:
+			self.win2.flip()
 		if self.num_screens == 3:
 			self.win3.flip()
 
@@ -358,7 +363,8 @@ class Exp:
 		print(f"Trial played for {overall_clock.getTime():.6f} s")
 
 		self.win.flip()
-		self.win2.flip()
+		if self.num_screens > 1:
+			self.win2.flip()
 		if self.num_screens == 3:
 			self.win3.flip()
 	
@@ -371,16 +377,19 @@ class Exp:
 		trialInfo+="Trial Number: " + str(curTrial["trial_number"]) + "\n"
 		trialInfo+="Phase: TEST"
 
-		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
-		trialInfoStim.draw()
+		if self.num_screens > 1:
+			trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
+			trialInfoStim.draw()
+			square_skeleton_1=visual.Rect(self.win2,lineColor="black",fillColor="blue",size=[150,150],pos=(-150,0))
+			square_skeleton_2=visual.Rect(self.win2,lineColor="black",fillColor="blue",size=[150,150],pos=(150,0))
+			square_skeleton_1.draw()
+			square_skeleton_2.draw()
 		if self.num_screens == 3:
 			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
 			trialInfoStim_3.draw()
-		square_skeleton_1=visual.Rect(self.win2,lineColor="black",fillColor="blue",size=[150,150],pos=(-150,0))
-		square_skeleton_2=visual.Rect(self.win2,lineColor="black",fillColor="blue",size=[150,150],pos=(150,0))
-		square_skeleton_1.draw()
-		square_skeleton_2.draw()
-		self.win2.flip()
+
+		if self.num_screens > 1:
+			self.win2.flip()
 		if self.num_screens == 3:
 			self.win3.flip()
 
@@ -417,7 +426,8 @@ class Exp:
 		self.wait_with_quit(test_time)
 
 		self.win.flip()
-		self.win2.flip()
+		if self.num_screens > 1:
+			self.win2.flip()
 		if self.num_screens == 3:
 			self.win3.flip()
 		
@@ -443,14 +453,16 @@ class Exp:
 		trialInfo+="Trial Number: " + str(curTrial["trial_number"]) + "\n"
 		trialInfo+="Phase: FAMILIAR"
 
-		trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
-		trialInfoStim.draw()
+		if self.num_screens > 1:
+			trialInfoStim=visual.TextStim(self.win2,text=trialInfo,color="white",height=30,wrapWidth=1200,pos=(0,-200))
+			trialInfoStim.draw()
+			square_skeleton=visual.Rect(self.win2,lineColor="black",fillColor="red",size=[150,150],pos=(0,0))
+			square_skeleton.draw()
 		if self.num_screens == 3:
 			trialInfoStim_3=visual.TextStim(self.win3,text=trialInfo,color="white",height=60,wrapWidth=1200,pos=(0,0))
 			trialInfoStim_3.draw()
-		square_skeleton=visual.Rect(self.win2,lineColor="black",fillColor="red",size=[150,150],pos=(0,0))
-		square_skeleton.draw()
-		self.win2.flip()
+		if self.num_screens > 1:
+			self.win2.flip()
 		if self.num_screens == 3:
 			self.win3.flip()
 
@@ -524,11 +536,13 @@ class Exp:
 						#print(time_left)
 						looks += 1 #add a new look to the look counter
 
-						#looking: visual feedback on experimenter monitor
-						square_skeleton.color = "green"
-						trialInfoStim.draw()
-						square_skeleton.draw()
-						self.win2.flip()
+
+						if self.num_screens > 1:
+							#looking: visual feedback on experimenter monitor
+							square_skeleton.color = "green"
+							trialInfoStim.draw()
+							square_skeleton.draw()
+							self.win2.flip()
 					
 					#if the infant was previously looking but now is no longer registered as looking
 					if not space_down and looking:
@@ -542,11 +556,13 @@ class Exp:
 						#print(looking)
 						#print(time_left)
 
-						#look away: visual feedback on experimenter monitor
-						square_skeleton.color = "red"
-						trialInfoStim.draw()
-						square_skeleton.draw()
-						self.win2.flip()
+
+						if self.num_screens > 1:
+							#look away: visual feedback on experimenter monitor
+							square_skeleton.color = "red"
+							trialInfoStim.draw()
+							square_skeleton.draw()
+							self.win2.flip()
 
 						#store last look
 						look_list.append(cur_look_length)
@@ -577,11 +593,13 @@ class Exp:
 						#print(time_left)
 						looks += 1
 
-						#looking: visual feedback on experimenter monitor
-						square_skeleton.color = "green"
-						trialInfoStim.draw()
-						square_skeleton.draw()
-						self.win2.flip()
+
+						if self.num_screens > 1:
+							#looking: visual feedback on experimenter monitor
+							square_skeleton.color = "green"
+							trialInfoStim.draw()
+							square_skeleton.draw()
+							self.win2.flip()
 					
 					#if the infant was previously looking and now as registered as looking away (left arrow pushed)
 					if responded and response[0]=="left" and looking:
@@ -594,11 +612,12 @@ class Exp:
 						#print(looking)
 						#print(time_left)
 
-						#look away: visual feedback on experimenter monitor
-						square_skeleton.color = "red"
-						trialInfoStim.draw()
-						square_skeleton.draw()
-						self.win2.flip()
+						if self.num_screens > 1:
+							#look away: visual feedback on experimenter monitor
+							square_skeleton.color = "red"
+							trialInfoStim.draw()
+							square_skeleton.draw()
+							self.win2.flip()
 
 						#store last look
 						look_list.append(cur_look_length)
@@ -622,7 +641,8 @@ class Exp:
 
 		# Clear screen
 		self.win.flip()
-		self.win2.flip()
+		if self.num_screens > 1:
+			self.win2.flip()
 		if self.num_screens == 3:
 			self.win3.flip()
 
