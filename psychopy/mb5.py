@@ -204,7 +204,7 @@ class Exp:
 			preload_time = overall_clock.getTime()
 			cur_ag_duration = cur_ag_duration - preload_time
 			cur_ag_max_duration = cur_ag_max_duration - preload_time
-			print(f"preload for {preload_time:.6f} s")
+			#print(f"preload for {preload_time:.6f} s")
 
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
@@ -257,15 +257,15 @@ class Exp:
 					timeout = True 
 					#print(clock.getTime())
 		
-		print(f"initiate stop after {clock.getTime():.6f} s")
+		#print(f"initiate stop after {clock.getTime():.6f} s")
 		#stop the movie
 		self.ag.stop()
 		self.ag.seek(0)
 		self.sounds['laughing_baby']['stim'].stop()
 		self.ag_movie_border.autoDraw = False
 
-		print(f"Movie played for {clock.getTime():.6f} s")
-		print(f"Trial played for {overall_clock.getTime():.6f} s")
+		#print(f"Movie played for {clock.getTime():.6f} s")
+		#print(f"Trial played for {overall_clock.getTime():.6f} s")
 
 		self.win.flip()
 		if self.num_screens > 1:
@@ -296,7 +296,7 @@ class Exp:
 			preload_time = overall_clock.getTime()
 			cur_cf_duration = cur_cf_duration - preload_time
 			cur_cf_max_duration = cur_cf_max_duration - preload_time
-			print(f"preload for {overall_clock.getTime():.6f} s")
+			#print(f"preload for {overall_clock.getTime():.6f} s")
 
 		########build and present text screen for hand coding######
 		trialInfo="Experiment: " + expName +"\n"
@@ -351,15 +351,15 @@ class Exp:
 					timeout = True 
 					#print(clock.getTime())
 
-		print(f"initiate stop after {clock.getTime():.6f} s")
+		#print(f"initiate stop after {clock.getTime():.6f} s")
 		#stop the movie
 		self.cf.stop()
 		self.cf.seek(0)
 		self.sounds['ag']['stim'].stop()
 		event.clearEvents()
 
-		print(f"Movie played for {clock.getTime():.6f} s")
-		print(f"Trial played for {overall_clock.getTime():.6f} s")
+		#print(f"Movie played for {clock.getTime():.6f} s")
+		#print(f"Trial played for {overall_clock.getTime():.6f} s")
 
 		self.win.flip()
 		if self.num_screens > 1:
