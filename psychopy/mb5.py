@@ -7,7 +7,7 @@ import sys
 import copy
 import socket
 import webbrowser as web
-from useful_functions_python3 import getKeyboardResponse, showText, setAndPresentStimulus, createDirectories, openOutputFile, printHeader, importTrialsWithHeader, calculateRectangularCoordinates, loadFiles, popupError, getRunTimeVars, evaluateLists, writeToFile
+from useful_functions_python3 import getKeyboardResponse, showText, setAndPresentStimulus, createDirectories, openOutputFile, openOutputFileCSV, printHeader, importTrialsWithHeader, calculateRectangularCoordinates, loadFiles, popupError, getRunTimeVars, evaluateLists, writeToFile, writeToFileCSV
 # from generateTrials import *
 from psychopy.hardware import keyboard
 
@@ -21,24 +21,24 @@ class Exp:
 	def __init__(self):
 
 		while True:
-			runTimeVarOrder = ['subjCode','trial_list','method','num_screens','tv_screen','exp_screen','side_screen','image_size','keyboard']
-			runTimeVars = getRunTimeVars({'subjCode':'', 'trial_list': 1, 'method':["contingent","fixed"],'keyboard': ["default","event"],'num_screens': 3,'tv_screen': 2,'exp_screen': 0,'side_screen': 1,'image_size': 0.65,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
-			if runTimeVars['subjCode']=='':
-				popupError('Subject code is blank')
+			runTimeVarOrder = ['participant','trial_list','method','num_screens','tv_screen','exp_screen','side_screen','image_size','keyboard']
+			runTimeVars = getRunTimeVars({'participant':'', 'trial_list': 1, 'method':["contingent","fixed"],'keyboard': ["default","event"],'num_screens': 3,'tv_screen': 2,'exp_screen': 0,'side_screen': 1,'image_size': 0.65,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
+			if runTimeVars['participant']=='':
+				popupError('Participant field is blank')
 			elif 'Choose' in list(runTimeVars.values()):
 				popupError('Need to choose a value from a dropdown box')
 			else:
 				try:
 					createDirectories(['data','trials'])
-					self.outputFile = openOutputFile('data/'+runTimeVars['subjCode'],expName+'_familiarization')
-					self.testOutputFile = openOutputFile('data/'+runTimeVars['subjCode'],expName+'_test')
+					self.outputFile = openOutputFileCSV('data/'+runTimeVars['participant'],expName+'_familiarization')
+					self.testOutputFile = openOutputFileCSV('data/'+runTimeVars['participant'],expName+'_test')
 					if self.outputFile and self.testOutputFile: #files were opened for writing
 						break
 				except:
 					popupError('Output file(s) could not be opened for writing')
 
 		# generateTrials(runTimeVars, runTimeVarOrder)
-		# (self.header,self.trialInfo) = importTrialsWithHeader('trials/'+runTimeVars['subjCode']+'_trials.csv', separator=',')
+		# (self.header,self.trialInfo) = importTrialsWithHeader('trials/'+runTimeVars['participant']+'_trials.csv', separator=',')
 		(self.header,self.trialInfo) = importTrialsWithHeader('trials/mb5_trial_list_'+str(runTimeVars['trial_list'])+'.csv', separator=',')
 		self.trialInfo = evaluateLists(self.trialInfo) #needed because the choices field is a list
 
@@ -442,7 +442,7 @@ class Exp:
 		test_responses.extend([
 			position_type,
 			elapsed_test_time])
-		writeToFile(self.testOutputFile,test_responses,writeNewLine=True,separator=",")
+		writeToFileCSV(self.testOutputFile,test_responses,writeNewLine=True)
 
 	def show_familiarization(self,curTrial, gaze_contingent=False, play_audio=True):
 
@@ -662,7 +662,7 @@ class Exp:
 			total_held_time,
 			elapsed_time,
 			looks,keypress_list,look_list])
-		writeToFile(self.outputFile,responses,writeNewLine=True,separator=",")
+		writeToFileCSV(self.outputFile,responses,writeNewLine=True)
 
 
 if __name__ == '__main__':
@@ -671,11 +671,13 @@ if __name__ == '__main__':
 	#file headers
 	train_header = exp.complete_header[:] #assign list by value since we're extending it below and don't want to change the orig header list
 	train_header.extend(('total_accumulated_looking_time','elapsed_time','number_of_looks','keypress_list','look_duration_list'))
-	printHeader(train_header,headerFile="familiarization_header.txt",separator=",")
+	#printHeader(train_header,headerFile="familiarization_header.txt",separator=",")
+	writeToFile(exp.outputFile,train_header,writeNewLine=True,separator=",")
 
 	test_header = exp.complete_header[:] 
 	test_header.extend(('position_type','elapsed_time'))
-	printHeader(test_header,headerFile="test_header.txt",separator=",")
+	#printHeader(test_header,headerFile="test_header.txt",separator=",")
+	writeToFile(exp.testOutputFile,test_header,writeNewLine=True,separator=",")
 
 	if exp.method == "contingent":
 		fam_contingent = True

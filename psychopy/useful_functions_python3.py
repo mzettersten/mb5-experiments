@@ -227,6 +227,17 @@ def openOutputFile(subjCode,suffix):
 			print('could not open file for writing')
 		return outputFile
 
+def openOutputFileCSV(subjCode,suffix):
+	if  os.path.isfile(subjCode+'_'+suffix+'.csv'):
+		popupError('Error: That subject code already exists')
+		return False
+	else:
+		try:
+			outputFile = open(subjCode+'_'+suffix+'.csv','w')
+		except:
+			print('could not open file for writing')
+		return outputFile
+
 def	calculateRectangularCoordinates(distanceX, distanceY, numCols, numRows,yOffset=0,xOffset=0):
 	coords = [[0,0]]*numCols*numRows
 	curObj=0
@@ -331,6 +342,19 @@ def getMouseResponse(mouse,duration=0):
 def writeToFile(fileHandle,trial,separator='\t', sync=True,writeNewLine=False):
 	"""Writes a trial (array of lists) to a previously opened file"""
 	line = separator.join([str(i) for i in trial]) #TABify
+	if writeNewLine:
+		line += '\n' #add a newline
+	try:
+		fileHandle.write(line)
+	except:
+		print('file is not open for writing')
+	if sync:
+			fileHandle.flush()
+			os.fsync(fileHandle)
+
+def writeToFileCSV(fileHandle,trial, sync=True,writeNewLine=False):
+	"""Writes a trial (array of lists) to a previously opened file"""
+	line = ",".join(['"{}"'] * len(trial)).format(*trial)
 	if writeNewLine:
 		line += '\n' #add a newline
 	try:
