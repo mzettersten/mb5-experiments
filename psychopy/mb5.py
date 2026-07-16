@@ -162,7 +162,6 @@ class Exp:
 			self.check_for_quit()
 			core.wait(.01)
 		
-	# may need to remove the /2 when running on the lab computer. Retina screen resolution issue..
 	def create_placeholder(self,lineColor="black", fillColor="white",size=None,pos=(0,0)):
 		if size is None:
 			size = (self.size + 0.01, self.size + 0.01)
@@ -170,7 +169,7 @@ class Exp:
 
 	def show_instructions(self,text):
 
-		## now just a procedure to present a starting image
+		## now just a procedure to present a starting image, no text instructions displayed
 		#self.win.flip()
 		#visual.TextStim(win=self.win,text=text,color="white",height=40,pos=(0,0),wrapWidth=1000).draw()
 		image=visual.ImageStim(self.win, 'stimuli/images/bunnies.png',size=(None,1),mask=None,interpolate=True)
