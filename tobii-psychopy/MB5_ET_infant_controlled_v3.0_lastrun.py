@@ -1,8 +1,8 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-This experiment was created using PsychoPy3 Experiment Builder (v2025.2.4),
-    on May 27, 2026, at 16:44
+This experiment was created using PsychoPy3 Experiment Builder (v2026.1.3),
+    on Fri 31 Jul 10:09:16 2026
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,7 +54,7 @@ deviceManager = hardware.DeviceManager()
 # ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 # store info about the experiment session
-psychopyVersion = '2025.2.4'
+psychopyVersion = '2026.1.3'
 expName = 'Test'  # from the Builder filename that created this script
 expVersion = ''
 # a list of functions to run when the experiment ends (starts off blank)
@@ -148,10 +148,12 @@ def setupData(expInfo, dataDir=None):
     thisExp = data.ExperimentHandler(
         name=expName, version=expVersion,
         extraInfo=expInfo, runtimeInfo=None,
-        originPath='C:\\Users\\SoCal Lab\\Documents\\experiments\\mb5_hub\\MB5_PsychoPy_Builder_SetUp\\MB5_ET_infant_controlled_v3.0_lastrun.py',
+        originPath='/Users/marcus/Documents/Python_Repos/mb5-experiments/tobii-psychopy/MB5_ET_infant_controlled_v3.0_lastrun.py',
         savePickle=True, saveWideText=True,
         dataFileName=dataDir + os.sep + filename, sortColumns='time'
     )
+    # store pilot mode in data file
+    thisExp.addData('piloting', PILOTING, priority=priority.LOW)
     thisExp.setPriority('thisRow.t', priority.CRITICAL)
     thisExp.setPriority('expName', priority.LOW)
     # return experiment handler
@@ -864,7 +866,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         method='sequential', 
         extraInfo=expInfo, 
         originPath=-1, 
-        trialList=data.importConditions(trial_file), 
+        trialList=data.importConditions(expInfo['order_number'] + ".csv"), 
         seed=None, 
         isTrials=True, 
     )
@@ -916,6 +918,10 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         baby_video.setAutoDraw(False)
         baby_video.stop()
         baby_video.seek(0)
+        # draw 1st frame and clear (attempt to solve black flash screen)
+        baby_video.draw()
+        win.clearBuffer()
+        
         # Reset Audio Stim
         baby_sound = sound.Sound(r'materials\\baby_sound.wav')
         baby_sound.setVolume(1.0)
@@ -1072,8 +1078,9 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         # Run 'End Routine' code from code_attention_check
         baby_video.stop()
         baby_sound.stop()
-        baby_video.seek(0)
-        baby_video.setAutoDraw(False)
+        # not sure this is needed
+        # baby_video.seek(0)
+        # baby_video.setAutoDraw(False)
         # the Routine "Laughing_Baby" was not non-slip safe, so reset the non-slip timer
         routineTimer.reset()
         
@@ -1342,6 +1349,11 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             central_fixation.setAutoDraw(False)
             central_fixation.stop()
             central_fixation.seek(0)
+            
+            # draw 1st frame and clear (attempt to solve black flash screen)
+            baby_video.draw()
+            win.clearBuffer()
+            
             # play sound
             attention_sound = sound.Sound(r'materials\\attention_sound.wav')
             attention_sound.setVolume(1.0)
@@ -1503,8 +1515,9 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             # Run 'End Routine' code from code_check_fixation
             central_fixation.stop()
             attention_sound.stop()
-            central_fixation.seek(0)
-            central_fixation.setAutoDraw(False)
+            # not sure this is needed
+            # baby_video.seek(0)
+            # baby_video.setAutoDraw(False)
             # the Routine "Central_Fixation" was not non-slip safe, so reset the non-slip timer
             routineTimer.reset()
             
@@ -1981,6 +1994,10 @@ def endExperiment(thisExp, win=None):
     win : psychopy.visual.Window
         Window for this experiment.
     """
+    # stop any playback components
+    if thisExp.currentRoutine is not None:
+        for comp in thisExp.currentRoutine.getPlaybackComponents():
+            comp.stop()
     if win is not None:
         # remove autodraw from all current components
         win.clearAutoDraw()
