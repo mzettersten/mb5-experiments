@@ -1,6 +1,6 @@
 # ManyBabies 5 — PsychoPy and Tobii Eye Tracking Set Up Instructions
 
-*2nd draft version — please message Florian (florian.bednarski@auckland.ac.nz) with any feedback, issues, or problems.*
+*2nd draft version — please message <insert name / contact> with any feedback, issues, or problems.*
 
 ## Required Equipment / Software
 
