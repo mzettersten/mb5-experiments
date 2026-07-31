@@ -166,6 +166,7 @@ def generate_trials(cur_seed=seed, num_labs=96):
     os.makedirs(trial_lists_root, exist_ok=True)
 
     lab_assignments = make_lab_assignments(num_labs)
+    trial_list_id = 1
 
     for lab_number, assignment in enumerate(lab_assignments, start=1):
         lab_name = f"lab{lab_number}"
@@ -196,8 +197,6 @@ def generate_trials(cur_seed=seed, num_labs=96):
         familiarization_time_sets = familiarization_time_sets_dict[cur_familiarization_time_set_name]
         print(cur_familiarization_time_set_name)
         print(familiarization_time_sets)
-
-        trial_list_id = 1
 
         for cur_fractal_set in fractal_sets: #MZ: only keeping here if we ever want to create multiple sets of fractals
             for cur_complexity_order in complexity_orders:
