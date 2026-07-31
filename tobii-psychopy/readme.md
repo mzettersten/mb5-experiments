@@ -22,13 +22,13 @@ Download all files from the link below and keep them in one folder on the machin
 <!-- TODO: Check this is still needed! 📁 [MB5 PsychoPy Builder Set Up — Google Drive](https://drive.google.com/drive/folders/   1MxtvPNrxcWdSX4aonC66vzK41BqXZl8a) -->
 
 ### Directory Structure
-
+---> update to final design!!!
 ```
 MB5_PsychoPy_Builder_SetUp
 ├── data/                     # eye tracking data will be stored here
-├── Stimuli/                  # store all Fractals and Fribbles stimuli here
+├── stimuli/images/                  # store all Fractals and Fribbles stimuli here
 ├── materials/                # store all other stimuli here (sounds, attention getters, etc.)
-├── randomization_lists/       # store the lists assigned to your lab here
+├── trials/       # store the lists assigned to your lab here
 └── MB5_infant_controlled.psyexp   # the PsychoPy file — open this in Builder view to run the experiment
 ```
 
@@ -54,16 +54,18 @@ Below are screenshots to help you set everything up in your lab.
 1. Open the `.psyexp` file in the PsychoPy Builder view.
 2. Make sure you have selected a working default speaker and turned up the volume.
 3. Click the green run button.
-4. In the pop-up window, enter the participant identification following your lab's SOP. In the box for randomization, enter the name of the CSV file for this participant. Your lab will receive a set of CSV files with randomization information — for each participant, select the corresponding file here.
+4. In the pop-up window, enter the participant identification following your lab's SOP. In the box for order_number, enter the name of the CSV file for this participant. Your lab will receive a set of CSV files with randomization information — for each participant, select the corresponding file here.
 
-![Participant setup dialog](set_up_imgs/participant_setup_dialog.jpeg)
+UPDATE SCREENSHOT
+
+<!-- TODO: ![Participant setup dialog](set_up_imgs/participant_setup_dialog.jpeg) -->
 
 The experiment should now start. There are no participant instructions — this design is infant-controlled:
 
 - If the infant does not look at the screen during familiarisation, the trial will continue based on a fixed time.
-- However, at the start of each trial and at each attention getter, the infant must look at the screen at least briefly. If no gaze point is detected at these steps, the trial will not continue.
+- However, at the start of each trial and at each attention getter, the infant must look at the screen at least briefly. If no gaze point is detected at these steps, the trial will not continue. --> update if we change this!!!
 
-Let the trial run through to completion. At the end, you will see the MB5 logo for a brief moment. Afterward, check the `data` folder for this participant's data — there should be an Excel file containing time series eye tracking data, with the participant identification information in the file name.
+Let the trial run through to completion. At the end, you will see the bunnies image for a brief moment. Afterward, check the `data` folder for this participant's data — there should be an Excel file containing time series eye tracking data, with the participant identification information in the file name.
 
 ## Finding Your Python Path
 
