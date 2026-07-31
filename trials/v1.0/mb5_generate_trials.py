@@ -115,7 +115,7 @@ def make_lab_assignments(num_labs):
     return assignments
 
 
-def generate_trials(cur_seed=seed, num_labs=24):
+def generate_trials(cur_seed=seed, num_labs=96):
     # define trial parameters
     #familiarization_time_sets = [[5, 10, 15], [10, 15, 5], [15, 5, 10]] #old, when we still had a finite list of fam permutations within a lab
     familiarization_time_sets_dict = {
