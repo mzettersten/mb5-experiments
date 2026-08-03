@@ -86,7 +86,8 @@ class Exp:
 		self.position = {'left': (-0.5,0), 'right': (0.5,0), 'center':(0,0)}
 		self.size = float(runTimeVars['image_size'])
 		self.inputDevice = "keyboard"
-		self.validKeys = ['space','escape']
+		self.validKeys = ['space','escape','esc']
+		self.validKeysWithPause = ['space','escape','esc','p']
 		self.method = runTimeVars['method']
 		self.fam_audio=runTimeVars['fam_audio']
 		self.keyboard = runTimeVars['keyboard']
@@ -226,9 +227,11 @@ class Exp:
 		if self.num_screens == 3:
 			self.win3.flip()
 		event.clearEvents()
+
 		# present AG
 		clock = core.Clock()  # Create a clock to track time
 		clock.reset()
+
 		# Play the movie
 		self.ag_movie_border.autoDraw = True
 		self.ag.play()
@@ -242,20 +245,59 @@ class Exp:
 		elif gaze_contingent:
 			key_pressed = False
 			timeout = False
+			paused = False
+
+			#define variables tracking pauses
+			number_of_ag_pauses = 0
+			total_ag_pause_time = 0
+			pause_start_time = None
+
 			while (not key_pressed) and (not timeout):
 				#self.ag.play()
 				self.ag.draw()
 				self.win.flip()
-				keys = event.getKeys(keyList=self.validKeys)
-				if 'escape' in keys:
+				keys = event.getKeys(keyList=self.validKeysWithPause)
+				if 'escape' in keys or 'esc' in keys:
 					self.cleanup()
 					core.quit()
+				# procedure for pausing the attention getter
+				if 'p' in keys:
+					if not paused:
+						# Pause at the current frame
+						self.ag.pause()
+						self.sounds['laughing_baby']['stim'].stop()
+						paused = True
+						pause_start_time = core.getTime()
+						number_of_ag_pauses += 1
+					else:
+						# Finish timing this pause
+						cur_pause_time = core.getTime() - pause_start_time
+						total_ag_pause_time += cur_pause_time
+						paused = False
+						pause_start_time = None
+						
+						# Stop and Restart movie and audio from the beginning
+						self.ag.stop()
+						self.ag.seek(0)
+						self.sounds['laughing_baby']['stim'].stop()
+						#restart
+						self.ag.play()
+						self.sounds['laughing_baby']['stim'].play()
+						
+						# Restart the maximum AG duration
+						clock.reset()
+
+				# press space bar to advance
 				if 'space' in keys:
 					key_pressed = True
 
-				if clock.getTime() >= cur_ag_max_duration:
+				if (not paused) and (clock.getTime() >= cur_ag_max_duration):
 					timeout = True 
 					#print(clock.getTime())
+		
+		#store pause information to be passed along to be stored in the familiarization data
+		curTrial['number_of_ag_pauses'] = number_of_ag_pauses
+		curTrial['total_ag_pause_time'] = total_ag_pause_time
 		
 		#print(f"initiate stop after {clock.getTime():.6f} s")
 		#stop the movie
@@ -342,7 +384,7 @@ class Exp:
 				self.cf.draw()
 				self.win.flip()
 				keys = event.getKeys(keyList=self.validKeys)
-				if 'escape' in keys:
+				if 'escape' in keys or 'esc' in keys:
 					self.cleanup()
 					core.quit()
 				if 'space' in keys:
@@ -660,7 +702,7 @@ class Exp:
 		responses.extend([
 			total_held_time,
 			elapsed_time,
-			looks,keypress_list,look_list])
+			looks,keypress_list,look_list,curTrial['number_of_ag_pauses'],curTrial['total_ag_pause_time']])
 		writeToFileCSV(self.outputFile,responses,writeNewLine=True)
 
 
@@ -669,7 +711,7 @@ if __name__ == '__main__':
 
 	#file headers
 	train_header = exp.complete_header[:] #assign list by value since we're extending it below and don't want to change the orig header list
-	train_header.extend(('total_accumulated_looking_time','elapsed_time','number_of_looks','keypress_list','look_duration_list'))
+	train_header.extend(('total_accumulated_looking_time','elapsed_time','number_of_looks','keypress_list','look_duration_list','number_of_ag_pauses','total_ag_pause_time'))
 	#printHeader(train_header,headerFile="familiarization_header.txt",separator=",")
 	writeToFile(exp.outputFile,train_header,writeNewLine=True,separator=",")
 
