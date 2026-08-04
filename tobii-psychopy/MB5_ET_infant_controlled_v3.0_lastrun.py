@@ -1,8 +1,8 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-This experiment was created using PsychoPy3 Experiment Builder (v2025.2.4),
-    on August 03, 2026, at 15:41
+This experiment was created using PsychoPy3 Experiment Builder (v2026.1.3),
+    on August 04, 2026, at 16:31
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,7 +54,7 @@ deviceManager = hardware.DeviceManager()
 # ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 # store info about the experiment session
-psychopyVersion = '2025.2.4'
+psychopyVersion = '2026.1.3'
 expName = 'Test'  # from the Builder filename that created this script
 expVersion = ''
 # a list of functions to run when the experiment ends (starts off blank)
@@ -148,10 +148,12 @@ def setupData(expInfo, dataDir=None):
     thisExp = data.ExperimentHandler(
         name=expName, version=expVersion,
         extraInfo=expInfo, runtimeInfo=None,
-        originPath='C:\\Users\\ellagaze25\\Desktop\\tobii-psychopy\\MB5_ET_infant_controlled_v3.0_lastrun.py',
+        originPath='C:\\Users\\SoCal Lab\\Desktop\\mb5-experiments\\tobii-psychopy\\MB5_ET_infant_controlled_v3.0_lastrun.py',
         savePickle=True, saveWideText=True,
         dataFileName=dataDir + os.sep + filename, sortColumns='time'
     )
+    # store pilot mode in data file
+    thisExp.addData('piloting', PILOTING, priority=priority.LOW)
     thisExp.setPriority('thisRow.t', priority.CRITICAL)
     thisExp.setPriority('expName', priority.LOW)
     # return experiment handler
@@ -215,7 +217,7 @@ def setupWindow(expInfo=None, win=None):
     if win is None:
         # if not given a window to setup, make one
         win = visual.Window(
-            size=_winSize, fullscr=_fullScr, screen=1,
+            size=_winSize, fullscr=_fullScr, screen=0,
             winType='pyglet', allowGUI=True, allowStencil=False,
             monitor='testMonitor', color=(0.0000, 0.0000, 0.0000), colorSpace='rgb',
             backgroundImage='', backgroundFit='none',
@@ -403,7 +405,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         win=win,
         name='start_image', 
         image='materials/bunnies.png', mask=None, anchor='center',
-        ori=0.0, pos=(0, 0), draggable=False, size=(0.5, 0.5),
+        ori=0.0, pos=(0, 0), draggable=False, size=(None, 1),
         color=[1,1,1], colorSpace='rgb', opacity=None,
         flipHoriz=False, flipVert=False,
         texRes=128.0, interpolate=True, depth=0.0)
@@ -574,7 +576,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         win=win,
         name='image', 
         image='materials/bunnies.png', mask=None, anchor='center',
-        ori=0.0, pos=(0, 0), draggable=False, size=(0.5, 0.5),
+        ori=0.0, pos=(0, 0), draggable=False, size=(1, 1),
         color=[1,1,1], colorSpace='rgb', opacity=None,
         flipHoriz=False, flipVert=False,
         texRes=128.0, interpolate=True, depth=0.0)
@@ -798,7 +800,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         Laughing_Baby.status = NOT_STARTED
         continueRoutine = True
         # update component parameters for each repeat
-        baby_video.setMovie('C:/Users/ellagaze25/Desktop/Baby Video Grey_re_encode.mp4')
+        baby_video.setMovie('materials/baby_video_grey.mp4')
         # Run 'Begin Routine' code from code_attention_check
         # ---------- BEGIN ROUTINE ----------
         trialClock = core.Clock()
@@ -2175,6 +2177,10 @@ def endExperiment(thisExp, win=None):
     win : psychopy.visual.Window
         Window for this experiment.
     """
+    # stop any playback components
+    if thisExp.currentRoutine is not None:
+        for comp in thisExp.currentRoutine.getPlaybackComponents():
+            comp.stop()
     if win is not None:
         # remove autodraw from all current components
         win.clearAutoDraw()
