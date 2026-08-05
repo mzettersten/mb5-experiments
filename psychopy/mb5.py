@@ -21,8 +21,8 @@ class Exp:
 	def __init__(self):
 
 		while True:
-			runTimeVarOrder = ['participant','trial_list','method','num_screens','tv_screen','exp_screen','side_screen','image_size','keyboard']
-			runTimeVars = getRunTimeVars({'participant':'', 'trial_list': 1, 'method':["contingent","fixed"],'keyboard': ["default","event"],'num_screens': 3,'tv_screen': 2,'exp_screen': 0,'side_screen': 1,'image_size': 0.65,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
+			runTimeVarOrder = ['participant','trial_list','method','num_screens','tv_screen','exp_screen','side_screen','image_size','lr_distance','keyboard','fam_audio']
+			runTimeVars = getRunTimeVars({'participant':'', 'trial_list': 1, 'method':["contingent","fixed"],'keyboard': ["default","event"],'num_screens': 3,'tv_screen': 2,'exp_screen': 0,'side_screen': 1,'image_size': 0.65,'lr_distance': 0.5,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
 			if runTimeVars['participant']=='':
 				popupError('Participant field is blank')
 			elif 'Choose' in list(runTimeVars.values()):
@@ -83,7 +83,8 @@ class Exp:
 		self.ag_max_duration = 10
 
 		#other useful variables
-		self.position = {'left': (-0.5,0), 'right': (0.5,0), 'center':(0,0)}
+		self.lr_distance = float(runTimeVars['lr_distance'])
+		self.position = {'left': (-self.lr_distance,0), 'right': (self.lr_distance,0), 'center':(0,0)}
 		self.size = float(runTimeVars['image_size'])
 		self.inputDevice = "keyboard"
 		self.validKeys = ['space','escape','esc']
