@@ -1,8 +1,8 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-This experiment was created using PsychoPy3 Experiment Builder (v2026.1.3),
-    on August 04, 2026, at 16:31
+This experiment was created using PsychoPy3 Experiment Builder (v2025.2.4),
+    on August 07, 2026, at 14:33
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,14 +54,14 @@ deviceManager = hardware.DeviceManager()
 # ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 # store info about the experiment session
-psychopyVersion = '2026.1.3'
+psychopyVersion = '2025.2.4'
 expName = 'Test'  # from the Builder filename that created this script
 expVersion = ''
 # a list of functions to run when the experiment ends (starts off blank)
 runAtExit = []
 # information about this experiment
 expInfo = {
-    'participant': f"{randint(0, 999999):06.0f}",
+    'participant': '',
     'order_number': '644',
     'date|hid': data.getDateStr(),
     'expName|hid': expName,
@@ -148,12 +148,10 @@ def setupData(expInfo, dataDir=None):
     thisExp = data.ExperimentHandler(
         name=expName, version=expVersion,
         extraInfo=expInfo, runtimeInfo=None,
-        originPath='C:\\Users\\SoCal Lab\\Desktop\\mb5-experiments\\tobii-psychopy\\MB5_ET_infant_controlled_v3.0_lastrun.py',
+        originPath='C:\\Users\\ellagaze25\\Desktop\\mb5-experiments-auckland\\tobii-psychopy\\MB5_ET_infant_controlled_v3.0_lastrun.py',
         savePickle=True, saveWideText=True,
         dataFileName=dataDir + os.sep + filename, sortColumns='time'
     )
-    # store pilot mode in data file
-    thisExp.addData('piloting', PILOTING, priority=priority.LOW)
     thisExp.setPriority('thisRow.t', priority.CRITICAL)
     thisExp.setPriority('expName', priority.LOW)
     # return experiment handler
@@ -217,7 +215,7 @@ def setupWindow(expInfo=None, win=None):
     if win is None:
         # if not given a window to setup, make one
         win = visual.Window(
-            size=_winSize, fullscr=_fullScr, screen=0,
+            size=_winSize, fullscr=_fullScr, screen=1,
             winType='pyglet', allowGUI=True, allowStencil=False,
             monitor='testMonitor', color=(0.0000, 0.0000, 0.0000), colorSpace='rgb',
             backgroundImage='', backgroundFit='none',
@@ -404,14 +402,13 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     start_image = visual.ImageStim(
         win=win,
         name='start_image', 
-        image='materials/bunnies.png', mask=None, anchor='center',
+        image='stimuli/images/bunnies.png', mask=None, anchor='center',
         ori=0.0, pos=(0, 0), draggable=False, size=(None, 1),
         color=[1,1,1], colorSpace='rgb', opacity=None,
         flipHoriz=False, flipVert=False,
         texRes=128.0, interpolate=True, depth=0.0)
     # Run 'Begin Experiment' code from Tobii_SDK_connect
     #set runtime variables
-    
     found_eyetrackers = tr.find_all_eyetrackers()
     if not found_eyetrackers:
         raise RuntimeError("No Tobii eye trackers found!")
@@ -489,16 +486,27 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     first_frame_baby_set_up = visual.ImageStim(
         win=win,
         name='first_frame_baby_set_up', 
-        image='materials/first_frame_baby.png', mask=None, anchor='center',
+        image='stimuli/images/first_frame_baby.png', mask=None, anchor='center',
         ori=0.0, pos=(0, 0), draggable=False, size=(1.3333, 0.75),
         color=[1,1,1], colorSpace='rgb', opacity=None,
         flipHoriz=False, flipVert=False,
         texRes=128.0, interpolate=True, depth=-4.0)
     
+    # --- Initialize components for Routine "Pause_Image" ---
+    pause_image_set = visual.ImageStim(
+        win=win,
+        name='pause_image_set', 
+        image='stimuli/images/bunnies.png', mask=None, anchor='center',
+        ori=0.0, pos=(0, 0), draggable=False, size=(None, 1),
+        color=[1,1,1], colorSpace='rgb', opacity=None,
+        flipHoriz=False, flipVert=False,
+        texRes=128.0, interpolate=True, depth=-1.0)
+    start_again_key = keyboard.Keyboard(deviceName='defaultKeyboard')
+    
     # --- Initialize components for Routine "Familiarization" ---
     ROI_Familiarization = visual.Rect(
         win=win, name='ROI_Familiarization',
-        width=(0.75, 0.75)[0], height=(0.75, 0.75)[1],
+        width=(0.65, 0.65)[0], height=(0.65, 0.65)[1],
         ori=0.0, pos=(0, 0), draggable=False, anchor='center',
         lineWidth=1.0,
         colorSpace='rgb', lineColor=(0.0000, 0.0000, 0.0000), fillColor=(0.0000, 0.0000, 0.0000),
@@ -507,10 +515,18 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         win=win,
         name='imgFam', 
         image='default.png', mask=None, anchor='center',
-        ori=0.0, pos=(0, 0), draggable=False, size=(0.75, 0.75),
+        ori=0.0, pos=(0, 0), draggable=False, size=(0.65, 0.65),
         color=[1,1,1], colorSpace='rgb', opacity=None,
         flipHoriz=False, flipVert=False,
         texRes=128.0, interpolate=True, depth=-1.0)
+    sound_fam = sound.Sound(
+        'A', 
+        secs=-1, 
+        stereo=True, 
+        hamming=True, 
+        speaker=None,    name='sound_fam'
+    )
+    sound_fam.setVolume(1.0)
     
     # --- Initialize components for Routine "Central_Fixation" ---
     central_fixation = visual.MovieStim(
@@ -523,33 +539,32 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     )
     sound_1 = sound.Sound(
         'A', 
-        secs=-1, 
+        secs=0.750, 
         stereo=True, 
         hamming=True, 
         speaker=None,    name='sound_1'
     )
     sound_1.setVolume(1.0)
-    key_resp_stop = keyboard.Keyboard(deviceName='defaultKeyboard')
     first_frame_fixation_set_up = visual.ImageStim(
         win=win,
         name='first_frame_fixation_set_up', 
-        image='materials/first_frame_attention.png', mask=None, anchor='center',
+        image='stimuli/images/first_frame_attention.png', mask=None, anchor='center',
         ori=0.0, pos=(0, 0), draggable=False, size=(0.7,0.4),
         color=[1,1,1], colorSpace='rgb', opacity=None,
         flipHoriz=False, flipVert=False,
-        texRes=128.0, interpolate=True, depth=-4.0)
+        texRes=128.0, interpolate=True, depth=-3.0)
     
     # --- Initialize components for Routine "Test_Period" ---
     ROI_right = visual.Rect(
         win=win, name='ROI_right',
-        width=(0.75, 0.75)[0], height=(0.75, 0.75)[1],
+        width=(0.65, 0.65)[0], height=(0.65, 0.65)[1],
         ori=0.0, pos=(0.8, 0), draggable=False, anchor='center-right',
         lineWidth=1.0,
         colorSpace='rgb', lineColor=(0.0000, 0.0000, 0.0000), fillColor=(0.0000, 0.0000, 0.0000),
         opacity=None, depth=0.0, interpolate=True)
     ROI_left = visual.Rect(
         win=win, name='ROI_left',
-        width=(0.75, 0.75)[0], height=(0.75, 0.75)[1],
+        width=(0.65, 0.65)[0], height=(0.65, 0.65)[1],
         ori=0.0, pos=(-0.8, 0), draggable=False, anchor='center-left',
         lineWidth=1.0,
         colorSpace='rgb', lineColor=(0.0000, 0.0000, 0.0000), fillColor=(0.0000, 0.0000, 0.0000),
@@ -558,7 +573,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         win=win,
         name='imgLeft', 
         image=None, mask=None, anchor='center-left',
-        ori=0.0, pos=(-0.8, 0), draggable=False, size=(0.75, 0.75),
+        ori=0.0, pos=(-0.8, 0), draggable=False, size=(0.65, 0.65),
         color=[1,1,1], colorSpace='rgb', opacity=None,
         flipHoriz=False, flipVert=False,
         texRes=128.0, interpolate=True, depth=-2.0)
@@ -566,7 +581,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         win=win,
         name='imgRight', 
         image=None, mask=None, anchor='center-right',
-        ori=0.0, pos=(0.8, 0), draggable=False, size=(0.75, 0.75),
+        ori=0.0, pos=(0.8, 0), draggable=False, size=(0.65, 0.65),
         color=[1,1,1], colorSpace='rgb', opacity=None,
         flipHoriz=False, flipVert=False,
         texRes=128.0, interpolate=True, depth=-3.0)
@@ -575,8 +590,8 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     image = visual.ImageStim(
         win=win,
         name='image', 
-        image='materials/bunnies.png', mask=None, anchor='center',
-        ori=0.0, pos=(0, 0), draggable=False, size=(1, 1),
+        image='stimuli/images/bunnies.png', mask=None, anchor='center',
+        ori=0.0, pos=(0, 0), draggable=False, size=(None, 1),
         color=[1,1,1], colorSpace='rgb', opacity=None,
         flipHoriz=False, flipVert=False,
         texRes=128.0, interpolate=True, depth=0.0)
@@ -791,324 +806,529 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             for paramName in thisTrialLoop:
                 globals()[paramName] = thisTrialLoop[paramName]
         
-        # --- Prepare to start Routine "Laughing_Baby" ---
-        # create an object to store info about Routine Laughing_Baby
-        Laughing_Baby = data.Routine(
-            name='Laughing_Baby',
-            components=[baby_video, key_resp_continue, baby_sound, first_frame_baby_set_up],
+        # set up handler to look after randomisation of conditions etc
+        pause_loop = data.TrialHandler2(
+            name='pause_loop',
+            nReps=999, 
+            method='sequential', 
+            extraInfo=expInfo, 
+            originPath=-1, 
+            trialList=[None], 
+            seed=None, 
+            isTrials=True, 
         )
-        Laughing_Baby.status = NOT_STARTED
-        continueRoutine = True
-        # update component parameters for each repeat
-        baby_video.setMovie('materials/baby_video_grey.mp4')
-        # Run 'Begin Routine' code from code_attention_check
-        # ---------- BEGIN ROUTINE ----------
-        trialClock = core.Clock()
-        roiClock = core.Clock()
-        #videoStarted = False
-        #videoStartTime = None
-        gazeTime = 0
-        gazeInROI = False
-        continueRoutine = True
-        sampleIndex = 0
+        thisExp.addLoop(pause_loop)  # add the loop to the experiment
+        thisPause_loop = pause_loop.trialList[0]  # so we can initialise stimuli with some values
+        # abbreviate parameter names if possible (e.g. rgb = thisPause_loop.rgb)
+        if thisPause_loop != None:
+            for paramName in thisPause_loop:
+                globals()[paramName] = thisPause_loop[paramName]
+        if thisSession is not None:
+            # if running in a Session with a Liaison client, send data up to now
+            thisSession.sendExperimentData()
         
-        ## Load Video Stim
-        #videoStarted = False
-        #
-        ## Reset Audio Stim
-        #baby_sound = sound.Sound(r'materials\\baby_sound.wav')
-        #baby_sound.setVolume(1.0)
-        #soundPlayed = False
-        
-        # Get aspect ratio
-        aspect = win.size[0] / win.size[1]
-        
-        # Define ROI
-        x0 = -aspect / 2
-        x1 =  aspect / 2
-        y0 = -0.5
-        y1 =  0.5
-        
-        print('Attention check started')
-        # create starting attributes for key_resp_continue
-        key_resp_continue.keys = []
-        key_resp_continue.rt = []
-        _key_resp_continue_allKeys = []
-        baby_sound.setSound('materials/baby_sound.wav', secs=10, hamming=True)
-        baby_sound.setVolume(1.0, log=False)
-        baby_sound.seek(0)
-        # store start times for Laughing_Baby
-        Laughing_Baby.tStartRefresh = win.getFutureFlipTime(clock=globalClock)
-        Laughing_Baby.tStart = globalClock.getTime(format='float')
-        Laughing_Baby.status = STARTED
-        thisExp.addData('Laughing_Baby.started', Laughing_Baby.tStart)
-        Laughing_Baby.maxDuration = None
-        # keep track of which components have finished
-        Laughing_BabyComponents = Laughing_Baby.components
-        for thisComponent in Laughing_Baby.components:
-            thisComponent.tStart = None
-            thisComponent.tStop = None
-            thisComponent.tStartRefresh = None
-            thisComponent.tStopRefresh = None
-            if hasattr(thisComponent, 'status'):
-                thisComponent.status = NOT_STARTED
-        # reset timers
-        t = 0
-        _timeToFirstFrame = win.getFutureFlipTime(clock="now")
-        frameN = -1
-        
-        # --- Run Routine "Laughing_Baby" ---
-        thisExp.currentRoutine = Laughing_Baby
-        Laughing_Baby.forceEnded = routineForceEnded = not continueRoutine
-        while continueRoutine:
-            # if trial has changed, end Routine now
-            if hasattr(thisTrialLoop, 'status') and thisTrialLoop.status == STOPPING:
-                continueRoutine = False
-            # get current time
-            t = routineTimer.getTime()
-            tThisFlip = win.getFutureFlipTime(clock=routineTimer)
-            tThisFlipGlobal = win.getFutureFlipTime(clock=None)
-            frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
-            # update/draw components on each frame
+        for thisPause_loop in pause_loop:
+            pause_loop.status = STARTED
+            if hasattr(thisPause_loop, 'status'):
+                thisPause_loop.status = STARTED
+            currentLoop = pause_loop
+            thisExp.timestampOnFlip(win, 'thisRow.t', format=globalClock.format)
+            if thisSession is not None:
+                # if running in a Session with a Liaison client, send data up to now
+                thisSession.sendExperimentData()
+            # abbreviate parameter names if possible (e.g. rgb = thisPause_loop.rgb)
+            if thisPause_loop != None:
+                for paramName in thisPause_loop:
+                    globals()[paramName] = thisPause_loop[paramName]
             
-            # *baby_video* updates
+            # --- Prepare to start Routine "Laughing_Baby" ---
+            # create an object to store info about Routine Laughing_Baby
+            Laughing_Baby = data.Routine(
+                name='Laughing_Baby',
+                components=[baby_video, key_resp_continue, baby_sound, first_frame_baby_set_up],
+            )
+            Laughing_Baby.status = NOT_STARTED
+            continueRoutine = True
+            # update component parameters for each repeat
+            baby_video.setMovie('stimuli/movies/laughing_baby_no_audio_grey.mp4')
+            # Run 'Begin Routine' code from code_laughing_baby
+            # ---------- BEGIN ROUTINE ----------
+            trialClock = core.Clock()
+            roiClock = core.Clock()
+            trialTime = 0
+            gazeInROI = False
+            continueRoutine = True
+            sampleIndex = 0
             
-            # if baby_video is starting this frame...
-            if baby_video.status == NOT_STARTED and tThisFlip >= 0.5-frameTolerance:
-                # keep track of start time/frame for later
-                baby_video.frameNStart = frameN  # exact frame index
-                baby_video.tStart = t  # local t and not account for scr refresh
-                baby_video.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(baby_video, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'baby_video.started')
-                # update status
-                baby_video.status = STARTED
-                baby_video.setAutoDraw(True)
-                baby_video.play()
+            # Get aspect ratio
+            aspect = win.size[0] / win.size[1]
             
-            # if baby_video is stopping this frame...
-            if baby_video.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > baby_video.tStartRefresh + 10-frameTolerance or baby_video.isFinished:
-                    # keep track of stop time/frame for later
-                    baby_video.tStop = t  # not accounting for scr refresh
-                    baby_video.tStopRefresh = tThisFlipGlobal  # on global time
-                    baby_video.frameNStop = frameN  # exact frame index
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'baby_video.stopped')
-                    # update status
-                    baby_video.status = FINISHED
-                    baby_video.setAutoDraw(False)
-            if baby_video.status == FINISHED:  # force-end the Routine
-                continueRoutine = False
-            # Run 'Each Frame' code from code_attention_check
-            # Get current time
-            currentTime = trialClock.getTime()
-            # Get current gaze
-            gazePos = get_current_gaze()
+            # Define ROI
+            x0 = -aspect / 2
+            x1 =  aspect / 2
+            y0 = -0.5
+            y1 =  0.5
             
-            if gazePos is not None:
-                gazeX, gazeY = gazePos
-                if x0 <= gazeX <= x1 and y0 <= gazeY <= y1:
-                    # Entering ROI
-                    if not gazeInROI:
-                        roiClock.reset()
-                        gazeInROI = True
-                    # current accumulated gaze time
-                    currentGazeTime = gazeTime + roiClock.getTime()
-                else:
-                    # Leaving ROI
-                    if gazeInROI:
-                        gazeTime += roiClock.getTime()
-                        gazeInROI = False
-                    currentGazeTime = gazeTime
-            else:
-                gazeX, gazeY = None, None
-                currentGazeTime = gazeTime
-                
-            # ---------- SAVE RAW GAZE SAMPLE ----------
+            # set up pause function
+            showPause = False
+            restartVideo = False
             
-            sampleIndex += 1
-            thisExp.addData('gaze_sample_index', sampleIndex)
-            thisExp.addData('gaze_time', currentTime)
-            thisExp.addData('gaze_ROI_time', currentGazeTime)
-            # Make a safe copy of latest_gaze to prevent thread issues
-            current_sample = latest_gaze.copy() if latest_gaze else None
-            # Save all raw gaze fields from latest_gaze
-            if current_sample is not None:
-                keys = list(current_sample.keys())
-                for k in keys:
-                    thisExp.addData(k, current_sample[k])
-            else:
-                thisExp.addData('no_gaze_data', 1)
+            print('Laughing Baby Started')
+            # create starting attributes for key_resp_continue
+            key_resp_continue.keys = []
+            key_resp_continue.rt = []
+            _key_resp_continue_allKeys = []
+            baby_sound.setSound('stimuli/audio/laughing_baby.wav', secs=10, hamming=True)
+            baby_sound.setVolume(1.0, log=False)
+            baby_sound.seek(0)
+            # store start times for Laughing_Baby
+            Laughing_Baby.tStartRefresh = win.getFutureFlipTime(clock=globalClock)
+            Laughing_Baby.tStart = globalClock.getTime(format='float')
+            Laughing_Baby.status = STARTED
+            thisExp.addData('Laughing_Baby.started', Laughing_Baby.tStart)
+            Laughing_Baby.maxDuration = None
+            # keep track of which components have finished
+            Laughing_BabyComponents = Laughing_Baby.components
+            for thisComponent in Laughing_Baby.components:
+                thisComponent.tStart = None
+                thisComponent.tStop = None
+                thisComponent.tStartRefresh = None
+                thisComponent.tStopRefresh = None
+                if hasattr(thisComponent, 'status'):
+                    thisComponent.status = NOT_STARTED
+            # reset timers
+            t = 0
+            _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+            frameN = -1
             
-            ## End routine after 10 seconds # Adjust value below to change duration
-            #if videoStarted and videoStartTime is not None:
-            #    if t - videoStartTime >= 10.0:
-            #        continueRoutine = False
-                    
-            # Optional: allow escape key to quit experiment
-            if 'escape' in event.getKeys():
-                core.quit()
-            
-            
-            # *key_resp_continue* updates
-            waitOnFlip = False
-            
-            # if key_resp_continue is starting this frame...
-            if key_resp_continue.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                key_resp_continue.frameNStart = frameN  # exact frame index
-                key_resp_continue.tStart = t  # local t and not account for scr refresh
-                key_resp_continue.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(key_resp_continue, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'key_resp_continue.started')
-                # update status
-                key_resp_continue.status = STARTED
-                # keyboard checking is just starting
-                waitOnFlip = True
-                win.callOnFlip(key_resp_continue.clock.reset)  # t=0 on next screen flip
-                win.callOnFlip(key_resp_continue.clearEvents, eventType='keyboard')  # clear events on next screen flip
-            if key_resp_continue.status == STARTED and not waitOnFlip:
-                theseKeys = key_resp_continue.getKeys(keyList=['space'], ignoreKeys=["escape"], waitRelease=False)
-                _key_resp_continue_allKeys.extend(theseKeys)
-                if len(_key_resp_continue_allKeys):
-                    key_resp_continue.keys = _key_resp_continue_allKeys[-1].name  # just the last key pressed
-                    key_resp_continue.rt = _key_resp_continue_allKeys[-1].rt
-                    key_resp_continue.duration = _key_resp_continue_allKeys[-1].duration
-                    # a response ends the routine
+            # --- Run Routine "Laughing_Baby" ---
+            thisExp.currentRoutine = Laughing_Baby
+            Laughing_Baby.forceEnded = routineForceEnded = not continueRoutine
+            while continueRoutine:
+                # if trial has changed, end Routine now
+                if hasattr(thisPause_loop, 'status') and thisPause_loop.status == STOPPING:
                     continueRoutine = False
-            
-            # *baby_sound* updates
-            
-            # if baby_sound is starting this frame...
-            if baby_sound.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                baby_sound.frameNStart = frameN  # exact frame index
-                baby_sound.tStart = t  # local t and not account for scr refresh
-                baby_sound.tStartRefresh = tThisFlipGlobal  # on global time
-                # add timestamp to datafile
-                thisExp.addData('baby_sound.started', tThisFlipGlobal)
-                # update status
-                baby_sound.status = STARTED
-                baby_sound.play(when=win)  # sync with win flip
-            
-            # if baby_sound is stopping this frame...
-            if baby_sound.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > baby_sound.tStartRefresh + 10-frameTolerance or baby_sound.isFinished:
-                    # keep track of stop time/frame for later
-                    baby_sound.tStop = t  # not accounting for scr refresh
-                    baby_sound.tStopRefresh = tThisFlipGlobal  # on global time
-                    baby_sound.frameNStop = frameN  # exact frame index
+                # get current time
+                t = routineTimer.getTime()
+                tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+                tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+                frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+                # update/draw components on each frame
+                
+                # *baby_video* updates
+                
+                # if baby_video is starting this frame...
+                if baby_video.status == NOT_STARTED and tThisFlip >= 0.1-frameTolerance:
+                    # keep track of start time/frame for later
+                    baby_video.frameNStart = frameN  # exact frame index
+                    baby_video.tStart = t  # local t and not account for scr refresh
+                    baby_video.tStartRefresh = tThisFlipGlobal  # on global time
+                    win.timeOnFlip(baby_video, 'tStartRefresh')  # time at next scr refresh
                     # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'baby_sound.stopped')
+                    thisExp.timestampOnFlip(win, 'baby_video.started')
                     # update status
-                    baby_sound.status = FINISHED
-                    baby_sound.stop()
-            
-            # *first_frame_baby_set_up* updates
-            
-            # if first_frame_baby_set_up is starting this frame...
-            if first_frame_baby_set_up.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                first_frame_baby_set_up.frameNStart = frameN  # exact frame index
-                first_frame_baby_set_up.tStart = t  # local t and not account for scr refresh
-                first_frame_baby_set_up.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(first_frame_baby_set_up, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'first_frame_baby_set_up.started')
-                # update status
-                first_frame_baby_set_up.status = STARTED
-                first_frame_baby_set_up.setAutoDraw(True)
-            
-            # if first_frame_baby_set_up is active this frame...
-            if first_frame_baby_set_up.status == STARTED:
-                # update params
-                pass
-            
-            # if first_frame_baby_set_up is stopping this frame...
-            if first_frame_baby_set_up.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > first_frame_baby_set_up.tStartRefresh + 0.5-frameTolerance:
-                    # keep track of stop time/frame for later
-                    first_frame_baby_set_up.tStop = t  # not accounting for scr refresh
-                    first_frame_baby_set_up.tStopRefresh = tThisFlipGlobal  # on global time
-                    first_frame_baby_set_up.frameNStop = frameN  # exact frame index
+                    baby_video.status = STARTED
+                    baby_video.setAutoDraw(True)
+                    baby_video.play()
+                
+                # if baby_video is stopping this frame...
+                if baby_video.status == STARTED:
+                    # is it time to stop? (based on global clock, using actual start)
+                    if tThisFlipGlobal > baby_video.tStartRefresh + 9.9-frameTolerance or baby_video.isFinished:
+                        # keep track of stop time/frame for later
+                        baby_video.tStop = t  # not accounting for scr refresh
+                        baby_video.tStopRefresh = tThisFlipGlobal  # on global time
+                        baby_video.frameNStop = frameN  # exact frame index
+                        # add timestamp to datafile
+                        thisExp.timestampOnFlip(win, 'baby_video.stopped')
+                        # update status
+                        baby_video.status = FINISHED
+                        baby_video.setAutoDraw(False)
+                if baby_video.status == FINISHED:  # force-end the Routine
+                    continueRoutine = False
+                # Run 'Each Frame' code from code_laughing_baby
+                # Get current time
+                currentTime = trialClock.getTime()
+                # Get current gaze
+                gazePos = get_current_gaze()
+                
+                if gazePos is not None:
+                    gazeX, gazeY = gazePos
+                    if x0 <= gazeX <= x1 and y0 <= gazeY <= y1:
+                        # Entering ROI
+                        if not gazeInROI:
+                            roiClock.reset()
+                            gazeInROI = True
+                        # current accumulated gaze time
+                        currentGazeTime = trialTime + roiClock.getTime()
+                    else:
+                        # Leaving ROI
+                        if gazeInROI:
+                            trialTime += roiClock.getTime()
+                            gazeInROI = False
+                        currentGazeTime = trialTime
+                else:
+                    gazeX, gazeY = None, None
+                    currentGazeTime = trialTime
+                    
+                # ---------- SAVE RAW GAZE SAMPLE ----------
+                sampleIndex += 1
+                thisExp.addData('gaze_sample_index', sampleIndex)
+                thisExp.addData('trial_time', currentTime)
+                thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)
+                thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)
+                thisExp.addData('gaze_in_roi', inROI if 'inROI' in locals() else 0)
+                thisExp.addData('gaze_time_ROI_baby_video', currentGazeTime)
+                
+                # Make a safe copy of latest_gaze to prevent thread issues
+                current_sample = latest_gaze.copy() if latest_gaze else None
+                
+                # Save all raw gaze fields from latest_gaze
+                if current_sample is not None:
+                    keys = list(current_sample.keys())
+                    for k in keys:
+                        thisExp.addData(k, current_sample[k])
+                else:
+                    thisExp.addData('no_gaze_data', 1)
+                
+                # Pause function - experimenter controlled
+                keys = event.getKeys()
+                
+                if 'p' in keys:
+                    showPause = True
+                    continueRoutine = False
+                
+                # *key_resp_continue* updates
+                waitOnFlip = False
+                
+                # if key_resp_continue is starting this frame...
+                if key_resp_continue.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                    # keep track of start time/frame for later
+                    key_resp_continue.frameNStart = frameN  # exact frame index
+                    key_resp_continue.tStart = t  # local t and not account for scr refresh
+                    key_resp_continue.tStartRefresh = tThisFlipGlobal  # on global time
+                    win.timeOnFlip(key_resp_continue, 'tStartRefresh')  # time at next scr refresh
                     # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'first_frame_baby_set_up.stopped')
+                    thisExp.timestampOnFlip(win, 'key_resp_continue.started')
                     # update status
-                    first_frame_baby_set_up.status = FINISHED
-                    first_frame_baby_set_up.setAutoDraw(False)
+                    key_resp_continue.status = STARTED
+                    # keyboard checking is just starting
+                    waitOnFlip = True
+                    win.callOnFlip(key_resp_continue.clock.reset)  # t=0 on next screen flip
+                    win.callOnFlip(key_resp_continue.clearEvents, eventType='keyboard')  # clear events on next screen flip
+                if key_resp_continue.status == STARTED and not waitOnFlip:
+                    theseKeys = key_resp_continue.getKeys(keyList=['space'], ignoreKeys=["escape"], waitRelease=False)
+                    _key_resp_continue_allKeys.extend(theseKeys)
+                    if len(_key_resp_continue_allKeys):
+                        key_resp_continue.keys = _key_resp_continue_allKeys[-1].name  # just the last key pressed
+                        key_resp_continue.rt = _key_resp_continue_allKeys[-1].rt
+                        key_resp_continue.duration = _key_resp_continue_allKeys[-1].duration
+                        # a response ends the routine
+                        continueRoutine = False
+                
+                # *baby_sound* updates
+                
+                # if baby_sound is starting this frame...
+                if baby_sound.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                    # keep track of start time/frame for later
+                    baby_sound.frameNStart = frameN  # exact frame index
+                    baby_sound.tStart = t  # local t and not account for scr refresh
+                    baby_sound.tStartRefresh = tThisFlipGlobal  # on global time
+                    # add timestamp to datafile
+                    thisExp.addData('baby_sound.started', tThisFlipGlobal)
+                    # update status
+                    baby_sound.status = STARTED
+                    baby_sound.play(when=win)  # sync with win flip
+                
+                # if baby_sound is stopping this frame...
+                if baby_sound.status == STARTED:
+                    # is it time to stop? (based on global clock, using actual start)
+                    if tThisFlipGlobal > baby_sound.tStartRefresh + 10-frameTolerance or baby_sound.isFinished:
+                        # keep track of stop time/frame for later
+                        baby_sound.tStop = t  # not accounting for scr refresh
+                        baby_sound.tStopRefresh = tThisFlipGlobal  # on global time
+                        baby_sound.frameNStop = frameN  # exact frame index
+                        # add timestamp to datafile
+                        thisExp.timestampOnFlip(win, 'baby_sound.stopped')
+                        # update status
+                        baby_sound.status = FINISHED
+                        baby_sound.stop()
+                
+                # *first_frame_baby_set_up* updates
+                
+                # if first_frame_baby_set_up is starting this frame...
+                if first_frame_baby_set_up.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                    # keep track of start time/frame for later
+                    first_frame_baby_set_up.frameNStart = frameN  # exact frame index
+                    first_frame_baby_set_up.tStart = t  # local t and not account for scr refresh
+                    first_frame_baby_set_up.tStartRefresh = tThisFlipGlobal  # on global time
+                    win.timeOnFlip(first_frame_baby_set_up, 'tStartRefresh')  # time at next scr refresh
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'first_frame_baby_set_up.started')
+                    # update status
+                    first_frame_baby_set_up.status = STARTED
+                    first_frame_baby_set_up.setAutoDraw(True)
+                
+                # if first_frame_baby_set_up is active this frame...
+                if first_frame_baby_set_up.status == STARTED:
+                    # update params
+                    pass
+                
+                # if first_frame_baby_set_up is stopping this frame...
+                if first_frame_baby_set_up.status == STARTED:
+                    # is it time to stop? (based on global clock, using actual start)
+                    if tThisFlipGlobal > first_frame_baby_set_up.tStartRefresh + 0.1-frameTolerance:
+                        # keep track of stop time/frame for later
+                        first_frame_baby_set_up.tStop = t  # not accounting for scr refresh
+                        first_frame_baby_set_up.tStopRefresh = tThisFlipGlobal  # on global time
+                        first_frame_baby_set_up.frameNStop = frameN  # exact frame index
+                        # add timestamp to datafile
+                        thisExp.timestampOnFlip(win, 'first_frame_baby_set_up.stopped')
+                        # update status
+                        first_frame_baby_set_up.status = FINISHED
+                        first_frame_baby_set_up.setAutoDraw(False)
+                
+                # check for quit (typically the Esc key)
+                if defaultKeyboard.getKeys(keyList=["escape"]):
+                    thisExp.status = FINISHED
+                if thisExp.status == FINISHED or endExpNow:
+                    endExperiment(thisExp, win=win)
+                    return
+                # pause experiment here if requested
+                if thisExp.status == PAUSED:
+                    pauseExperiment(
+                        thisExp=thisExp, 
+                        win=win, 
+                        timers=[routineTimer, globalClock], 
+                        currentRoutine=Laughing_Baby,
+                    )
+                    # skip the frame we paused on
+                    continue
+                
+                # has a Component requested the Routine to end?
+                if not continueRoutine:
+                    Laughing_Baby.forceEnded = routineForceEnded = True
+                # has the Routine been forcibly ended?
+                if Laughing_Baby.forceEnded or routineForceEnded:
+                    break
+                # has every Component finished?
+                continueRoutine = False
+                for thisComponent in Laughing_Baby.components:
+                    if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                        continueRoutine = True
+                        break  # at least one component has not yet finished
+                
+                # refresh the screen
+                if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+                    win.flip()
             
-            # check for quit (typically the Esc key)
-            if defaultKeyboard.getKeys(keyList=["escape"]):
-                thisExp.status = FINISHED
-            if thisExp.status == FINISHED or endExpNow:
-                endExperiment(thisExp, win=win)
-                return
-            # pause experiment here if requested
-            if thisExp.status == PAUSED:
+            # --- Ending Routine "Laughing_Baby" ---
+            for thisComponent in Laughing_Baby.components:
+                if hasattr(thisComponent, "setAutoDraw"):
+                    thisComponent.setAutoDraw(False)
+            # store stop times for Laughing_Baby
+            Laughing_Baby.tStop = globalClock.getTime(format='float')
+            Laughing_Baby.tStopRefresh = tThisFlipGlobal
+            thisExp.addData('Laughing_Baby.stopped', Laughing_Baby.tStop)
+            baby_video.setAutoDraw(False)
+            baby_video.stop()  # ensure movie has stopped at end of Routine
+            # check responses
+            if key_resp_continue.keys in ['', [], None]:  # No response was made
+                key_resp_continue.keys = None
+            pause_loop.addData('key_resp_continue.keys',key_resp_continue.keys)
+            if key_resp_continue.keys != None:  # we had a response
+                pause_loop.addData('key_resp_continue.rt', key_resp_continue.rt)
+                pause_loop.addData('key_resp_continue.duration', key_resp_continue.duration)
+            baby_sound.pause()  # ensure sound has stopped at end of Routine
+            # the Routine "Laughing_Baby" was not non-slip safe, so reset the non-slip timer
+            routineTimer.reset()
+            
+            # --- Prepare to start Routine "Pause_Image" ---
+            # create an object to store info about Routine Pause_Image
+            Pause_Image = data.Routine(
+                name='Pause_Image',
+                components=[pause_image_set, start_again_key],
+            )
+            Pause_Image.status = NOT_STARTED
+            continueRoutine = True
+            # update component parameters for each repeat
+            # Run 'Begin Routine' code from check_infant_ready
+            if not showPause:
+                continueRoutine = False
+            # create starting attributes for start_again_key
+            start_again_key.keys = []
+            start_again_key.rt = []
+            _start_again_key_allKeys = []
+            # store start times for Pause_Image
+            Pause_Image.tStartRefresh = win.getFutureFlipTime(clock=globalClock)
+            Pause_Image.tStart = globalClock.getTime(format='float')
+            Pause_Image.status = STARTED
+            thisExp.addData('Pause_Image.started', Pause_Image.tStart)
+            Pause_Image.maxDuration = None
+            # keep track of which components have finished
+            Pause_ImageComponents = Pause_Image.components
+            for thisComponent in Pause_Image.components:
+                thisComponent.tStart = None
+                thisComponent.tStop = None
+                thisComponent.tStartRefresh = None
+                thisComponent.tStopRefresh = None
+                if hasattr(thisComponent, 'status'):
+                    thisComponent.status = NOT_STARTED
+            # reset timers
+            t = 0
+            _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+            frameN = -1
+            
+            # --- Run Routine "Pause_Image" ---
+            thisExp.currentRoutine = Pause_Image
+            Pause_Image.forceEnded = routineForceEnded = not continueRoutine
+            while continueRoutine:
+                # if trial has changed, end Routine now
+                if hasattr(thisPause_loop, 'status') and thisPause_loop.status == STOPPING:
+                    continueRoutine = False
+                # get current time
+                t = routineTimer.getTime()
+                tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+                tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+                frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+                # update/draw components on each frame
+                
+                # *pause_image_set* updates
+                
+                # if pause_image_set is starting this frame...
+                if pause_image_set.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                    # keep track of start time/frame for later
+                    pause_image_set.frameNStart = frameN  # exact frame index
+                    pause_image_set.tStart = t  # local t and not account for scr refresh
+                    pause_image_set.tStartRefresh = tThisFlipGlobal  # on global time
+                    win.timeOnFlip(pause_image_set, 'tStartRefresh')  # time at next scr refresh
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'pause_image_set.started')
+                    # update status
+                    pause_image_set.status = STARTED
+                    pause_image_set.setAutoDraw(True)
+                
+                # if pause_image_set is active this frame...
+                if pause_image_set.status == STARTED:
+                    # update params
+                    pass
+                
+                # *start_again_key* updates
+                waitOnFlip = False
+                
+                # if start_again_key is starting this frame...
+                if start_again_key.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                    # keep track of start time/frame for later
+                    start_again_key.frameNStart = frameN  # exact frame index
+                    start_again_key.tStart = t  # local t and not account for scr refresh
+                    start_again_key.tStartRefresh = tThisFlipGlobal  # on global time
+                    win.timeOnFlip(start_again_key, 'tStartRefresh')  # time at next scr refresh
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'start_again_key.started')
+                    # update status
+                    start_again_key.status = STARTED
+                    # keyboard checking is just starting
+                    waitOnFlip = True
+                    win.callOnFlip(start_again_key.clock.reset)  # t=0 on next screen flip
+                    win.callOnFlip(start_again_key.clearEvents, eventType='keyboard')  # clear events on next screen flip
+                if start_again_key.status == STARTED and not waitOnFlip:
+                    theseKeys = start_again_key.getKeys(keyList=['s'], ignoreKeys=["escape"], waitRelease=False)
+                    _start_again_key_allKeys.extend(theseKeys)
+                    if len(_start_again_key_allKeys):
+                        start_again_key.keys = _start_again_key_allKeys[-1].name  # just the last key pressed
+                        start_again_key.rt = _start_again_key_allKeys[-1].rt
+                        start_again_key.duration = _start_again_key_allKeys[-1].duration
+                        # a response ends the routine
+                        continueRoutine = False
+                
+                # check for quit (typically the Esc key)
+                if defaultKeyboard.getKeys(keyList=["escape"]):
+                    thisExp.status = FINISHED
+                if thisExp.status == FINISHED or endExpNow:
+                    endExperiment(thisExp, win=win)
+                    return
+                # pause experiment here if requested
+                if thisExp.status == PAUSED:
+                    pauseExperiment(
+                        thisExp=thisExp, 
+                        win=win, 
+                        timers=[routineTimer, globalClock], 
+                        currentRoutine=Pause_Image,
+                    )
+                    # skip the frame we paused on
+                    continue
+                
+                # has a Component requested the Routine to end?
+                if not continueRoutine:
+                    Pause_Image.forceEnded = routineForceEnded = True
+                # has the Routine been forcibly ended?
+                if Pause_Image.forceEnded or routineForceEnded:
+                    break
+                # has every Component finished?
+                continueRoutine = False
+                for thisComponent in Pause_Image.components:
+                    if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                        continueRoutine = True
+                        break  # at least one component has not yet finished
+                
+                # refresh the screen
+                if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+                    win.flip()
+            
+            # --- Ending Routine "Pause_Image" ---
+            for thisComponent in Pause_Image.components:
+                if hasattr(thisComponent, "setAutoDraw"):
+                    thisComponent.setAutoDraw(False)
+            # store stop times for Pause_Image
+            Pause_Image.tStop = globalClock.getTime(format='float')
+            Pause_Image.tStopRefresh = tThisFlipGlobal
+            thisExp.addData('Pause_Image.stopped', Pause_Image.tStop)
+            # Run 'End Routine' code from check_infant_ready
+            if 's' in start_again_key.keys:
+                restartVideo = True
+            else:
+                restartVideo = False
+                
+            if restartVideo:
+                pause_loop.finished = False
+            else:
+                pause_loop.finished = True
+            # check responses
+            if start_again_key.keys in ['', [], None]:  # No response was made
+                start_again_key.keys = None
+            pause_loop.addData('start_again_key.keys',start_again_key.keys)
+            if start_again_key.keys != None:  # we had a response
+                pause_loop.addData('start_again_key.rt', start_again_key.rt)
+                pause_loop.addData('start_again_key.duration', start_again_key.duration)
+            # the Routine "Pause_Image" was not non-slip safe, so reset the non-slip timer
+            routineTimer.reset()
+            # mark thisPause_loop as finished
+            if hasattr(thisPause_loop, 'status'):
+                thisPause_loop.status = FINISHED
+            # if awaiting a pause, pause now
+            if pause_loop.status == PAUSED:
+                thisExp.status = PAUSED
                 pauseExperiment(
                     thisExp=thisExp, 
                     win=win, 
-                    timers=[routineTimer, globalClock], 
-                    currentRoutine=Laughing_Baby,
+                    timers=[globalClock], 
                 )
-                # skip the frame we paused on
-                continue
+                # once done pausing, restore running status
+                pause_loop.status = STARTED
+            thisExp.nextEntry()
             
-            # has a Component requested the Routine to end?
-            if not continueRoutine:
-                Laughing_Baby.forceEnded = routineForceEnded = True
-            # has the Routine been forcibly ended?
-            if Laughing_Baby.forceEnded or routineForceEnded:
-                break
-            # has every Component finished?
-            continueRoutine = False
-            for thisComponent in Laughing_Baby.components:
-                if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
-                    continueRoutine = True
-                    break  # at least one component has not yet finished
-            
-            # refresh the screen
-            if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
-                win.flip()
+        # completed 999 repeats of 'pause_loop'
+        pause_loop.status = FINISHED
         
-        # --- Ending Routine "Laughing_Baby" ---
-        for thisComponent in Laughing_Baby.components:
-            if hasattr(thisComponent, "setAutoDraw"):
-                thisComponent.setAutoDraw(False)
-        # store stop times for Laughing_Baby
-        Laughing_Baby.tStop = globalClock.getTime(format='float')
-        Laughing_Baby.tStopRefresh = tThisFlipGlobal
-        thisExp.addData('Laughing_Baby.stopped', Laughing_Baby.tStop)
-        baby_video.setAutoDraw(False)
-        baby_video.stop()  # ensure movie has stopped at end of Routine
-        # Run 'End Routine' code from code_attention_check
-        #baby_video.stop()
-        #baby_sound.stop()
-        # not sure this is needed
-        # baby_video.seek(0)
-        # baby_video.setAutoDraw(False)
-        # check responses
-        if key_resp_continue.keys in ['', [], None]:  # No response was made
-            key_resp_continue.keys = None
-        trialLoop.addData('key_resp_continue.keys',key_resp_continue.keys)
-        if key_resp_continue.keys != None:  # we had a response
-            trialLoop.addData('key_resp_continue.rt', key_resp_continue.rt)
-            trialLoop.addData('key_resp_continue.duration', key_resp_continue.duration)
-        baby_sound.pause()  # ensure sound has stopped at end of Routine
-        # the Routine "Laughing_Baby" was not non-slip safe, so reset the non-slip timer
-        routineTimer.reset()
+        if thisSession is not None:
+            # if running in a Session with a Liaison client, send data up to now
+            thisSession.sendExperimentData()
         
         # --- Prepare to start Routine "Familiarization" ---
         # create an object to store info about Routine Familiarization
         Familiarization = data.Routine(
             name='Familiarization',
-            components=[ROI_Familiarization, imgFam],
+            components=[ROI_Familiarization, imgFam, sound_fam],
         )
         Familiarization.status = NOT_STARTED
         continueRoutine = True
@@ -1125,12 +1345,6 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         inROI = 0
         gazeInROI = False
         
-        # Play Sound
-        fam_sound = sound.Sound(r'materials\\familiarization_sound.wav')
-        fam_sound.setVolume(1.0)
-        #print("Duration:", Fam.getDuration())
-        fam_sound.play()
-        
         # Define ROI
         x0, y0 = ROI_Familiarization.pos[0] - ROI_Familiarization.size[0]/2, ROI_Familiarization.pos[1] - ROI_Familiarization.size[1]/2
         x1, y1 = ROI_Familiarization.pos[0] + ROI_Familiarization.size[0]/2, ROI_Familiarization.pos[1] + ROI_Familiarization.size[1]/2
@@ -1140,6 +1354,9 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         maxTime = float(familiarization_time_timeout)  # maximum trial duration
         
         print('Fam started')
+        sound_fam.setSound('stimuli/audio/amelie_rediscovery_ag.wav', hamming=True)
+        sound_fam.setVolume(1.0, log=False)
+        sound_fam.seek(0)
         # store start times for Familiarization
         Familiarization.tStartRefresh = win.getFutureFlipTime(clock=globalClock)
         Familiarization.tStart = globalClock.getTime(format='float')
@@ -1221,32 +1438,35 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             
             if gazePos is not None:
                 gazeX, gazeY = gazePos
-            
                 # Check if gaze is inside ROI
                 if x0 <= gazeX <= x1 and y0 <= gazeY <= y1:
                     inROI = 1
                     if not gazeInROI:       # first frame in ROI
                         roiClock.reset()
                         gazeInROI = True
-                    #gazeTime = roiClock.getTime()  # update gazeTime continuously while in ROI
                 else:
                     if gazeInROI:           # gaze just left ROI
                         gazeTime += roiClock.getTime()  # finalize accumulated time
                         gazeInROI = False
-            
+                        
             # If currently looking, report accumulated + current fixation
             if gazeInROI:
                 currentGazeTime = gazeTime + roiClock.getTime()
             else:
                 currentGazeTime = gazeTime
-            
-            print(currentGazeTime)
+                
+            # for debugging
+            # print(currentGazeTime)
             
             # ---------- SAVE RAW GAZE SAMPLE ----------
             
             sampleIndex += 1
             thisExp.addData('gaze_sample_index', sampleIndex)
-            thisExp.addData('gaze_time', currentGazeTime)
+            thisExp.addData('trial_time', currentTime)
+            thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)
+            thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)
+            thisExp.addData('gaze_in_roi', inROI if 'inROI' in locals() else 0)
+            thisExp.addData('gaze_time_ROI_familiarization', currentGazeTime if 'gazeTime' in locals() else 0)
             
             # Make a safe copy of latest_gaze to prevent thread issues
             current_sample = latest_gaze.copy() if latest_gaze else None
@@ -1259,24 +1479,47 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             else:
                 thisExp.addData('no_gaze_data', 1)
             
-            # Save processed values safely
-            thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)
-            thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)
-            thisExp.addData('gaze_in_roi', inROI if 'inROI' in locals() else 0)
-            thisExp.addData('gaze_time_in_roi', currentGazeTime if 'gazeTime' in locals() else 0)
-            
             thisExp.nextEntry()  # VERY IMPORTANT
             
             # ---------- END CONDITIONS ----------
             
             if currentGazeTime >= minTime:
+                print('Passed min familiarization time.')
                 continueRoutine = False
             
             if currentTime >= maxTime:
+                print('Did not pass min familiarization time.')
                 continueRoutine = False
             
             if 'escape' in event.getKeys():
                 core.quit()
+            
+            # *sound_fam* updates
+            
+            # if sound_fam is starting this frame...
+            if sound_fam.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                sound_fam.frameNStart = frameN  # exact frame index
+                sound_fam.tStart = t  # local t and not account for scr refresh
+                sound_fam.tStartRefresh = tThisFlipGlobal  # on global time
+                # add timestamp to datafile
+                thisExp.addData('sound_fam.started', tThisFlipGlobal)
+                # update status
+                sound_fam.status = STARTED
+                sound_fam.play(when=win)  # sync with win flip
+            
+            # if sound_fam is stopping this frame...
+            if sound_fam.status == STARTED:
+                if bool(False) or sound_fam.isFinished:
+                    # keep track of stop time/frame for later
+                    sound_fam.tStop = t  # not accounting for scr refresh
+                    sound_fam.tStopRefresh = tThisFlipGlobal  # on global time
+                    sound_fam.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'sound_fam.stopped')
+                    # update status
+                    sound_fam.status = FINISHED
+                    sound_fam.stop()
             
             # check for quit (typically the Esc key)
             if defaultKeyboard.getKeys(keyList=["escape"]):
@@ -1320,9 +1563,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         Familiarization.tStop = globalClock.getTime(format='float')
         Familiarization.tStopRefresh = tThisFlipGlobal
         thisExp.addData('Familiarization.stopped', Familiarization.tStop)
-        # Run 'End Routine' code from code_familiarization
-        fam_sound.stop()
-        
+        sound_fam.pause()  # ensure sound has stopped at end of Routine
         # the Routine "Familiarization" was not non-slip safe, so reset the non-slip timer
         routineTimer.reset()
         
@@ -1359,34 +1600,22 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             # create an object to store info about Routine Central_Fixation
             Central_Fixation = data.Routine(
                 name='Central_Fixation',
-                components=[central_fixation, sound_1, key_resp_stop, first_frame_fixation_set_up],
+                components=[central_fixation, sound_1, first_frame_fixation_set_up],
             )
             Central_Fixation.status = NOT_STARTED
             continueRoutine = True
             # update component parameters for each repeat
-            central_fixation.setMovie('materials/attention_video_grey.mp4')
+            central_fixation.setMovie('stimuli/movies/ag_no_audio_grey.mp4')
             # Run 'Begin Routine' code from code_check_fixation
+            # set up
             trialClock = core.Clock()
             roiClock = core.Clock()
-            #videoStarted = False
-            #videoStartTime = None
+            
             gazeTime = 0
             gazeInROI = False
             continueRoutine = True
             sampleIndex = 0
-            ## Get video stim
-            #central_fixation.setAutoDraw(False)
-            #central_fixation.stop()
-            #central_fixation.seek(0)
-            #
-            ## draw 1st frame and clear (attempt to solve black flash screen)
-            #baby_video.draw()
-            #win.clearBuffer()
             
-            ## play sound
-            #attention_sound = sound.Sound(r'materials\\attention_sound.wav')
-            #attention_sound.setVolume(1.0)
-            #soundPlayed = False
             # Get aspect ratio
             aspect = win.size[0] / win.size[1]
             
@@ -1396,15 +1625,11 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             y0 = -0.5
             y1 =  0.5
             
-            print('Attention check started')
+            print('Fixation started')
             
-            sound_1.setSound('materials/attention_sound.wav', secs=5, hamming=True)
+            sound_1.setSound('stimuli/audio/ag.wav', secs=0.750, hamming=True)
             sound_1.setVolume(1.0, log=False)
             sound_1.seek(0)
-            # create starting attributes for key_resp_stop
-            key_resp_stop.keys = []
-            key_resp_stop.rt = []
-            _key_resp_stop_allKeys = []
             # store start times for Central_Fixation
             Central_Fixation.tStartRefresh = win.getFutureFlipTime(clock=globalClock)
             Central_Fixation.tStart = globalClock.getTime(format='float')
@@ -1428,7 +1653,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             # --- Run Routine "Central_Fixation" ---
             thisExp.currentRoutine = Central_Fixation
             Central_Fixation.forceEnded = routineForceEnded = not continueRoutine
-            while continueRoutine:
+            while continueRoutine and routineTimer.getTime() < 0.75:
                 # if trial has changed, end Routine now
                 if hasattr(thisTestLoop, 'status') and thisTestLoop.status == STOPPING:
                     continueRoutine = False
@@ -1442,7 +1667,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                 # *central_fixation* updates
                 
                 # if central_fixation is starting this frame...
-                if central_fixation.status == NOT_STARTED and tThisFlip >= 0.5-frameTolerance:
+                if central_fixation.status == NOT_STARTED and tThisFlip >= 0-frameTolerance:
                     # keep track of start time/frame for later
                     central_fixation.frameNStart = frameN  # exact frame index
                     central_fixation.tStart = t  # local t and not account for scr refresh
@@ -1458,7 +1683,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                 # if central_fixation is stopping this frame...
                 if central_fixation.status == STARTED:
                     # is it time to stop? (based on global clock, using actual start)
-                    if tThisFlipGlobal > central_fixation.tStartRefresh + 5-frameTolerance or central_fixation.isFinished:
+                    if tThisFlipGlobal > central_fixation.tStartRefresh + 0.750-frameTolerance or central_fixation.isFinished:
                         # keep track of stop time/frame for later
                         central_fixation.tStop = t  # not accounting for scr refresh
                         central_fixation.tStopRefresh = tThisFlipGlobal  # on global time
@@ -1473,35 +1698,37 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                 # Run 'Each Frame' code from code_check_fixation
                 # Get current time
                 currentTime = trialClock.getTime()
-                
                 # Get current gaze
                 gazePos = get_current_gaze()  # returns (x, y) in 'height' units
                 
                 if gazePos is not None:
                     gazeX, gazeY = gazePos
+                    # Check if gaze is inside ROI
                     if x0 <= gazeX <= x1 and y0 <= gazeY <= y1:
-                        # Entering ROI
-                        if not gazeInROI:
+                        inROI = 1
+                        if not gazeInROI:       # first frame in ROI
                             roiClock.reset()
                             gazeInROI = True
-                        # current accumulated gaze time
-                        currentGazeTime = gazeTime + roiClock.getTime()
                     else:
-                        # Leaving ROI
-                        if gazeInROI:
-                            gazeTime += roiClock.getTime()
+                        if gazeInROI:           # gaze just left ROI
+                            gazeTime += roiClock.getTime()  # finalize accumulated time
                             gazeInROI = False
-                        currentGazeTime = gazeTime
+                            
+                # If currently looking, report accumulated + current fixation
+                if gazeInROI:
+                    currentGazeTime = gazeTime + roiClock.getTime()
                 else:
-                    gazeX, gazeY = None, None
                     currentGazeTime = gazeTime
                     
                 # ---------- SAVE RAW GAZE SAMPLE ----------
                 
                 sampleIndex += 1
                 thisExp.addData('gaze_sample_index', sampleIndex)
-                thisExp.addData('gaze_time', currentTime)
-                thisExp.addData('gaze_ROI_time', currentGazeTime)
+                thisExp.addData('trial_time', currentTime)
+                thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)
+                thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)
+                thisExp.addData('gaze_in_roi', inROI if 'inROI' in locals() else 0)
+                thisExp.addData('gaze_time_ROI_fixation', currentGazeTime)
                 # Make a safe copy of latest_gaze to prevent thread issues
                 current_sample = latest_gaze.copy() if latest_gaze else None
                 
@@ -1512,15 +1739,6 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                         thisExp.addData(k, current_sample[k])
                 else:
                     thisExp.addData('no_gaze_data', 1)
-                
-                ## End routine after 5 seconds # change value below to change duration
-                #if videoStarted and videoStartTime is not None:
-                #    if t - videoStartTime >= 5.0:
-                #        continueRoutine = False
-                
-                # Optional: allow escape key to quit experiment
-                if 'escape' in event.getKeys():
-                    core.quit()
                 
                 
                 # *sound_1* updates
@@ -1540,7 +1758,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                 # if sound_1 is stopping this frame...
                 if sound_1.status == STARTED:
                     # is it time to stop? (based on global clock, using actual start)
-                    if tThisFlipGlobal > sound_1.tStartRefresh + 5-frameTolerance or sound_1.isFinished:
+                    if tThisFlipGlobal > sound_1.tStartRefresh + 0.750-frameTolerance or sound_1.isFinished:
                         # keep track of stop time/frame for later
                         sound_1.tStop = t  # not accounting for scr refresh
                         sound_1.tStopRefresh = tThisFlipGlobal  # on global time
@@ -1550,34 +1768,6 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                         # update status
                         sound_1.status = FINISHED
                         sound_1.stop()
-                
-                # *key_resp_stop* updates
-                waitOnFlip = False
-                
-                # if key_resp_stop is starting this frame...
-                if key_resp_stop.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                    # keep track of start time/frame for later
-                    key_resp_stop.frameNStart = frameN  # exact frame index
-                    key_resp_stop.tStart = t  # local t and not account for scr refresh
-                    key_resp_stop.tStartRefresh = tThisFlipGlobal  # on global time
-                    win.timeOnFlip(key_resp_stop, 'tStartRefresh')  # time at next scr refresh
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'key_resp_stop.started')
-                    # update status
-                    key_resp_stop.status = STARTED
-                    # keyboard checking is just starting
-                    waitOnFlip = True
-                    win.callOnFlip(key_resp_stop.clock.reset)  # t=0 on next screen flip
-                    win.callOnFlip(key_resp_stop.clearEvents, eventType='keyboard')  # clear events on next screen flip
-                if key_resp_stop.status == STARTED and not waitOnFlip:
-                    theseKeys = key_resp_stop.getKeys(keyList=['space'], ignoreKeys=["escape"], waitRelease=False)
-                    _key_resp_stop_allKeys.extend(theseKeys)
-                    if len(_key_resp_stop_allKeys):
-                        key_resp_stop.keys = _key_resp_stop_allKeys[-1].name  # just the last key pressed
-                        key_resp_stop.rt = _key_resp_stop_allKeys[-1].rt
-                        key_resp_stop.duration = _key_resp_stop_allKeys[-1].duration
-                        # a response ends the routine
-                        continueRoutine = False
                 
                 # *first_frame_fixation_set_up* updates
                 
@@ -1602,7 +1792,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                 # if first_frame_fixation_set_up is stopping this frame...
                 if first_frame_fixation_set_up.status == STARTED:
                     # is it time to stop? (based on global clock, using actual start)
-                    if tThisFlipGlobal > first_frame_fixation_set_up.tStartRefresh + 0.5-frameTolerance:
+                    if tThisFlipGlobal > first_frame_fixation_set_up.tStartRefresh + 0.1-frameTolerance:
                         # keep track of stop time/frame for later
                         first_frame_fixation_set_up.tStop = t  # not accounting for scr refresh
                         first_frame_fixation_set_up.tStopRefresh = tThisFlipGlobal  # on global time
@@ -1657,22 +1847,14 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             thisExp.addData('Central_Fixation.stopped', Central_Fixation.tStop)
             central_fixation.setAutoDraw(False)
             central_fixation.stop()  # ensure movie has stopped at end of Routine
-            # Run 'End Routine' code from code_check_fixation
-            #central_fixation.stop()
-            #attention_sound.stop()
-            # not sure this is needed
-            # baby_video.seek(0)
-            # baby_video.setAutoDraw(False)
             sound_1.pause()  # ensure sound has stopped at end of Routine
-            # check responses
-            if key_resp_stop.keys in ['', [], None]:  # No response was made
-                key_resp_stop.keys = None
-            testLoop.addData('key_resp_stop.keys',key_resp_stop.keys)
-            if key_resp_stop.keys != None:  # we had a response
-                testLoop.addData('key_resp_stop.rt', key_resp_stop.rt)
-                testLoop.addData('key_resp_stop.duration', key_resp_stop.duration)
-            # the Routine "Central_Fixation" was not non-slip safe, so reset the non-slip timer
-            routineTimer.reset()
+            # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
+            if Central_Fixation.maxDurationReached:
+                routineTimer.addTime(-Central_Fixation.maxDuration)
+            elif Central_Fixation.forceEnded:
+                routineTimer.reset()
+            else:
+                routineTimer.addTime(-0.750000)
             
             # --- Prepare to start Routine "Test_Period" ---
             # create an object to store info about Routine Test_Period
@@ -1684,7 +1866,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             continueRoutine = True
             # update component parameters for each repeat
             # Run 'Begin Routine' code from code_test
-            # set up test imaga rotation
+            # set up test image rotation
             if testLoop.thisN == 0:
                 imgLeft.image = left_image_path_1
                 imgRight.image = right_image_path_1
@@ -1693,8 +1875,8 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                 imgRight.image = left_image_path_1
             
             # Timer for this trial
-            trialClock = core.Clock()  # overall max display tim2e
-            roiClockLeft = core.Clock()    # timer for fixation in ROI
+            trialClock = core.Clock()  
+            roiClockLeft = core.Clock()    
             roiClockRight = core.Clock()
             
             # Gaze tracking
@@ -1714,12 +1896,6 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             
             gazeX = float('nan')
             gazeY = float('nan')
-            
-            # Play Sound
-            test_sound = sound.Sound(r'materials\\familiarization_sound.wav')
-            test_sound.setVolume(1.0)
-            #print("Duration:", Fam.getDuration())
-            test_sound.play()
             
             # Define ROI Left
             x0, y0 = ROI_left.pos[0] - ROI_left.size[0]/2, ROI_left.pos[1] - ROI_left.size[1]/2
@@ -1853,14 +2029,12 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                 
                 if gazePos is not None:
                     gazeX, gazeY = gazePos
-                
                     # Left ROI
                     if x0 <= gazeX <= x1 and y0 <= gazeY <= y1:
                         inROILeft = 1
                         if not gazeInROILeft:
                             roiClockLeft.reset()
                             gazeInROILeft = True
-                        #gazeTimeLeft = roiClockLeft.getTime()
                     else:
                         inROILeft = 0
                         if gazeInROILeft:
@@ -1871,8 +2045,8 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                         currentGazeTimeLeft = gazeTimeLeft + roiClockLeft.getTime()
                     else:
                         currentGazeTimeLeft = gazeTimeLeft
-                
-                    print(f"Left: {currentGazeTimeLeft}")
+                    # for debugging
+                    # print(f"Left: {currentGazeTimeLeft}")
                 
                     # Right ROI
                     if x2 <= gazeX <= x3 and y2 <= gazeY <= y3:
@@ -1880,7 +2054,6 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                         if not gazeInROIRight:
                             roiClockRight.reset()
                             gazeInROIRight = True
-                        #gazeTimeRight = roiClockRight.getTime()
                     else:
                         inROIRight = 0
                         if gazeInROIRight:
@@ -1891,14 +2064,20 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                         currentGazeTimeRight = gazeTimeRight + roiClockRight.getTime()
                     else:
                         currentGazeTimeRight = gazeTimeRight
-                
-                    print(f"Right: {currentGazeTimeRight}")
+                    # for debugging
+                    # print(f"Right: {currentGazeTimeRight}")
                 
                 # ---------- SAVE RAW GAZE SAMPLE ----------
                 
                 sampleIndex += 1
                 thisExp.addData('gaze_sample_index', sampleIndex)
-                thisExp.addData('gaze_time', currentTime)
+                thisExp.addData('trial_time', currentTime)
+                thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)
+                thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)
+                thisExp.addData('gaze_in_roi_right', inROIRight)
+                thisExp.addData('gaze_time_in_roi_right', currentGazeTimeRight)
+                thisExp.addData('gaze_in_roi_left', inROILeft)
+                thisExp.addData('gaze_time_in_roi_left', currentGazeTimeLeft)
                 
                 # Make a safe copy of latest_gaze to prevent thread issues
                 current_sample = latest_gaze.copy() if latest_gaze else None
@@ -1911,22 +2090,12 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
                 else:
                     thisExp.addData('no_gaze_data', 1)
                 
-                # Save processed values safely
-                thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)
-                thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)
-                thisExp.addData('gaze_in_roi_right', inROIRight)
-                thisExp.addData('gaze_time_in_roi_right', currentGazeTimeRight)
-                thisExp.addData('gaze_in_roi_left', inROILeft)
-                thisExp.addData('gaze_time_in_roi_left', currentGazeTimeLeft)
-                
                 thisExp.nextEntry()  # VERY IMPORTANT
                 
+                # time out for test phase
                 if currentTime >= maxTime:
                     continueRoutine = False
                 
-                # Optional: exit experiment
-                if 'escape' in event.getKeys():
-                    core.quit()
                 
                 
                 # check for quit (typically the Esc key)
@@ -1971,9 +2140,6 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             Test_Period.tStop = globalClock.getTime(format='float')
             Test_Period.tStopRefresh = tThisFlipGlobal
             thisExp.addData('Test_Period.stopped', Test_Period.tStop)
-            # Run 'End Routine' code from code_test
-            test_sound.stop()
-            
             # the Routine "Test_Period" was not non-slip safe, so reset the non-slip timer
             routineTimer.reset()
             # mark thisTestLoop as finished
@@ -2141,7 +2307,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     # Run 'End Experiment' code from Tobii_SDK_disconnect
     # Stop eye tracker recording
     my_eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, gaze_callback)
-    print('ET stopped')
+    print('ET stopped DONE')
     
     # mark experiment as finished
     endExperiment(thisExp, win=win)
@@ -2177,10 +2343,6 @@ def endExperiment(thisExp, win=None):
     win : psychopy.visual.Window
         Window for this experiment.
     """
-    # stop any playback components
-    if thisExp.currentRoutine is not None:
-        for comp in thisExp.currentRoutine.getPlaybackComponents():
-            comp.stop()
     if win is not None:
         # remove autodraw from all current components
         win.clearAutoDraw()
