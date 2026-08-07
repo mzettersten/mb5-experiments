@@ -26,9 +26,12 @@ Download all files from the link below and keep them in one folder on the machin
 ```
 MB5_PsychoPy_Builder_SetUp
 ├── data/                     # eye tracking data will be stored here
-├── stimuli/images/                  # store all Fractals and Fribbles stimuli here
-├── materials/                # store all other stimuli here (sounds, attention getters, etc.)
+├── stimuli/
+        └── movies # video files for experiment
+        └── images # all stimuli images
+        └── audio # audio files corresponding to movies            
 ├── trials/       # store the lists assigned to your lab here
+├── set_up_imgs  # ignore
 └── MB5_infant_controlled.psyexp   # the PsychoPy file — open this in Builder view to run the experiment
 ```
 
