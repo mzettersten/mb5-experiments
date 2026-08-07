@@ -1,8 +1,8 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-This experiment was created using PsychoPy3 Experiment Builder (v2025.2.4),
-    on August 07, 2026, at 14:33
+This experiment was created using PsychoPy3 Experiment Builder (v2026.1.3),
+    on Fri  7 Aug 16:30:23 2026
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,15 +54,15 @@ deviceManager = hardware.DeviceManager()
 # ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 # store info about the experiment session
-psychopyVersion = '2025.2.4'
-expName = 'Test'  # from the Builder filename that created this script
+psychopyVersion = '2026.1.3'
+expName = 'ManyBabies5'  # from the Builder filename that created this script
 expVersion = ''
 # a list of functions to run when the experiment ends (starts off blank)
 runAtExit = []
 # information about this experiment
 expInfo = {
     'participant': '',
-    'order_number': '644',
+    'order_number': '1',
     'date|hid': data.getDateStr(),
     'expName|hid': expName,
     'expVersion|hid': expVersion,
@@ -148,10 +148,12 @@ def setupData(expInfo, dataDir=None):
     thisExp = data.ExperimentHandler(
         name=expName, version=expVersion,
         extraInfo=expInfo, runtimeInfo=None,
-        originPath='C:\\Users\\ellagaze25\\Desktop\\mb5-experiments-auckland\\tobii-psychopy\\MB5_ET_infant_controlled_v3.0_lastrun.py',
+        originPath='/Users/fbed874/Documents/GitHub_Repos/mb5-experiments/tobii-psychopy/MB5_ET_infant_controlled_v3.0_lastrun.py',
         savePickle=True, saveWideText=True,
         dataFileName=dataDir + os.sep + filename, sortColumns='time'
     )
+    # store pilot mode in data file
+    thisExp.addData('piloting', PILOTING, priority=priority.LOW)
     thisExp.setPriority('thisRow.t', priority.CRITICAL)
     thisExp.setPriority('expName', priority.LOW)
     # return experiment handler
@@ -1897,14 +1899,21 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
             gazeX = float('nan')
             gazeY = float('nan')
             
-            # Define ROI Left
-            x0, y0 = ROI_left.pos[0] - ROI_left.size[0]/2, ROI_left.pos[1] - ROI_left.size[1]/2
-            x1, y1 = ROI_left.pos[0] + ROI_left.size[0]/2, ROI_left.pos[1] + ROI_left.size[1]/2
+            # ROI_left uses anchor='center-left' (pos is midpoint of left edge)
+            left_w, left_h = ROI_left.size
+            x0 = ROI_left.pos[0]                  # left edge
+            x1 = ROI_left.pos[0] + left_w         # right edge
+            y0 = ROI_left.pos[1] - left_h / 2
+            y1 = ROI_left.pos[1] + left_h / 2
             
-            # Define ROI Right
-            x2, y2 = ROI_right.pos[0] - ROI_right.size[0]/2, ROI_right.pos[1] - ROI_right.size[1]/2
-            x3, y3 = ROI_right.pos[0] + ROI_right.size[0]/2, ROI_right.pos[1] + ROI_right.size[1]/2
+            # ROI_right uses anchor='center-right' (pos is midpoint of right edge)
+            right_w, right_h = ROI_right.size
+            x2 = ROI_right.pos[0] - right_w       # left edge
+            x3 = ROI_right.pos[0]                 # right edge
+            y2 = ROI_right.pos[1] - right_h / 2
+            y3 = ROI_right.pos[1] + right_h / 2
             
+            # set test time
             maxTime = 5
             
             print('Test started')
@@ -2343,6 +2352,10 @@ def endExperiment(thisExp, win=None):
     win : psychopy.visual.Window
         Window for this experiment.
     """
+    # stop any playback components
+    if thisExp.currentRoutine is not None:
+        for comp in thisExp.currentRoutine.getPlaybackComponents():
+            comp.stop()
     if win is not None:
         # remove autodraw from all current components
         win.clearAutoDraw()

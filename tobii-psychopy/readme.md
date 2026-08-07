@@ -57,16 +57,21 @@ Below are screenshots to help you set everything up in your lab.
 1. Open the `.psyexp` file in the PsychoPy Builder view.
 2. Make sure you have selected a working default speaker and turned up the volume.
 3. Click the green run button.
-4. In the pop-up window, enter the participant identification following your lab's SOP. In the box for order_number, enter the name of the CSV file for this participant. Your lab will receive a set of CSV files with randomization information — for each participant, select the corresponding file here.
+4. In the pop-up window, enter the participant identification following your lab's SOP. In the box for order_number, enter the trial number (number in name of the CSV file) for this participant. Your lab will receive a set of CSV files with randomization information — for each participant, select the corresponding file here.
 
-UPDATE SCREENSHOT
-
-<!-- TODO: ![Participant setup dialog](set_up_imgs/participant_setup_dialog.jpeg) -->
+![Experiment Setting](set_up_imgs/experiment_settings.png)
 
 The experiment should now start. There are no participant instructions — this design is infant-controlled:
 
 - If the infant does not look at the screen during familiarisation, the trial will continue based on a fixed time.
-- However, at the start of each trial and at each attention getter, the infant must look at the screen at least briefly. If no gaze point is detected at these steps, the trial will not continue. --> update if we change this!!!
+- During the lauging baby video the experimenter can control the experiment like so:
+
+      <kbd>Space</kbd> CONTINUE TO FIXATION AND FAMILIARIZATION - works during the lauging baby video
+
+      <kbd>P</kbd> PAUSE THE EXPERIMENT - will show the bunny image 
+      
+      <kbd>S</kbd> CONTINUE THE EXPERIMENT - will move back to laughing baby from bunny image
+      
 
 Let the trial run through to completion. At the end, you will see the bunnies image for a brief moment. Afterward, check the `data` folder for this participant's data — there should be an Excel file containing time series eye tracking data, with the participant identification information in the file name.
 
