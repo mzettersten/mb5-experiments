@@ -61,17 +61,18 @@ Below are screenshots to help you set everything up in your lab.
 
 ![Experiment Setting](set_up_imgs/experiment_settings.png)
 
-The experiment should now start. There are no participant instructions — this design is infant-controlled:
+The experiment should now start. There are no participant instructions, as this is an infant-controlled design.
 
-- If the infant does not look at the screen during familiarisation, the trial will continue based on a fixed time.
-- During the lauging baby video the experimenter can control the experiment like so:
+- If the infant does not look at the screen during familiarization, the trial will continue after a fixed duration.
 
-      <kbd>Space</kbd> CONTINUE TO FIXATION AND FAMILIARIZATION - works during the lauging baby video
+During the **laughing baby** video, the experimenter can use the following controls:
 
-      <kbd>P</kbd> PAUSE THE EXPERIMENT - will show the bunny image 
-      
-      <kbd>S</kbd> CONTINUE THE EXPERIMENT - will move back to laughing baby from bunny image
-      
+| Key | Action |
+|-----|--------|
+| <kbd>Space</kbd> | Continue to the fixation screen and familiarization phase. |
+| <kbd>P</kbd> | Pause the experiment and display the bunny image. |
+| <kbd>S</kbd> | Resume the experiment, returning from the bunny image to the laughing baby video. |
+
 
 Let the trial run through to completion. At the end, you will see the bunnies image for a brief moment. Afterward, check the `data` folder for this participant's data — there should be an Excel file containing time series eye tracking data, with the participant identification information in the file name.
 
