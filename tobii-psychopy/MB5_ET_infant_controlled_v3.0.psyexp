@@ -141,14 +141,14 @@
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="code_laughing_baby" valType="code" updates="None" name="name"/>
       </CodeComponent>
-      <KeyboardComponent name="key_resp_continue" plugin="None">
+      <KeyboardComponent name="key_resp_continue_baby_video" plugin="None">
         <Param val="'space'" valType="list" updates="constant" name="allowedKeys"/>
         <Param val="" valType="str" updates="constant" name="correctAns"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="True" valType="bool" updates="constant" name="discard previous"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="True" valType="bool" updates="constant" name="forceEndRoutine"/>
-        <Param val="key_resp_continue" valType="code" updates="None" name="name"/>
+        <Param val="key_resp_continue_baby_video" valType="code" updates="None" name="name"/>
         <Param val="press" valType="str" updates="constant" name="registerOn"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
@@ -292,8 +292,8 @@
         <Param val="trialClock = new util.Clock();&amp;#10;roiClock = new util.Clock();&amp;#10;gazeTime = 0;&amp;#10;sampleIndex = 0;&amp;#10;inROI = 0;&amp;#10;gazeInROI = false;&amp;#10;[x0, y0] = [(ROI_Familiarization.pos[0] - (ROI_Familiarization.size[0] / 2)), (ROI_Familiarization.pos[1] - (ROI_Familiarization.size[1] / 2))];&amp;#10;[x1, y1] = [(ROI_Familiarization.pos[0] + (ROI_Familiarization.size[0] / 2)), (ROI_Familiarization.pos[1] + (ROI_Familiarization.size[1] / 2))];&amp;#10;minTime = Number.parseFloat(familiarization_time);&amp;#10;maxTime = Number.parseFloat(familiarization_time_timeout);&amp;#10;console.log(&quot;Fam started&quot;);&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
         <Param val="# Timer for this trial&amp;#10;trialClock = core.Clock()  # overall max display time&amp;#10;roiClock = core.Clock()    # timer for fixation in ROI&amp;#10;&amp;#10;# Gaze tracking&amp;#10;gazeTime = 0  # will store the gaze time inside ROI&amp;#10;sampleIndex = 0&amp;#10;inROI = 0&amp;#10;gazeInROI = False&amp;#10;&amp;#10;# Define ROI&amp;#10;x0, y0 = ROI_Familiarization.pos[0] - ROI_Familiarization.size[0]/2, ROI_Familiarization.pos[1] - ROI_Familiarization.size[1]/2&amp;#10;x1, y1 = ROI_Familiarization.pos[0] + ROI_Familiarization.size[0]/2, ROI_Familiarization.pos[1] + ROI_Familiarization.size[1]/2&amp;#10;&amp;#10;# Read times from Excel&amp;#10;minTime = float(familiarization_time)   # time required in ROI to end routine&amp;#10;maxTime = float(familiarization_time_timeout)  # maximum trial duration&amp;#10;&amp;#10;print('Fam started')" valType="extendedCode" updates="constant" name="Begin Routine"/>
         <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
-        <Param val="# Get current time&amp;#10;currentTime = trialClock.getTime()&amp;#10;# Get current gaze position from latest_gaze&amp;#10;gazePos = get_current_gaze()  # returns (x, y) or None&amp;#10;&amp;#10;if gazePos is not None:&amp;#10;    gazeX, gazeY = gazePos&amp;#10;    # Check if gaze is inside ROI&amp;#10;    if x0 &lt;= gazeX &lt;= x1 and y0 &lt;= gazeY &lt;= y1:&amp;#10;        inROI = 1&amp;#10;        if not gazeInROI:       # first frame in ROI&amp;#10;            roiClock.reset()&amp;#10;            gazeInROI = True&amp;#10;    else:&amp;#10;        if gazeInROI:           # gaze just left ROI&amp;#10;            gazeTime += roiClock.getTime()  # finalize accumulated time&amp;#10;            gazeInROI = False&amp;#10;            &amp;#10;# If currently looking, report accumulated + current fixation&amp;#10;if gazeInROI:&amp;#10;    currentGazeTime = gazeTime + roiClock.getTime()&amp;#10;else:&amp;#10;    currentGazeTime = gazeTime&amp;#10;    &amp;#10;# for debugging&amp;#10;# print(currentGazeTime)&amp;#10;&amp;#10;# ---------- SAVE RAW GAZE SAMPLE ----------&amp;#10;&amp;#10;sampleIndex += 1&amp;#10;thisExp.addData('gaze_sample_index', sampleIndex)&amp;#10;thisExp.addData('trial_time', currentTime)&amp;#10;thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)&amp;#10;thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)&amp;#10;thisExp.addData('gaze_in_roi', inROI if 'inROI' in locals() else 0)&amp;#10;thisExp.addData('gaze_time_ROI_familiarization', currentGazeTime if 'gazeTime' in locals() else 0)&amp;#10;&amp;#10;# Make a safe copy of latest_gaze to prevent thread issues&amp;#10;current_sample = latest_gaze.copy() if latest_gaze else None&amp;#10;&amp;#10;# Save all raw gaze fields from latest_gaze&amp;#10;if current_sample is not None:&amp;#10;    keys = list(current_sample.keys())&amp;#10;    for k in keys:&amp;#10;        thisExp.addData(k, current_sample[k])&amp;#10;else:&amp;#10;    thisExp.addData('no_gaze_data', 1)&amp;#10;&amp;#10;thisExp.nextEntry()  # VERY IMPORTANT&amp;#10;&amp;#10;# ---------- END CONDITIONS ----------&amp;#10;&amp;#10;if currentGazeTime &gt;= minTime:&amp;#10;    print('Passed min familiarization time.')&amp;#10;    continueRoutine = False&amp;#10;&amp;#10;if currentTime &gt;= maxTime:&amp;#10;    print('Did not pass min familiarization time.')&amp;#10;    continueRoutine = False&amp;#10;&amp;#10;if 'escape' in event.getKeys():&amp;#10;    core.quit()" valType="extendedCode" updates="constant" name="Each Frame"/>
-        <Param val="var _pj;&amp;#10;function _pj_snippets(container) {&amp;#10;    function in_es6(left, right) {&amp;#10;        if (((right instanceof Array) || ((typeof right) === &quot;string&quot;))) {&amp;#10;            return (right.indexOf(left) &gt; (- 1));&amp;#10;        } else {&amp;#10;            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {&amp;#10;                return right.has(left);&amp;#10;            } else {&amp;#10;                return (left in right);&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;    container[&quot;in_es6&quot;] = in_es6;&amp;#10;    return container;&amp;#10;}&amp;#10;_pj = {};&amp;#10;_pj_snippets(_pj);&amp;#10;currentTime = trialClock.getTime();&amp;#10;gazePos = get_current_gaze();&amp;#10;if ((gazePos !== null)) {&amp;#10;    [gazeX, gazeY] = gazePos;&amp;#10;    if ((((x0 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x1)) &amp;&amp; ((y0 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y1)))) {&amp;#10;        inROI = 1;&amp;#10;        if ((! gazeInROI)) {&amp;#10;            roiClock.reset();&amp;#10;            gazeInROI = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        if (gazeInROI) {&amp;#10;            gazeTime += roiClock.getTime();&amp;#10;            gazeInROI = false;&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;if (gazeInROI) {&amp;#10;    currentGazeTime = (gazeTime + roiClock.getTime());&amp;#10;} else {&amp;#10;    currentGazeTime = gazeTime;&amp;#10;}&amp;#10;sampleIndex += 1;&amp;#10;psychoJS.experiment.addData(&quot;gaze_sample_index&quot;, sampleIndex);&amp;#10;psychoJS.experiment.addData(&quot;trial_time&quot;, currentTime);&amp;#10;psychoJS.experiment.addData(&quot;gaze_x&quot;, (_pj.in_es6(&quot;gazeX&quot;, locals()) ? gazeX : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_y&quot;, (_pj.in_es6(&quot;gazeY&quot;, locals()) ? gazeY : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi&quot;, (_pj.in_es6(&quot;inROI&quot;, locals()) ? inROI : 0));&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_ROI_familiarization&quot;, (_pj.in_es6(&quot;gazeTime&quot;, locals()) ? currentGazeTime : 0));&amp;#10;current_sample = (latest_gaze ? latest_gaze.copy() : null);&amp;#10;if ((current_sample !== null)) {&amp;#10;    keys = list(current_sample.keys());&amp;#10;    for (var k, _pj_c = 0, _pj_a = keys, _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;        k = _pj_a[_pj_c];&amp;#10;        psychoJS.experiment.addData(k, current_sample[k]);&amp;#10;    }&amp;#10;} else {&amp;#10;    psychoJS.experiment.addData(&quot;no_gaze_data&quot;, 1);&amp;#10;}&amp;#10;psychoJS.experiment.nextEntry();&amp;#10;if ((currentGazeTime &gt;= minTime)) {&amp;#10;    console.log(&quot;Passed min familiarization time.&quot;);&amp;#10;    continueRoutine = false;&amp;#10;}&amp;#10;if ((currentTime &gt;= maxTime)) {&amp;#10;    console.log(&quot;Did not pass min familiarization time.&quot;);&amp;#10;    continueRoutine = false;&amp;#10;}&amp;#10;if (_pj.in_es6(&quot;escape&quot;, psychoJS.eventManager.getKeys())) {&amp;#10;    core.quit();&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Each JS Frame"/>
+        <Param val="# Get current time&amp;#10;currentTime = trialClock.getTime()&amp;#10;# Get current gaze position from latest_gaze&amp;#10;gazePos = get_current_gaze()  # returns (x, y) or None&amp;#10;&amp;#10;if gazePos is not None:&amp;#10;    gazeX, gazeY = gazePos&amp;#10;    # Check if gaze is inside ROI&amp;#10;    if x0 &lt;= gazeX &lt;= x1 and y0 &lt;= gazeY &lt;= y1:&amp;#10;        inROI = 1&amp;#10;        if not gazeInROI:       # first frame in ROI&amp;#10;            roiClock.reset()&amp;#10;            gazeInROI = True&amp;#10;    else:&amp;#10;        if gazeInROI:           # gaze just left ROI&amp;#10;            gazeTime += roiClock.getTime()  # finalize accumulated time&amp;#10;            gazeInROI = False&amp;#10;            &amp;#10;# If currently looking, report accumulated + current fixation&amp;#10;if gazeInROI:&amp;#10;    currentGazeTime = gazeTime + roiClock.getTime()&amp;#10;else:&amp;#10;    currentGazeTime = gazeTime&amp;#10;    &amp;#10;# for debugging&amp;#10;# print(currentGazeTime)&amp;#10;&amp;#10;# ---------- SAVE RAW GAZE SAMPLE ----------&amp;#10;&amp;#10;sampleIndex += 1&amp;#10;thisExp.addData('gaze_sample_index', sampleIndex)&amp;#10;thisExp.addData('trial_time', currentTime)&amp;#10;thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)&amp;#10;thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)&amp;#10;thisExp.addData('gaze_in_roi_familiarization', inROI if 'inROI' in locals() else 0)&amp;#10;thisExp.addData('gaze_time_ROI_familiarization', currentGazeTime if 'gazeTime' in locals() else 0)&amp;#10;&amp;#10;# Make a safe copy of latest_gaze to prevent thread issues&amp;#10;current_sample = latest_gaze.copy() if latest_gaze else None&amp;#10;&amp;#10;# Save all raw gaze fields from latest_gaze&amp;#10;if current_sample is not None:&amp;#10;    keys = list(current_sample.keys())&amp;#10;    for k in keys:&amp;#10;        thisExp.addData(k, current_sample[k])&amp;#10;else:&amp;#10;    thisExp.addData('no_gaze_data', 1)&amp;#10;&amp;#10;thisExp.nextEntry()  # VERY IMPORTANT&amp;#10;&amp;#10;# ---------- END CONDITIONS ----------&amp;#10;&amp;#10;if currentGazeTime &gt;= minTime:&amp;#10;    print('Passed min familiarization time.')&amp;#10;    continueRoutine = False&amp;#10;&amp;#10;if currentTime &gt;= maxTime:&amp;#10;    print('Did not pass min familiarization time.')&amp;#10;    continueRoutine = False" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="var _pj;&amp;#10;function _pj_snippets(container) {&amp;#10;    function in_es6(left, right) {&amp;#10;        if (((right instanceof Array) || ((typeof right) === &quot;string&quot;))) {&amp;#10;            return (right.indexOf(left) &gt; (- 1));&amp;#10;        } else {&amp;#10;            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {&amp;#10;                return right.has(left);&amp;#10;            } else {&amp;#10;                return (left in right);&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;    container[&quot;in_es6&quot;] = in_es6;&amp;#10;    return container;&amp;#10;}&amp;#10;_pj = {};&amp;#10;_pj_snippets(_pj);&amp;#10;currentTime = trialClock.getTime();&amp;#10;gazePos = get_current_gaze();&amp;#10;if ((gazePos !== null)) {&amp;#10;    [gazeX, gazeY] = gazePos;&amp;#10;    if ((((x0 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x1)) &amp;&amp; ((y0 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y1)))) {&amp;#10;        inROI = 1;&amp;#10;        if ((! gazeInROI)) {&amp;#10;            roiClock.reset();&amp;#10;            gazeInROI = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        if (gazeInROI) {&amp;#10;            gazeTime += roiClock.getTime();&amp;#10;            gazeInROI = false;&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;if (gazeInROI) {&amp;#10;    currentGazeTime = (gazeTime + roiClock.getTime());&amp;#10;} else {&amp;#10;    currentGazeTime = gazeTime;&amp;#10;}&amp;#10;sampleIndex += 1;&amp;#10;psychoJS.experiment.addData(&quot;gaze_sample_index&quot;, sampleIndex);&amp;#10;psychoJS.experiment.addData(&quot;trial_time&quot;, currentTime);&amp;#10;psychoJS.experiment.addData(&quot;gaze_x&quot;, (_pj.in_es6(&quot;gazeX&quot;, locals()) ? gazeX : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_y&quot;, (_pj.in_es6(&quot;gazeY&quot;, locals()) ? gazeY : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi_familiarization&quot;, (_pj.in_es6(&quot;inROI&quot;, locals()) ? inROI : 0));&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_ROI_familiarization&quot;, (_pj.in_es6(&quot;gazeTime&quot;, locals()) ? currentGazeTime : 0));&amp;#10;current_sample = (latest_gaze ? latest_gaze.copy() : null);&amp;#10;if ((current_sample !== null)) {&amp;#10;    keys = list(current_sample.keys());&amp;#10;    for (var k, _pj_c = 0, _pj_a = keys, _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;        k = _pj_a[_pj_c];&amp;#10;        psychoJS.experiment.addData(k, current_sample[k]);&amp;#10;    }&amp;#10;} else {&amp;#10;    psychoJS.experiment.addData(&quot;no_gaze_data&quot;, 1);&amp;#10;}&amp;#10;psychoJS.experiment.nextEntry();&amp;#10;if ((currentGazeTime &gt;= minTime)) {&amp;#10;    console.log(&quot;Passed min familiarization time.&quot;);&amp;#10;    continueRoutine = false;&amp;#10;}&amp;#10;if ((currentTime &gt;= maxTime)) {&amp;#10;    console.log(&quot;Did not pass min familiarization time.&quot;);&amp;#10;    continueRoutine = false;&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Each JS Frame"/>
         <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
@@ -320,267 +320,6 @@
         <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="1" valType="num" updates="constant" name="volume"/>
       </SoundComponent>
-    </Routine>
-    <Routine name="Central_Fixation">
-      <RoutineSettingsComponent name="Central_Fixation" plugin="None">
-        <Param val="none" valType="str" updates="None" name="backgroundFit"/>
-        <Param val="" valType="str" updates="None" name="backgroundImg"/>
-        <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
-        <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
-        <Param val="" valType="str" updates="constant" name="desc"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="False" valType="code" updates="None" name="forceNonSlip"/>
-        <Param val="Central_Fixation" valType="code" updates="None" name="name"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="" valType="code" updates="constant" name="skipIf"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
-      </RoutineSettingsComponent>
-      <MovieComponent name="central_fixation" plugin="None">
-        <Param val="False" valType="bool" updates="None" name="No audio"/>
-        <Param val="center" valType="str" updates="constant" name="anchor"/>
-        <Param val="ffpyplayer" valType="str" updates="None" name="backend"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="True" valType="bool" updates="constant" name="forceEndRoutine"/>
-        <Param val="False" valType="bool" updates="None" name="loop"/>
-        <Param val="stimuli/movies/ag_no_audio_grey.mp4" valType="file" updates="set every repeat" name="movie"/>
-        <Param val="central_fixation" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="(0.7,0.4)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="0.750" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="constant" name="stopWithRoutine"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="code" updates="None" name="validator"/>
-        <Param val="1" valType="num" updates="None" name="volume"/>
-      </MovieComponent>
-      <CodeComponent name="code_check_fixation" plugin="None">
-        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
-        <Param val="trialClock = new util.Clock();&amp;#10;roiClock = new util.Clock();&amp;#10;gazeTime = 0;&amp;#10;gazeInROI = false;&amp;#10;continueRoutine = true;&amp;#10;sampleIndex = 0;&amp;#10;aspect = (psychoJS.window.size[0] / psychoJS.window.size[1]);&amp;#10;x0 = ((- aspect) / 2);&amp;#10;x1 = (aspect / 2);&amp;#10;y0 = (- 0.5);&amp;#10;y1 = 0.5;&amp;#10;console.log(&quot;Fixation started&quot;);&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="# set up&amp;#10;trialClock = core.Clock()&amp;#10;roiClock = core.Clock()&amp;#10;&amp;#10;gazeTime = 0&amp;#10;gazeInROI = False&amp;#10;continueRoutine = True&amp;#10;sampleIndex = 0&amp;#10;&amp;#10;# Get aspect ratio&amp;#10;aspect = win.size[0] / win.size[1]&amp;#10;&amp;#10;# Define ROI&amp;#10;x0 = -aspect / 2&amp;#10;x1 =  aspect / 2&amp;#10;y0 = -0.5&amp;#10;y1 =  0.5&amp;#10;&amp;#10;print('Fixation started')&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
-        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
-        <Param val="# Get current time&amp;#10;currentTime = trialClock.getTime()&amp;#10;# Get current gaze&amp;#10;gazePos = get_current_gaze()  # returns (x, y) in 'height' units&amp;#10;&amp;#10;if gazePos is not None:&amp;#10;    gazeX, gazeY = gazePos&amp;#10;    # Check if gaze is inside ROI&amp;#10;    if x0 &lt;= gazeX &lt;= x1 and y0 &lt;= gazeY &lt;= y1:&amp;#10;        inROI = 1&amp;#10;        if not gazeInROI:       # first frame in ROI&amp;#10;            roiClock.reset()&amp;#10;            gazeInROI = True&amp;#10;    else:&amp;#10;        if gazeInROI:           # gaze just left ROI&amp;#10;            gazeTime += roiClock.getTime()  # finalize accumulated time&amp;#10;            gazeInROI = False&amp;#10;            &amp;#10;# If currently looking, report accumulated + current fixation&amp;#10;if gazeInROI:&amp;#10;    currentGazeTime = gazeTime + roiClock.getTime()&amp;#10;else:&amp;#10;    currentGazeTime = gazeTime&amp;#10;    &amp;#10;# ---------- SAVE RAW GAZE SAMPLE ----------&amp;#10;&amp;#10;sampleIndex += 1&amp;#10;thisExp.addData('gaze_sample_index', sampleIndex)&amp;#10;thisExp.addData('trial_time', currentTime)&amp;#10;thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)&amp;#10;thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)&amp;#10;thisExp.addData('gaze_in_roi', inROI if 'inROI' in locals() else 0)&amp;#10;thisExp.addData('gaze_time_ROI_fixation', currentGazeTime)&amp;#10;# Make a safe copy of latest_gaze to prevent thread issues&amp;#10;current_sample = latest_gaze.copy() if latest_gaze else None&amp;#10;&amp;#10;# Save all raw gaze fields from latest_gaze&amp;#10;if current_sample is not None:&amp;#10;    keys = list(current_sample.keys())&amp;#10;    for k in keys:&amp;#10;        thisExp.addData(k, current_sample[k])&amp;#10;else:&amp;#10;    thisExp.addData('no_gaze_data', 1)&amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
-        <Param val="var _pj;&amp;#10;function _pj_snippets(container) {&amp;#10;    function in_es6(left, right) {&amp;#10;        if (((right instanceof Array) || ((typeof right) === &quot;string&quot;))) {&amp;#10;            return (right.indexOf(left) &gt; (- 1));&amp;#10;        } else {&amp;#10;            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {&amp;#10;                return right.has(left);&amp;#10;            } else {&amp;#10;                return (left in right);&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;    container[&quot;in_es6&quot;] = in_es6;&amp;#10;    return container;&amp;#10;}&amp;#10;_pj = {};&amp;#10;_pj_snippets(_pj);&amp;#10;currentTime = trialClock.getTime();&amp;#10;gazePos = get_current_gaze();&amp;#10;if ((gazePos !== null)) {&amp;#10;    [gazeX, gazeY] = gazePos;&amp;#10;    if ((((x0 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x1)) &amp;&amp; ((y0 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y1)))) {&amp;#10;        inROI = 1;&amp;#10;        if ((! gazeInROI)) {&amp;#10;            roiClock.reset();&amp;#10;            gazeInROI = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        if (gazeInROI) {&amp;#10;            gazeTime += roiClock.getTime();&amp;#10;            gazeInROI = false;&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;if (gazeInROI) {&amp;#10;    currentGazeTime = (gazeTime + roiClock.getTime());&amp;#10;} else {&amp;#10;    currentGazeTime = gazeTime;&amp;#10;}&amp;#10;sampleIndex += 1;&amp;#10;psychoJS.experiment.addData(&quot;gaze_sample_index&quot;, sampleIndex);&amp;#10;psychoJS.experiment.addData(&quot;trial_time&quot;, currentTime);&amp;#10;psychoJS.experiment.addData(&quot;gaze_x&quot;, (_pj.in_es6(&quot;gazeX&quot;, locals()) ? gazeX : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_y&quot;, (_pj.in_es6(&quot;gazeY&quot;, locals()) ? gazeY : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi&quot;, (_pj.in_es6(&quot;inROI&quot;, locals()) ? inROI : 0));&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_ROI_fixation&quot;, currentGazeTime);&amp;#10;current_sample = (latest_gaze ? latest_gaze.copy() : null);&amp;#10;if ((current_sample !== null)) {&amp;#10;    keys = list(current_sample.keys());&amp;#10;    for (var k, _pj_c = 0, _pj_a = keys, _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;        k = _pj_a[_pj_c];&amp;#10;        psychoJS.experiment.addData(k, current_sample[k]);&amp;#10;    }&amp;#10;} else {&amp;#10;    psychoJS.experiment.addData(&quot;no_gaze_data&quot;, 1);&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Each JS Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="code_check_fixation" valType="code" updates="None" name="name"/>
-      </CodeComponent>
-      <SoundComponent name="sound_1" plugin="None">
-        <Param val="" valType="device" updates="None" name="deviceLabel"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="False" valType="bool" updates="constant" name="forceEndRoutine"/>
-        <Param val="True" valType="bool" updates="constant" name="hamming"/>
-        <Param val="sound_1" valType="code" updates="None" name="name"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="stimuli/audio/ag.wav" valType="str" updates="set every repeat" name="sound"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="0.750" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="constant" name="stopWithRoutine"/>
-        <Param val="True" valType="bool" updates="constant" name="syncScreenRefresh"/>
-        <Param val="" valType="code" updates="None" name="validator"/>
-        <Param val="1" valType="num" updates="constant" name="volume"/>
-      </SoundComponent>
-      <ImageComponent name="first_frame_fixation_set_up" plugin="None">
-        <Param val="center" valType="str" updates="constant" name="anchor"/>
-        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="False" valType="code" updates="constant" name="draggable"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
-        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="stimuli/images/first_frame_attention.png" valType="file" updates="constant" name="image"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="" valType="str" updates="constant" name="mask"/>
-        <Param val="first_frame_fixation_set_up" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="(0.7,0.4)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="0.1" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="code" updates="None" name="validator"/>
-      </ImageComponent>
-    </Routine>
-    <Routine name="Test_Period">
-      <RoutineSettingsComponent name="Test_Period" plugin="None">
-        <Param val="none" valType="str" updates="None" name="backgroundFit"/>
-        <Param val="" valType="str" updates="None" name="backgroundImg"/>
-        <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
-        <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
-        <Param val="" valType="str" updates="constant" name="desc"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="False" valType="code" updates="None" name="forceNonSlip"/>
-        <Param val="Test_Period" valType="code" updates="None" name="name"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="" valType="code" updates="constant" name="skipIf"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
-      </RoutineSettingsComponent>
-      <PolygonComponent name="ROI_right" plugin="None">
-        <Param val="center-right" valType="str" updates="constant" name="anchor"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="False" valType="code" updates="constant" name="draggable"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="fillColor"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="lineColor"/>
-        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
-        <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="ROI_right" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(0.8, 0)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="rectangle" valType="str" updates="None" name="shape"/>
-        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="code" updates="None" name="validator"/>
-        <Param val="" valType="list" updates="constant" name="vertices"/>
-      </PolygonComponent>
-      <PolygonComponent name="ROI_left" plugin="None">
-        <Param val="center-left" valType="str" updates="constant" name="anchor"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="False" valType="code" updates="constant" name="draggable"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="fillColor"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="lineColor"/>
-        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
-        <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="ROI_left" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(-0.8, 0)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="rectangle" valType="str" updates="None" name="shape"/>
-        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="code" updates="None" name="validator"/>
-        <Param val="" valType="list" updates="constant" name="vertices"/>
-      </PolygonComponent>
-      <ImageComponent name="imgLeft" plugin="None">
-        <Param val="center-left" valType="str" updates="constant" name="anchor"/>
-        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="False" valType="code" updates="constant" name="draggable"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
-        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="" valType="file" updates="constant" name="image"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="" valType="str" updates="constant" name="mask"/>
-        <Param val="imgLeft" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(-0.8, 0)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="code" updates="None" name="validator"/>
-      </ImageComponent>
-      <ImageComponent name="imgRight" plugin="None">
-        <Param val="center-right" valType="str" updates="constant" name="anchor"/>
-        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="False" valType="code" updates="constant" name="draggable"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
-        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="" valType="file" updates="constant" name="image"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="" valType="str" updates="constant" name="mask"/>
-        <Param val="imgRight" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(0.8, 0)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="code" updates="None" name="validator"/>
-      </ImageComponent>
-      <CodeComponent name="code_test" plugin="None">
-        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
-        <Param val="if ((testLoop.thisN === 0)) {&amp;#10;    imgLeft.image = left_image_path_1;&amp;#10;    imgRight.image = right_image_path_1;&amp;#10;} else {&amp;#10;    imgLeft.image = right_image_path_1;&amp;#10;    imgRight.image = left_image_path_1;&amp;#10;}&amp;#10;trialClock = new util.Clock();&amp;#10;roiClockLeft = new util.Clock();&amp;#10;roiClockRight = new util.Clock();&amp;#10;sampleIndex = 0;&amp;#10;gazeX = Number.parseFloat(&quot;nan&quot;);&amp;#10;gazeY = Number.parseFloat(&quot;nan&quot;);&amp;#10;gazeTimeLeft = 0;&amp;#10;currentGazeTimeLeft = gazeTimeLeft;&amp;#10;inROILeft = 0;&amp;#10;gazeInROILeft = false;&amp;#10;gazeTimeRight = 0;&amp;#10;currentGazeTimeRight = gazeTimeRight;&amp;#10;inROIRight = 0;&amp;#10;gazeInROIRight = false;&amp;#10;gazeX = Number.parseFloat(&quot;nan&quot;);&amp;#10;gazeY = Number.parseFloat(&quot;nan&quot;);&amp;#10;[left_w, left_h] = ROI_left.size;&amp;#10;x0 = ROI_left.pos[0];&amp;#10;x1 = (ROI_left.pos[0] + left_w);&amp;#10;y0 = (ROI_left.pos[1] - (left_h / 2));&amp;#10;y1 = (ROI_left.pos[1] + (left_h / 2));&amp;#10;[right_w, right_h] = ROI_right.size;&amp;#10;x2 = (ROI_right.pos[0] - right_w);&amp;#10;x3 = ROI_right.pos[0];&amp;#10;y2 = (ROI_right.pos[1] - (right_h / 2));&amp;#10;y3 = (ROI_right.pos[1] + (right_h / 2));&amp;#10;maxTime = 5;&amp;#10;console.log(&quot;Test started&quot;);&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="# set up test image rotation&amp;#10;if testLoop.thisN == 0:&amp;#10;    imgLeft.image = left_image_path_1&amp;#10;    imgRight.image = right_image_path_1&amp;#10;else:&amp;#10;    imgLeft.image = right_image_path_1&amp;#10;    imgRight.image = left_image_path_1&amp;#10;&amp;#10;# Timer for this trial&amp;#10;trialClock = core.Clock()  &amp;#10;roiClockLeft = core.Clock()    &amp;#10;roiClockRight = core.Clock()&amp;#10;&amp;#10;# Gaze tracking&amp;#10;sampleIndex = 0&amp;#10;gazeX = float('nan')&amp;#10;gazeY = float('nan')&amp;#10;&amp;#10;gazeTimeLeft = 0 &amp;#10;currentGazeTimeLeft = gazeTimeLeft&amp;#10;inROILeft = 0&amp;#10;gazeInROILeft = False&amp;#10;&amp;#10;gazeTimeRight = 0&amp;#10;currentGazeTimeRight = gazeTimeRight&amp;#10;inROIRight = 0&amp;#10;gazeInROIRight = False&amp;#10;&amp;#10;gazeX = float('nan')&amp;#10;gazeY = float('nan')&amp;#10;&amp;#10;# ROI_left uses anchor='center-left' (pos is midpoint of left edge)&amp;#10;left_w, left_h = ROI_left.size&amp;#10;x0 = ROI_left.pos[0]                  # left edge&amp;#10;x1 = ROI_left.pos[0] + left_w         # right edge&amp;#10;y0 = ROI_left.pos[1] - left_h / 2&amp;#10;y1 = ROI_left.pos[1] + left_h / 2&amp;#10;&amp;#10;# ROI_right uses anchor='center-right' (pos is midpoint of right edge)&amp;#10;right_w, right_h = ROI_right.size&amp;#10;x2 = ROI_right.pos[0] - right_w       # left edge&amp;#10;x3 = ROI_right.pos[0]                 # right edge&amp;#10;y2 = ROI_right.pos[1] - right_h / 2&amp;#10;y3 = ROI_right.pos[1] + right_h / 2&amp;#10;&amp;#10;# set test time&amp;#10;maxTime = 5&amp;#10;&amp;#10;print('Test started')" valType="extendedCode" updates="constant" name="Begin Routine"/>
-        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
-        <Param val="# Current time&amp;#10;currentTime = trialClock.getTime()&amp;#10;# Get current gaze position&amp;#10;gazePos = get_current_gaze()  # (x, y) or None&amp;#10;&amp;#10;if gazePos is not None:&amp;#10;    gazeX, gazeY = gazePos&amp;#10;    # Left ROI&amp;#10;    if x0 &lt;= gazeX &lt;= x1 and y0 &lt;= gazeY &lt;= y1:&amp;#10;        inROILeft = 1&amp;#10;        if not gazeInROILeft:&amp;#10;            roiClockLeft.reset()&amp;#10;            gazeInROILeft = True&amp;#10;    else:&amp;#10;        inROILeft = 0&amp;#10;        if gazeInROILeft:&amp;#10;            gazeTimeLeft += roiClockLeft.getTime()&amp;#10;            gazeInROILeft = False&amp;#10;    # If currently looking, report accumulated + current fixation&amp;#10;    if inROILeft:&amp;#10;        currentGazeTimeLeft = gazeTimeLeft + roiClockLeft.getTime()&amp;#10;    else:&amp;#10;        currentGazeTimeLeft = gazeTimeLeft&amp;#10;    # for debugging&amp;#10;    # print(f&quot;Left: {currentGazeTimeLeft}&quot;)&amp;#10;&amp;#10;    # Right ROI&amp;#10;    if x2 &lt;= gazeX &lt;= x3 and y2 &lt;= gazeY &lt;= y3:&amp;#10;        inROIRight = 1&amp;#10;        if not gazeInROIRight:&amp;#10;            roiClockRight.reset()&amp;#10;            gazeInROIRight = True&amp;#10;    else:&amp;#10;        inROIRight = 0&amp;#10;        if gazeInROIRight:&amp;#10;            gazeTimeRight += roiClockRight.getTime()&amp;#10;            gazeInROIRight = False&amp;#10;        # If currently looking, report accumulated + current fixation&amp;#10;    if inROIRight:&amp;#10;        currentGazeTimeRight = gazeTimeRight + roiClockRight.getTime()&amp;#10;    else:&amp;#10;        currentGazeTimeRight = gazeTimeRight&amp;#10;    # for debugging&amp;#10;    # print(f&quot;Right: {currentGazeTimeRight}&quot;)&amp;#10;&amp;#10;# ---------- SAVE RAW GAZE SAMPLE ----------&amp;#10;&amp;#10;sampleIndex += 1&amp;#10;thisExp.addData('gaze_sample_index', sampleIndex)&amp;#10;thisExp.addData('trial_time', currentTime)&amp;#10;thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)&amp;#10;thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)&amp;#10;thisExp.addData('gaze_in_roi_right', inROIRight)&amp;#10;thisExp.addData('gaze_time_in_roi_right', currentGazeTimeRight)&amp;#10;thisExp.addData('gaze_in_roi_left', inROILeft)&amp;#10;thisExp.addData('gaze_time_in_roi_left', currentGazeTimeLeft)&amp;#10;&amp;#10;# Make a safe copy of latest_gaze to prevent thread issues&amp;#10;current_sample = latest_gaze.copy() if latest_gaze else None&amp;#10;&amp;#10;# Save all raw gaze fields from latest_gaze&amp;#10;if current_sample is not None:&amp;#10;    keys = list(current_sample.keys())&amp;#10;    for k in keys:&amp;#10;        thisExp.addData(k, current_sample[k])&amp;#10;else:&amp;#10;    thisExp.addData('no_gaze_data', 1)&amp;#10;&amp;#10;thisExp.nextEntry()  # VERY IMPORTANT&amp;#10;&amp;#10;# time out for test phase&amp;#10;if currentTime &gt;= maxTime:&amp;#10;    continueRoutine = False&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
-        <Param val="var _pj;&amp;#10;function _pj_snippets(container) {&amp;#10;    function in_es6(left, right) {&amp;#10;        if (((right instanceof Array) || ((typeof right) === &quot;string&quot;))) {&amp;#10;            return (right.indexOf(left) &gt; (- 1));&amp;#10;        } else {&amp;#10;            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {&amp;#10;                return right.has(left);&amp;#10;            } else {&amp;#10;                return (left in right);&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;    container[&quot;in_es6&quot;] = in_es6;&amp;#10;    return container;&amp;#10;}&amp;#10;_pj = {};&amp;#10;_pj_snippets(_pj);&amp;#10;currentTime = trialClock.getTime();&amp;#10;gazePos = get_current_gaze();&amp;#10;if ((gazePos !== null)) {&amp;#10;    [gazeX, gazeY] = gazePos;&amp;#10;    if ((((x0 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x1)) &amp;&amp; ((y0 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y1)))) {&amp;#10;        inROILeft = 1;&amp;#10;        if ((! gazeInROILeft)) {&amp;#10;            roiClockLeft.reset();&amp;#10;            gazeInROILeft = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        inROILeft = 0;&amp;#10;        if (gazeInROILeft) {&amp;#10;            gazeTimeLeft += roiClockLeft.getTime();&amp;#10;            gazeInROILeft = false;&amp;#10;        }&amp;#10;    }&amp;#10;    if (inROILeft) {&amp;#10;        currentGazeTimeLeft = (gazeTimeLeft + roiClockLeft.getTime());&amp;#10;    } else {&amp;#10;        currentGazeTimeLeft = gazeTimeLeft;&amp;#10;    }&amp;#10;    if ((((x2 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x3)) &amp;&amp; ((y2 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y3)))) {&amp;#10;        inROIRight = 1;&amp;#10;        if ((! gazeInROIRight)) {&amp;#10;            roiClockRight.reset();&amp;#10;            gazeInROIRight = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        inROIRight = 0;&amp;#10;        if (gazeInROIRight) {&amp;#10;            gazeTimeRight += roiClockRight.getTime();&amp;#10;            gazeInROIRight = false;&amp;#10;        }&amp;#10;    }&amp;#10;    if (inROIRight) {&amp;#10;        currentGazeTimeRight = (gazeTimeRight + roiClockRight.getTime());&amp;#10;    } else {&amp;#10;        currentGazeTimeRight = gazeTimeRight;&amp;#10;    }&amp;#10;}&amp;#10;sampleIndex += 1;&amp;#10;psychoJS.experiment.addData(&quot;gaze_sample_index&quot;, sampleIndex);&amp;#10;psychoJS.experiment.addData(&quot;trial_time&quot;, currentTime);&amp;#10;psychoJS.experiment.addData(&quot;gaze_x&quot;, (_pj.in_es6(&quot;gazeX&quot;, locals()) ? gazeX : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_y&quot;, (_pj.in_es6(&quot;gazeY&quot;, locals()) ? gazeY : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi_right&quot;, inROIRight);&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_in_roi_right&quot;, currentGazeTimeRight);&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi_left&quot;, inROILeft);&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_in_roi_left&quot;, currentGazeTimeLeft);&amp;#10;current_sample = (latest_gaze ? latest_gaze.copy() : null);&amp;#10;if ((current_sample !== null)) {&amp;#10;    keys = list(current_sample.keys());&amp;#10;    for (var k, _pj_c = 0, _pj_a = keys, _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;        k = _pj_a[_pj_c];&amp;#10;        psychoJS.experiment.addData(k, current_sample[k]);&amp;#10;    }&amp;#10;} else {&amp;#10;    psychoJS.experiment.addData(&quot;no_gaze_data&quot;, 1);&amp;#10;}&amp;#10;psychoJS.experiment.nextEntry();&amp;#10;if ((currentTime &gt;= maxTime)) {&amp;#10;    continueRoutine = false;&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Each JS Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="code_test" valType="code" updates="None" name="name"/>
-      </CodeComponent>
     </Routine>
     <Routine name="Start_ET">
       <RoutineSettingsComponent name="Start_ET" plugin="None">
@@ -812,6 +551,547 @@
         <Param val="True" valType="bool" updates="constant" name="syncScreenRefresh"/>
       </KeyboardComponent>
     </Routine>
+    <Routine name="Pre_Test_Attention_Getter">
+      <RoutineSettingsComponent name="Pre_Test_Attention_Getter" plugin="None">
+        <Param val="none" valType="str" updates="None" name="backgroundFit"/>
+        <Param val="" valType="str" updates="None" name="backgroundImg"/>
+        <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
+        <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
+        <Param val="" valType="str" updates="constant" name="desc"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="code" updates="None" name="forceNonSlip"/>
+        <Param val="Pre_Test_Attention_Getter" valType="code" updates="None" name="name"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="" valType="code" updates="constant" name="skipIf"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
+      </RoutineSettingsComponent>
+      <MovieComponent name="central_fixation" plugin="None">
+        <Param val="False" valType="bool" updates="None" name="No audio"/>
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="ffpyplayer" valType="str" updates="None" name="backend"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="True" valType="bool" updates="constant" name="forceEndRoutine"/>
+        <Param val="False" valType="bool" updates="None" name="loop"/>
+        <Param val="stimuli/movies/ag_no_audio_grey.mp4" valType="file" updates="set every repeat" name="movie"/>
+        <Param val="central_fixation" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="(0.7,0.4)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="5" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="constant" name="stopWithRoutine"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+        <Param val="1" valType="num" updates="None" name="volume"/>
+      </MovieComponent>
+      <CodeComponent name="code_ag_1" plugin="None">
+        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
+        <Param val="trialClock = new util.Clock();&amp;#10;roiClock = new util.Clock();&amp;#10;gazeTime = 0;&amp;#10;gazeInROI = false;&amp;#10;continueRoutine = true;&amp;#10;sampleIndex = 0;&amp;#10;aspect = (psychoJS.window.size[0] / psychoJS.window.size[1]);&amp;#10;x0 = ((- aspect) / 2);&amp;#10;x1 = (aspect / 2);&amp;#10;y0 = (- 0.5);&amp;#10;y1 = 0.5;&amp;#10;console.log(&quot;AG 1 started&quot;);&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
+        <Param val="# set up&amp;#10;trialClock = core.Clock()&amp;#10;roiClock = core.Clock()&amp;#10;&amp;#10;gazeTime = 0&amp;#10;gazeInROI = False&amp;#10;continueRoutine = True&amp;#10;sampleIndex = 0&amp;#10;&amp;#10;# Get aspect ratio&amp;#10;aspect = win.size[0] / win.size[1]&amp;#10;&amp;#10;# Define ROI&amp;#10;x0 = -aspect / 2&amp;#10;x1 =  aspect / 2&amp;#10;y0 = -0.5&amp;#10;y1 =  0.5&amp;#10;&amp;#10;print('AG 1 started')&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
+        <Param val="# Get current time&amp;#10;currentTime = trialClock.getTime()&amp;#10;# Get current gaze&amp;#10;gazePos = get_current_gaze()  # returns (x, y) in 'height' units&amp;#10;&amp;#10;if gazePos is not None:&amp;#10;    gazeX, gazeY = gazePos&amp;#10;    # Check if gaze is inside ROI&amp;#10;    if x0 &lt;= gazeX &lt;= x1 and y0 &lt;= gazeY &lt;= y1:&amp;#10;        inROI = 1&amp;#10;        if not gazeInROI:       # first frame in ROI&amp;#10;            roiClock.reset()&amp;#10;            gazeInROI = True&amp;#10;    else:&amp;#10;        if gazeInROI:           # gaze just left ROI&amp;#10;            gazeTime += roiClock.getTime()  # finalize accumulated time&amp;#10;            gazeInROI = False&amp;#10;            &amp;#10;# If currently looking, report accumulated + current fixation&amp;#10;if gazeInROI:&amp;#10;    currentGazeTime = gazeTime + roiClock.getTime()&amp;#10;else:&amp;#10;    currentGazeTime = gazeTime&amp;#10;    &amp;#10;# ---------- SAVE RAW GAZE SAMPLE ----------&amp;#10;&amp;#10;sampleIndex += 1&amp;#10;thisExp.addData('gaze_sample_index', sampleIndex)&amp;#10;thisExp.addData('trial_time', currentTime)&amp;#10;thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)&amp;#10;thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)&amp;#10;thisExp.addData('gaze_in_roi_ag_1', inROI if 'inROI' in locals() else 0)&amp;#10;thisExp.addData('gaze_time_ROI_ag_1', currentGazeTime)&amp;#10;# Make a safe copy of latest_gaze to prevent thread issues&amp;#10;current_sample = latest_gaze.copy() if latest_gaze else None&amp;#10;&amp;#10;# Save all raw gaze fields from latest_gaze&amp;#10;if current_sample is not None:&amp;#10;    keys = list(current_sample.keys())&amp;#10;    for k in keys:&amp;#10;        thisExp.addData(k, current_sample[k])&amp;#10;else:&amp;#10;    thisExp.addData('no_gaze_data', 1)&amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="var _pj;&amp;#10;function _pj_snippets(container) {&amp;#10;    function in_es6(left, right) {&amp;#10;        if (((right instanceof Array) || ((typeof right) === &quot;string&quot;))) {&amp;#10;            return (right.indexOf(left) &gt; (- 1));&amp;#10;        } else {&amp;#10;            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {&amp;#10;                return right.has(left);&amp;#10;            } else {&amp;#10;                return (left in right);&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;    container[&quot;in_es6&quot;] = in_es6;&amp;#10;    return container;&amp;#10;}&amp;#10;_pj = {};&amp;#10;_pj_snippets(_pj);&amp;#10;currentTime = trialClock.getTime();&amp;#10;gazePos = get_current_gaze();&amp;#10;if ((gazePos !== null)) {&amp;#10;    [gazeX, gazeY] = gazePos;&amp;#10;    if ((((x0 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x1)) &amp;&amp; ((y0 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y1)))) {&amp;#10;        inROI = 1;&amp;#10;        if ((! gazeInROI)) {&amp;#10;            roiClock.reset();&amp;#10;            gazeInROI = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        if (gazeInROI) {&amp;#10;            gazeTime += roiClock.getTime();&amp;#10;            gazeInROI = false;&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;if (gazeInROI) {&amp;#10;    currentGazeTime = (gazeTime + roiClock.getTime());&amp;#10;} else {&amp;#10;    currentGazeTime = gazeTime;&amp;#10;}&amp;#10;sampleIndex += 1;&amp;#10;psychoJS.experiment.addData(&quot;gaze_sample_index&quot;, sampleIndex);&amp;#10;psychoJS.experiment.addData(&quot;trial_time&quot;, currentTime);&amp;#10;psychoJS.experiment.addData(&quot;gaze_x&quot;, (_pj.in_es6(&quot;gazeX&quot;, locals()) ? gazeX : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_y&quot;, (_pj.in_es6(&quot;gazeY&quot;, locals()) ? gazeY : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi_ag_1&quot;, (_pj.in_es6(&quot;inROI&quot;, locals()) ? inROI : 0));&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_ROI_ag_1&quot;, currentGazeTime);&amp;#10;current_sample = (latest_gaze ? latest_gaze.copy() : null);&amp;#10;if ((current_sample !== null)) {&amp;#10;    keys = list(current_sample.keys());&amp;#10;    for (var k, _pj_c = 0, _pj_a = keys, _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;        k = _pj_a[_pj_c];&amp;#10;        psychoJS.experiment.addData(k, current_sample[k]);&amp;#10;    }&amp;#10;} else {&amp;#10;    psychoJS.experiment.addData(&quot;no_gaze_data&quot;, 1);&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Each JS Frame"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="code_ag_1" valType="code" updates="None" name="name"/>
+      </CodeComponent>
+      <SoundComponent name="sound_1" plugin="None">
+        <Param val="" valType="device" updates="None" name="deviceLabel"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="forceEndRoutine"/>
+        <Param val="True" valType="bool" updates="constant" name="hamming"/>
+        <Param val="sound_1" valType="code" updates="None" name="name"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="stimuli/audio/ag.wav" valType="str" updates="set every repeat" name="sound"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="5" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="constant" name="stopWithRoutine"/>
+        <Param val="True" valType="bool" updates="constant" name="syncScreenRefresh"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+        <Param val="1" valType="num" updates="constant" name="volume"/>
+      </SoundComponent>
+      <ImageComponent name="first_frame_ag_1" plugin="None">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="False" valType="code" updates="constant" name="draggable"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="stimuli/images/first_frame_attention.png" valType="file" updates="constant" name="image"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="" valType="str" updates="constant" name="mask"/>
+        <Param val="first_frame_ag_1" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="(0.7,0.4)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="0.1" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+      </ImageComponent>
+      <KeyboardComponent name="key_resp_continue_pre_test_ag" plugin="None">
+        <Param val="'space'" valType="list" updates="constant" name="allowedKeys"/>
+        <Param val="" valType="str" updates="constant" name="correctAns"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="constant" name="discard previous"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="True" valType="bool" updates="constant" name="forceEndRoutine"/>
+        <Param val="key_resp_continue_pre_test_ag" valType="code" updates="None" name="name"/>
+        <Param val="press" valType="str" updates="constant" name="registerOn"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="last key" valType="str" updates="constant" name="store"/>
+        <Param val="False" valType="bool" updates="constant" name="storeCorrect"/>
+        <Param val="True" valType="bool" updates="constant" name="syncScreenRefresh"/>
+      </KeyboardComponent>
+    </Routine>
+    <Routine name="Test_Event_1">
+      <RoutineSettingsComponent name="Test_Event_1" plugin="None">
+        <Param val="none" valType="str" updates="None" name="backgroundFit"/>
+        <Param val="" valType="str" updates="None" name="backgroundImg"/>
+        <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
+        <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
+        <Param val="" valType="str" updates="constant" name="desc"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="code" updates="None" name="forceNonSlip"/>
+        <Param val="Test_Event_1" valType="code" updates="None" name="name"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="" valType="code" updates="constant" name="skipIf"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
+      </RoutineSettingsComponent>
+      <PolygonComponent name="ROI_right_1" plugin="None">
+        <Param val="center-right" valType="str" updates="constant" name="anchor"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="False" valType="code" updates="constant" name="draggable"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="fillColor"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="lineColor"/>
+        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
+        <Param val="4" valType="int" updates="constant" name="nVertices"/>
+        <Param val="ROI_right_1" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0.8, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="rectangle" valType="str" updates="None" name="shape"/>
+        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+        <Param val="" valType="list" updates="constant" name="vertices"/>
+      </PolygonComponent>
+      <PolygonComponent name="ROI_left_1" plugin="None">
+        <Param val="center-left" valType="str" updates="constant" name="anchor"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="False" valType="code" updates="constant" name="draggable"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="fillColor"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="lineColor"/>
+        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
+        <Param val="4" valType="int" updates="constant" name="nVertices"/>
+        <Param val="ROI_left_1" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(-0.8, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="rectangle" valType="str" updates="None" name="shape"/>
+        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+        <Param val="" valType="list" updates="constant" name="vertices"/>
+      </PolygonComponent>
+      <ImageComponent name="imgLeft_1" plugin="None">
+        <Param val="center-left" valType="str" updates="constant" name="anchor"/>
+        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="False" valType="code" updates="constant" name="draggable"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="$left_image_path_1" valType="file" updates="set every repeat" name="image"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="" valType="str" updates="constant" name="mask"/>
+        <Param val="imgLeft_1" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(-0.8, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+      </ImageComponent>
+      <ImageComponent name="imgRight_1" plugin="None">
+        <Param val="center-right" valType="str" updates="constant" name="anchor"/>
+        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="False" valType="code" updates="constant" name="draggable"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="$right_image_path_1" valType="file" updates="set every repeat" name="image"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="" valType="str" updates="constant" name="mask"/>
+        <Param val="imgRight_1" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0.8, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+      </ImageComponent>
+      <CodeComponent name="code_test_1" plugin="None">
+        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
+        <Param val="trialClock = new util.Clock();&amp;#10;roiClockLeft = new util.Clock();&amp;#10;roiClockRight = new util.Clock();&amp;#10;sampleIndex = 0;&amp;#10;gazeX = Number.parseFloat(&quot;nan&quot;);&amp;#10;gazeY = Number.parseFloat(&quot;nan&quot;);&amp;#10;gazeTimeLeft = 0;&amp;#10;currentGazeTimeLeft = gazeTimeLeft;&amp;#10;inROILeft = 0;&amp;#10;gazeInROILeft = false;&amp;#10;gazeTimeRight = 0;&amp;#10;currentGazeTimeRight = gazeTimeRight;&amp;#10;inROIRight = 0;&amp;#10;gazeInROIRight = false;&amp;#10;gazeX = Number.parseFloat(&quot;nan&quot;);&amp;#10;gazeY = Number.parseFloat(&quot;nan&quot;);&amp;#10;[left_w, left_h] = ROI_left_1.size;&amp;#10;x0 = ROI_left_1.pos[0];&amp;#10;x1 = (ROI_left_1.pos[0] + left_w);&amp;#10;y0 = (ROI_left_1.pos[1] - (left_h / 2));&amp;#10;y1 = (ROI_left_1.pos[1] + (left_h / 2));&amp;#10;[right_w, right_h] = ROI_right_1.size;&amp;#10;x2 = (ROI_right_1.pos[0] - right_w);&amp;#10;x3 = ROI_right_1.pos[0];&amp;#10;y2 = (ROI_right_1.pos[1] - (right_h / 2));&amp;#10;y3 = (ROI_right_1.pos[1] + (right_h / 2));&amp;#10;maxTime = 5;&amp;#10;console.log(&quot;Test 1 started&quot;);&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
+        <Param val="# Timer for this trial&amp;#10;trialClock = core.Clock()  &amp;#10;roiClockLeft = core.Clock()    &amp;#10;roiClockRight = core.Clock()&amp;#10;&amp;#10;# Gaze tracking&amp;#10;sampleIndex = 0&amp;#10;gazeX = float('nan')&amp;#10;gazeY = float('nan')&amp;#10;&amp;#10;gazeTimeLeft = 0 &amp;#10;currentGazeTimeLeft = gazeTimeLeft&amp;#10;inROILeft = 0&amp;#10;gazeInROILeft = False&amp;#10;&amp;#10;gazeTimeRight = 0&amp;#10;currentGazeTimeRight = gazeTimeRight&amp;#10;inROIRight = 0&amp;#10;gazeInROIRight = False&amp;#10;&amp;#10;gazeX = float('nan')&amp;#10;gazeY = float('nan')&amp;#10;&amp;#10;# ROI_left uses anchor='center-left' (pos is midpoint of left edge)&amp;#10;left_w, left_h = ROI_left_1.size&amp;#10;x0 = ROI_left_1.pos[0]                  # left edge&amp;#10;x1 = ROI_left_1.pos[0] + left_w         # right edge&amp;#10;y0 = ROI_left_1.pos[1] - left_h / 2&amp;#10;y1 = ROI_left_1.pos[1] + left_h / 2&amp;#10;&amp;#10;# ROI_right uses anchor='center-right' (pos is midpoint of right edge)&amp;#10;right_w, right_h = ROI_right_1.size&amp;#10;x2 = ROI_right_1.pos[0] - right_w       # left edge&amp;#10;x3 = ROI_right_1.pos[0]                 # right edge&amp;#10;y2 = ROI_right_1.pos[1] - right_h / 2&amp;#10;y3 = ROI_right_1.pos[1] + right_h / 2&amp;#10;&amp;#10;# set test time&amp;#10;maxTime = 5&amp;#10;&amp;#10;print('Test 1 started')" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
+        <Param val="# Current time&amp;#10;currentTime = trialClock.getTime()&amp;#10;# Get current gaze position&amp;#10;gazePos = get_current_gaze()  # (x, y) or None&amp;#10;&amp;#10;if gazePos is not None:&amp;#10;    gazeX, gazeY = gazePos&amp;#10;    # Left ROI&amp;#10;    if x0 &lt;= gazeX &lt;= x1 and y0 &lt;= gazeY &lt;= y1:&amp;#10;        inROILeft = 1&amp;#10;        if not gazeInROILeft:&amp;#10;            roiClockLeft.reset()&amp;#10;            gazeInROILeft = True&amp;#10;    else:&amp;#10;        inROILeft = 0&amp;#10;        if gazeInROILeft:&amp;#10;            gazeTimeLeft += roiClockLeft.getTime()&amp;#10;            gazeInROILeft = False&amp;#10;    # If currently looking, report accumulated + current fixation&amp;#10;    if inROILeft:&amp;#10;        currentGazeTimeLeft = gazeTimeLeft + roiClockLeft.getTime()&amp;#10;    else:&amp;#10;        currentGazeTimeLeft = gazeTimeLeft&amp;#10;    # for debugging&amp;#10;    # print(f&quot;Left: {currentGazeTimeLeft}&quot;)&amp;#10;&amp;#10;    # Right ROI&amp;#10;    if x2 &lt;= gazeX &lt;= x3 and y2 &lt;= gazeY &lt;= y3:&amp;#10;        inROIRight = 1&amp;#10;        if not gazeInROIRight:&amp;#10;            roiClockRight.reset()&amp;#10;            gazeInROIRight = True&amp;#10;    else:&amp;#10;        inROIRight = 0&amp;#10;        if gazeInROIRight:&amp;#10;            gazeTimeRight += roiClockRight.getTime()&amp;#10;            gazeInROIRight = False&amp;#10;        # If currently looking, report accumulated + current fixation&amp;#10;    if inROIRight:&amp;#10;        currentGazeTimeRight = gazeTimeRight + roiClockRight.getTime()&amp;#10;    else:&amp;#10;        currentGazeTimeRight = gazeTimeRight&amp;#10;    # for debugging&amp;#10;    # print(f&quot;Right: {currentGazeTimeRight}&quot;)&amp;#10;&amp;#10;# ---------- SAVE RAW GAZE SAMPLE ----------&amp;#10;&amp;#10;sampleIndex += 1&amp;#10;thisExp.addData('gaze_sample_index', sampleIndex)&amp;#10;thisExp.addData('trial_time', currentTime)&amp;#10;thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)&amp;#10;thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)&amp;#10;thisExp.addData('gaze_in_roi_right_test_1', inROIRight)&amp;#10;thisExp.addData('gaze_time_in_roi_right_test_1', currentGazeTimeRight)&amp;#10;thisExp.addData('gaze_in_roi_left_test_1', inROILeft)&amp;#10;thisExp.addData('gaze_time_in_roi_left_test_1', currentGazeTimeLeft)&amp;#10;&amp;#10;# Make a safe copy of latest_gaze to prevent thread issues&amp;#10;current_sample = latest_gaze.copy() if latest_gaze else None&amp;#10;&amp;#10;# Save all raw gaze fields from latest_gaze&amp;#10;if current_sample is not None:&amp;#10;    keys = list(current_sample.keys())&amp;#10;    for k in keys:&amp;#10;        thisExp.addData(k, current_sample[k])&amp;#10;else:&amp;#10;    thisExp.addData('no_gaze_data', 1)&amp;#10;&amp;#10;thisExp.nextEntry()  # VERY IMPORTANT&amp;#10;&amp;#10;# time out for test phase&amp;#10;if currentTime &gt;= maxTime:&amp;#10;    continueRoutine = False&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="var _pj;&amp;#10;function _pj_snippets(container) {&amp;#10;    function in_es6(left, right) {&amp;#10;        if (((right instanceof Array) || ((typeof right) === &quot;string&quot;))) {&amp;#10;            return (right.indexOf(left) &gt; (- 1));&amp;#10;        } else {&amp;#10;            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {&amp;#10;                return right.has(left);&amp;#10;            } else {&amp;#10;                return (left in right);&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;    container[&quot;in_es6&quot;] = in_es6;&amp;#10;    return container;&amp;#10;}&amp;#10;_pj = {};&amp;#10;_pj_snippets(_pj);&amp;#10;currentTime = trialClock.getTime();&amp;#10;gazePos = get_current_gaze();&amp;#10;if ((gazePos !== null)) {&amp;#10;    [gazeX, gazeY] = gazePos;&amp;#10;    if ((((x0 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x1)) &amp;&amp; ((y0 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y1)))) {&amp;#10;        inROILeft = 1;&amp;#10;        if ((! gazeInROILeft)) {&amp;#10;            roiClockLeft.reset();&amp;#10;            gazeInROILeft = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        inROILeft = 0;&amp;#10;        if (gazeInROILeft) {&amp;#10;            gazeTimeLeft += roiClockLeft.getTime();&amp;#10;            gazeInROILeft = false;&amp;#10;        }&amp;#10;    }&amp;#10;    if (inROILeft) {&amp;#10;        currentGazeTimeLeft = (gazeTimeLeft + roiClockLeft.getTime());&amp;#10;    } else {&amp;#10;        currentGazeTimeLeft = gazeTimeLeft;&amp;#10;    }&amp;#10;    if ((((x2 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x3)) &amp;&amp; ((y2 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y3)))) {&amp;#10;        inROIRight = 1;&amp;#10;        if ((! gazeInROIRight)) {&amp;#10;            roiClockRight.reset();&amp;#10;            gazeInROIRight = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        inROIRight = 0;&amp;#10;        if (gazeInROIRight) {&amp;#10;            gazeTimeRight += roiClockRight.getTime();&amp;#10;            gazeInROIRight = false;&amp;#10;        }&amp;#10;    }&amp;#10;    if (inROIRight) {&amp;#10;        currentGazeTimeRight = (gazeTimeRight + roiClockRight.getTime());&amp;#10;    } else {&amp;#10;        currentGazeTimeRight = gazeTimeRight;&amp;#10;    }&amp;#10;}&amp;#10;sampleIndex += 1;&amp;#10;psychoJS.experiment.addData(&quot;gaze_sample_index&quot;, sampleIndex);&amp;#10;psychoJS.experiment.addData(&quot;trial_time&quot;, currentTime);&amp;#10;psychoJS.experiment.addData(&quot;gaze_x&quot;, (_pj.in_es6(&quot;gazeX&quot;, locals()) ? gazeX : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_y&quot;, (_pj.in_es6(&quot;gazeY&quot;, locals()) ? gazeY : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi_right_test_1&quot;, inROIRight);&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_in_roi_right_test_1&quot;, currentGazeTimeRight);&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi_left_test_1&quot;, inROILeft);&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_in_roi_left_test_1&quot;, currentGazeTimeLeft);&amp;#10;current_sample = (latest_gaze ? latest_gaze.copy() : null);&amp;#10;if ((current_sample !== null)) {&amp;#10;    keys = list(current_sample.keys());&amp;#10;    for (var k, _pj_c = 0, _pj_a = keys, _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;        k = _pj_a[_pj_c];&amp;#10;        psychoJS.experiment.addData(k, current_sample[k]);&amp;#10;    }&amp;#10;} else {&amp;#10;    psychoJS.experiment.addData(&quot;no_gaze_data&quot;, 1);&amp;#10;}&amp;#10;psychoJS.experiment.nextEntry();&amp;#10;if ((currentTime &gt;= maxTime)) {&amp;#10;    continueRoutine = false;&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Each JS Frame"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="code_test_1" valType="code" updates="None" name="name"/>
+      </CodeComponent>
+    </Routine>
+    <Routine name="Mid_Test_Attention_Getter">
+      <RoutineSettingsComponent name="Mid_Test_Attention_Getter" plugin="None">
+        <Param val="none" valType="str" updates="None" name="backgroundFit"/>
+        <Param val="" valType="str" updates="None" name="backgroundImg"/>
+        <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
+        <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
+        <Param val="" valType="str" updates="constant" name="desc"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="code" updates="None" name="forceNonSlip"/>
+        <Param val="Mid_Test_Attention_Getter" valType="code" updates="None" name="name"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="" valType="code" updates="constant" name="skipIf"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
+      </RoutineSettingsComponent>
+      <MovieComponent name="attention_getter_2" plugin="None">
+        <Param val="False" valType="bool" updates="None" name="No audio"/>
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="ffpyplayer" valType="str" updates="None" name="backend"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="True" valType="bool" updates="constant" name="forceEndRoutine"/>
+        <Param val="False" valType="bool" updates="None" name="loop"/>
+        <Param val="stimuli/movies/ag_no_audio_grey.mp4" valType="file" updates="set every repeat" name="movie"/>
+        <Param val="attention_getter_2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="(0.7,0.4)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="0.75" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="constant" name="stopWithRoutine"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+        <Param val="1" valType="num" updates="None" name="volume"/>
+      </MovieComponent>
+      <CodeComponent name="code_ag_2" plugin="None">
+        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
+        <Param val="trialClock = new util.Clock();&amp;#10;roiClock = new util.Clock();&amp;#10;gazeTime = 0;&amp;#10;gazeInROI = false;&amp;#10;continueRoutine = true;&amp;#10;sampleIndex = 0;&amp;#10;aspect = (psychoJS.window.size[0] / psychoJS.window.size[1]);&amp;#10;x0 = ((- aspect) / 2);&amp;#10;x1 = (aspect / 2);&amp;#10;y0 = (- 0.5);&amp;#10;y1 = 0.5;&amp;#10;console.log(&quot;AG 2 started&quot;);&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
+        <Param val="# set up&amp;#10;trialClock = core.Clock()&amp;#10;roiClock = core.Clock()&amp;#10;&amp;#10;gazeTime = 0&amp;#10;gazeInROI = False&amp;#10;continueRoutine = True&amp;#10;sampleIndex = 0&amp;#10;&amp;#10;# Get aspect ratio&amp;#10;aspect = win.size[0] / win.size[1]&amp;#10;&amp;#10;# Define ROI&amp;#10;x0 = -aspect / 2&amp;#10;x1 =  aspect / 2&amp;#10;y0 = -0.5&amp;#10;y1 =  0.5&amp;#10;&amp;#10;print('AG 2 started')&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
+        <Param val="# Get current time&amp;#10;currentTime = trialClock.getTime()&amp;#10;# Get current gaze&amp;#10;gazePos = get_current_gaze()  # returns (x, y) in 'height' units&amp;#10;&amp;#10;if gazePos is not None:&amp;#10;    gazeX, gazeY = gazePos&amp;#10;    # Check if gaze is inside ROI&amp;#10;    if x0 &lt;= gazeX &lt;= x1 and y0 &lt;= gazeY &lt;= y1:&amp;#10;        inROI = 1&amp;#10;        if not gazeInROI:       # first frame in ROI&amp;#10;            roiClock.reset()&amp;#10;            gazeInROI = True&amp;#10;    else:&amp;#10;        if gazeInROI:           # gaze just left ROI&amp;#10;            gazeTime += roiClock.getTime()  # finalize accumulated time&amp;#10;            gazeInROI = False&amp;#10;            &amp;#10;# If currently looking, report accumulated + current fixation&amp;#10;if gazeInROI:&amp;#10;    currentGazeTime = gazeTime + roiClock.getTime()&amp;#10;else:&amp;#10;    currentGazeTime = gazeTime&amp;#10;    &amp;#10;# ---------- SAVE RAW GAZE SAMPLE ----------&amp;#10;&amp;#10;sampleIndex += 1&amp;#10;thisExp.addData('gaze_sample_index', sampleIndex)&amp;#10;thisExp.addData('trial_time', currentTime)&amp;#10;thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)&amp;#10;thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)&amp;#10;thisExp.addData('gaze_in_roi_ag_2', inROI if 'inROI' in locals() else 0)&amp;#10;thisExp.addData('gaze_time_ROI_ag_2', currentGazeTime)&amp;#10;# Make a safe copy of latest_gaze to prevent thread issues&amp;#10;current_sample = latest_gaze.copy() if latest_gaze else None&amp;#10;&amp;#10;# Save all raw gaze fields from latest_gaze&amp;#10;if current_sample is not None:&amp;#10;    keys = list(current_sample.keys())&amp;#10;    for k in keys:&amp;#10;        thisExp.addData(k, current_sample[k])&amp;#10;else:&amp;#10;    thisExp.addData('no_gaze_data', 1)&amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="var _pj;&amp;#10;function _pj_snippets(container) {&amp;#10;    function in_es6(left, right) {&amp;#10;        if (((right instanceof Array) || ((typeof right) === &quot;string&quot;))) {&amp;#10;            return (right.indexOf(left) &gt; (- 1));&amp;#10;        } else {&amp;#10;            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {&amp;#10;                return right.has(left);&amp;#10;            } else {&amp;#10;                return (left in right);&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;    container[&quot;in_es6&quot;] = in_es6;&amp;#10;    return container;&amp;#10;}&amp;#10;_pj = {};&amp;#10;_pj_snippets(_pj);&amp;#10;currentTime = trialClock.getTime();&amp;#10;gazePos = get_current_gaze();&amp;#10;if ((gazePos !== null)) {&amp;#10;    [gazeX, gazeY] = gazePos;&amp;#10;    if ((((x0 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x1)) &amp;&amp; ((y0 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y1)))) {&amp;#10;        inROI = 1;&amp;#10;        if ((! gazeInROI)) {&amp;#10;            roiClock.reset();&amp;#10;            gazeInROI = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        if (gazeInROI) {&amp;#10;            gazeTime += roiClock.getTime();&amp;#10;            gazeInROI = false;&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;if (gazeInROI) {&amp;#10;    currentGazeTime = (gazeTime + roiClock.getTime());&amp;#10;} else {&amp;#10;    currentGazeTime = gazeTime;&amp;#10;}&amp;#10;sampleIndex += 1;&amp;#10;psychoJS.experiment.addData(&quot;gaze_sample_index&quot;, sampleIndex);&amp;#10;psychoJS.experiment.addData(&quot;trial_time&quot;, currentTime);&amp;#10;psychoJS.experiment.addData(&quot;gaze_x&quot;, (_pj.in_es6(&quot;gazeX&quot;, locals()) ? gazeX : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_y&quot;, (_pj.in_es6(&quot;gazeY&quot;, locals()) ? gazeY : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi_ag_2&quot;, (_pj.in_es6(&quot;inROI&quot;, locals()) ? inROI : 0));&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_ROI_ag_2&quot;, currentGazeTime);&amp;#10;current_sample = (latest_gaze ? latest_gaze.copy() : null);&amp;#10;if ((current_sample !== null)) {&amp;#10;    keys = list(current_sample.keys());&amp;#10;    for (var k, _pj_c = 0, _pj_a = keys, _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;        k = _pj_a[_pj_c];&amp;#10;        psychoJS.experiment.addData(k, current_sample[k]);&amp;#10;    }&amp;#10;} else {&amp;#10;    psychoJS.experiment.addData(&quot;no_gaze_data&quot;, 1);&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Each JS Frame"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="code_ag_2" valType="code" updates="None" name="name"/>
+      </CodeComponent>
+      <SoundComponent name="sound_2" plugin="None">
+        <Param val="" valType="device" updates="None" name="deviceLabel"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="forceEndRoutine"/>
+        <Param val="True" valType="bool" updates="constant" name="hamming"/>
+        <Param val="sound_2" valType="code" updates="None" name="name"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="stimuli/audio/ag.wav" valType="str" updates="set every repeat" name="sound"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="0.75" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="constant" name="stopWithRoutine"/>
+        <Param val="True" valType="bool" updates="constant" name="syncScreenRefresh"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+        <Param val="1" valType="num" updates="constant" name="volume"/>
+      </SoundComponent>
+      <ImageComponent name="first_frame_ag_2" plugin="None">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="False" valType="code" updates="constant" name="draggable"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="stimuli/images/first_frame_attention.png" valType="file" updates="constant" name="image"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="" valType="str" updates="constant" name="mask"/>
+        <Param val="first_frame_ag_2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="(0.7,0.4)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="0.1" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+      </ImageComponent>
+    </Routine>
+    <Routine name="Test_Event_2">
+      <RoutineSettingsComponent name="Test_Event_2" plugin="None">
+        <Param val="none" valType="str" updates="None" name="backgroundFit"/>
+        <Param val="" valType="str" updates="None" name="backgroundImg"/>
+        <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
+        <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
+        <Param val="" valType="str" updates="constant" name="desc"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="code" updates="None" name="forceNonSlip"/>
+        <Param val="Test_Event_2" valType="code" updates="None" name="name"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="" valType="code" updates="constant" name="skipIf"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
+      </RoutineSettingsComponent>
+      <PolygonComponent name="ROI_right_2" plugin="None">
+        <Param val="center-right" valType="str" updates="constant" name="anchor"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="False" valType="code" updates="constant" name="draggable"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="fillColor"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="lineColor"/>
+        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
+        <Param val="4" valType="int" updates="constant" name="nVertices"/>
+        <Param val="ROI_right_2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0.8, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="rectangle" valType="str" updates="None" name="shape"/>
+        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+        <Param val="" valType="list" updates="constant" name="vertices"/>
+      </PolygonComponent>
+      <PolygonComponent name="ROI_left_2" plugin="None">
+        <Param val="center-left" valType="str" updates="constant" name="anchor"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="False" valType="code" updates="constant" name="draggable"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="fillColor"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="$(0.0000, 0.0000, 0.0000)" valType="color" updates="constant" name="lineColor"/>
+        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
+        <Param val="4" valType="int" updates="constant" name="nVertices"/>
+        <Param val="ROI_left_2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(-0.8, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="rectangle" valType="str" updates="None" name="shape"/>
+        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+        <Param val="" valType="list" updates="constant" name="vertices"/>
+      </PolygonComponent>
+      <ImageComponent name="imgLeft_2" plugin="None">
+        <Param val="center-left" valType="str" updates="constant" name="anchor"/>
+        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="False" valType="code" updates="constant" name="draggable"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="$left_image_path_2" valType="file" updates="set every repeat" name="image"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="" valType="str" updates="constant" name="mask"/>
+        <Param val="imgLeft_2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(-0.8, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+      </ImageComponent>
+      <ImageComponent name="imgRight_2" plugin="None">
+        <Param val="center-right" valType="str" updates="constant" name="anchor"/>
+        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="False" valType="code" updates="constant" name="draggable"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="$right_image_path_2" valType="file" updates="set every repeat" name="image"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="" valType="str" updates="constant" name="mask"/>
+        <Param val="imgRight_2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0.8, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="(0.65, 0.65)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
+      </ImageComponent>
+      <CodeComponent name="code_test_2" plugin="None">
+        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
+        <Param val="trialClock = new util.Clock();&amp;#10;roiClockLeft = new util.Clock();&amp;#10;roiClockRight = new util.Clock();&amp;#10;sampleIndex = 0;&amp;#10;gazeX = Number.parseFloat(&quot;nan&quot;);&amp;#10;gazeY = Number.parseFloat(&quot;nan&quot;);&amp;#10;gazeTimeLeft = 0;&amp;#10;currentGazeTimeLeft = gazeTimeLeft;&amp;#10;inROILeft = 0;&amp;#10;gazeInROILeft = false;&amp;#10;gazeTimeRight = 0;&amp;#10;currentGazeTimeRight = gazeTimeRight;&amp;#10;inROIRight = 0;&amp;#10;gazeInROIRight = false;&amp;#10;gazeX = Number.parseFloat(&quot;nan&quot;);&amp;#10;gazeY = Number.parseFloat(&quot;nan&quot;);&amp;#10;[left_w, left_h] = ROI_left_2.size;&amp;#10;x0 = ROI_left_2.pos[0];&amp;#10;x1 = (ROI_left_2.pos[0] + left_w);&amp;#10;y0 = (ROI_left_2.pos[1] - (left_h / 2));&amp;#10;y1 = (ROI_left_2.pos[1] + (left_h / 2));&amp;#10;[right_w, right_h] = ROI_right_2.size;&amp;#10;x2 = (ROI_right_2.pos[0] - right_w);&amp;#10;x3 = ROI_right_2.pos[0];&amp;#10;y2 = (ROI_right_2.pos[1] - (right_h / 2));&amp;#10;y3 = (ROI_right_2.pos[1] + (right_h / 2));&amp;#10;maxTime = 5;&amp;#10;console.log(&quot;Test 2 started&quot;);&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
+        <Param val="# Timer for this trial&amp;#10;trialClock = core.Clock()  &amp;#10;roiClockLeft = core.Clock()    &amp;#10;roiClockRight = core.Clock()&amp;#10;&amp;#10;# Gaze tracking&amp;#10;sampleIndex = 0&amp;#10;gazeX = float('nan')&amp;#10;gazeY = float('nan')&amp;#10;&amp;#10;gazeTimeLeft = 0 &amp;#10;currentGazeTimeLeft = gazeTimeLeft&amp;#10;inROILeft = 0&amp;#10;gazeInROILeft = False&amp;#10;&amp;#10;gazeTimeRight = 0&amp;#10;currentGazeTimeRight = gazeTimeRight&amp;#10;inROIRight = 0&amp;#10;gazeInROIRight = False&amp;#10;&amp;#10;gazeX = float('nan')&amp;#10;gazeY = float('nan')&amp;#10;&amp;#10;# ROI_left uses anchor='center-left' (pos is midpoint of left edge)&amp;#10;left_w, left_h = ROI_left_2.size&amp;#10;x0 = ROI_left_2.pos[0]                  # left edge&amp;#10;x1 = ROI_left_2.pos[0] + left_w         # right edge&amp;#10;y0 = ROI_left_2.pos[1] - left_h / 2&amp;#10;y1 = ROI_left_2.pos[1] + left_h / 2&amp;#10;&amp;#10;# ROI_right uses anchor='center-right' (pos is midpoint of right edge)&amp;#10;right_w, right_h = ROI_right_2.size&amp;#10;x2 = ROI_right_2.pos[0] - right_w       # left edge&amp;#10;x3 = ROI_right_2.pos[0]                 # right edge&amp;#10;y2 = ROI_right_2.pos[1] - right_h / 2&amp;#10;y3 = ROI_right_2.pos[1] + right_h / 2&amp;#10;&amp;#10;# set test time&amp;#10;maxTime = 5&amp;#10;&amp;#10;print('Test 2 started')" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
+        <Param val="# Current time&amp;#10;currentTime = trialClock.getTime()&amp;#10;# Get current gaze position&amp;#10;gazePos = get_current_gaze()  # (x, y) or None&amp;#10;&amp;#10;if gazePos is not None:&amp;#10;    gazeX, gazeY = gazePos&amp;#10;    # Left ROI&amp;#10;    if x0 &lt;= gazeX &lt;= x1 and y0 &lt;= gazeY &lt;= y1:&amp;#10;        inROILeft = 1&amp;#10;        if not gazeInROILeft:&amp;#10;            roiClockLeft.reset()&amp;#10;            gazeInROILeft = True&amp;#10;    else:&amp;#10;        inROILeft = 0&amp;#10;        if gazeInROILeft:&amp;#10;            gazeTimeLeft += roiClockLeft.getTime()&amp;#10;            gazeInROILeft = False&amp;#10;    # If currently looking, report accumulated + current fixation&amp;#10;    if inROILeft:&amp;#10;        currentGazeTimeLeft = gazeTimeLeft + roiClockLeft.getTime()&amp;#10;    else:&amp;#10;        currentGazeTimeLeft = gazeTimeLeft&amp;#10;    # for debugging&amp;#10;    # print(f&quot;Left: {currentGazeTimeLeft}&quot;)&amp;#10;&amp;#10;    # Right ROI&amp;#10;    if x2 &lt;= gazeX &lt;= x3 and y2 &lt;= gazeY &lt;= y3:&amp;#10;        inROIRight = 1&amp;#10;        if not gazeInROIRight:&amp;#10;            roiClockRight.reset()&amp;#10;            gazeInROIRight = True&amp;#10;    else:&amp;#10;        inROIRight = 0&amp;#10;        if gazeInROIRight:&amp;#10;            gazeTimeRight += roiClockRight.getTime()&amp;#10;            gazeInROIRight = False&amp;#10;        # If currently looking, report accumulated + current fixation&amp;#10;    if inROIRight:&amp;#10;        currentGazeTimeRight = gazeTimeRight + roiClockRight.getTime()&amp;#10;    else:&amp;#10;        currentGazeTimeRight = gazeTimeRight&amp;#10;    # for debugging&amp;#10;    # print(f&quot;Right: {currentGazeTimeRight}&quot;)&amp;#10;&amp;#10;# ---------- SAVE RAW GAZE SAMPLE ----------&amp;#10;&amp;#10;sampleIndex += 1&amp;#10;thisExp.addData('gaze_sample_index', sampleIndex)&amp;#10;thisExp.addData('trial_time', currentTime)&amp;#10;thisExp.addData('gaze_x', gazeX if 'gazeX' in locals() else None)&amp;#10;thisExp.addData('gaze_y', gazeY if 'gazeY' in locals() else None)&amp;#10;thisExp.addData('gaze_in_roi_right_test_2', inROIRight)&amp;#10;thisExp.addData('gaze_time_in_roi_right_test_2', currentGazeTimeRight)&amp;#10;thisExp.addData('gaze_in_roi_left_test_2', inROILeft)&amp;#10;thisExp.addData('gaze_time_in_roi_left_test_2', currentGazeTimeLeft)&amp;#10;&amp;#10;# Make a safe copy of latest_gaze to prevent thread issues&amp;#10;current_sample = latest_gaze.copy() if latest_gaze else None&amp;#10;&amp;#10;# Save all raw gaze fields from latest_gaze&amp;#10;if current_sample is not None:&amp;#10;    keys = list(current_sample.keys())&amp;#10;    for k in keys:&amp;#10;        thisExp.addData(k, current_sample[k])&amp;#10;else:&amp;#10;    thisExp.addData('no_gaze_data', 1)&amp;#10;&amp;#10;thisExp.nextEntry()  # VERY IMPORTANT&amp;#10;&amp;#10;# time out for test phase&amp;#10;if currentTime &gt;= maxTime:&amp;#10;    continueRoutine = False&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="var _pj;&amp;#10;function _pj_snippets(container) {&amp;#10;    function in_es6(left, right) {&amp;#10;        if (((right instanceof Array) || ((typeof right) === &quot;string&quot;))) {&amp;#10;            return (right.indexOf(left) &gt; (- 1));&amp;#10;        } else {&amp;#10;            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {&amp;#10;                return right.has(left);&amp;#10;            } else {&amp;#10;                return (left in right);&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;    container[&quot;in_es6&quot;] = in_es6;&amp;#10;    return container;&amp;#10;}&amp;#10;_pj = {};&amp;#10;_pj_snippets(_pj);&amp;#10;currentTime = trialClock.getTime();&amp;#10;gazePos = get_current_gaze();&amp;#10;if ((gazePos !== null)) {&amp;#10;    [gazeX, gazeY] = gazePos;&amp;#10;    if ((((x0 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x1)) &amp;&amp; ((y0 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y1)))) {&amp;#10;        inROILeft = 1;&amp;#10;        if ((! gazeInROILeft)) {&amp;#10;            roiClockLeft.reset();&amp;#10;            gazeInROILeft = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        inROILeft = 0;&amp;#10;        if (gazeInROILeft) {&amp;#10;            gazeTimeLeft += roiClockLeft.getTime();&amp;#10;            gazeInROILeft = false;&amp;#10;        }&amp;#10;    }&amp;#10;    if (inROILeft) {&amp;#10;        currentGazeTimeLeft = (gazeTimeLeft + roiClockLeft.getTime());&amp;#10;    } else {&amp;#10;        currentGazeTimeLeft = gazeTimeLeft;&amp;#10;    }&amp;#10;    if ((((x2 &lt;= gazeX) &amp;&amp; (gazeX &lt;= x3)) &amp;&amp; ((y2 &lt;= gazeY) &amp;&amp; (gazeY &lt;= y3)))) {&amp;#10;        inROIRight = 1;&amp;#10;        if ((! gazeInROIRight)) {&amp;#10;            roiClockRight.reset();&amp;#10;            gazeInROIRight = true;&amp;#10;        }&amp;#10;    } else {&amp;#10;        inROIRight = 0;&amp;#10;        if (gazeInROIRight) {&amp;#10;            gazeTimeRight += roiClockRight.getTime();&amp;#10;            gazeInROIRight = false;&amp;#10;        }&amp;#10;    }&amp;#10;    if (inROIRight) {&amp;#10;        currentGazeTimeRight = (gazeTimeRight + roiClockRight.getTime());&amp;#10;    } else {&amp;#10;        currentGazeTimeRight = gazeTimeRight;&amp;#10;    }&amp;#10;}&amp;#10;sampleIndex += 1;&amp;#10;psychoJS.experiment.addData(&quot;gaze_sample_index&quot;, sampleIndex);&amp;#10;psychoJS.experiment.addData(&quot;trial_time&quot;, currentTime);&amp;#10;psychoJS.experiment.addData(&quot;gaze_x&quot;, (_pj.in_es6(&quot;gazeX&quot;, locals()) ? gazeX : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_y&quot;, (_pj.in_es6(&quot;gazeY&quot;, locals()) ? gazeY : null));&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi_right_test_2&quot;, inROIRight);&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_in_roi_right_test_2&quot;, currentGazeTimeRight);&amp;#10;psychoJS.experiment.addData(&quot;gaze_in_roi_left_test_2&quot;, inROILeft);&amp;#10;psychoJS.experiment.addData(&quot;gaze_time_in_roi_left_test_2&quot;, currentGazeTimeLeft);&amp;#10;current_sample = (latest_gaze ? latest_gaze.copy() : null);&amp;#10;if ((current_sample !== null)) {&amp;#10;    keys = list(current_sample.keys());&amp;#10;    for (var k, _pj_c = 0, _pj_a = keys, _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;        k = _pj_a[_pj_c];&amp;#10;        psychoJS.experiment.addData(k, current_sample[k]);&amp;#10;    }&amp;#10;} else {&amp;#10;    psychoJS.experiment.addData(&quot;no_gaze_data&quot;, 1);&amp;#10;}&amp;#10;psychoJS.experiment.nextEntry();&amp;#10;if ((currentTime &gt;= maxTime)) {&amp;#10;    continueRoutine = false;&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Each JS Frame"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="code_test_2" valType="code" updates="None" name="name"/>
+      </CodeComponent>
+    </Routine>
   </Routines>
   <Flow>
     <Routine name="Start_ET"/>
@@ -841,20 +1121,10 @@
     <Routine name="Pause_Image"/>
     <LoopTerminator name="pause_loop"/>
     <Routine name="Familiarization"/>
-    <LoopInitiator loopType="TrialHandler" name="testLoop">
-      <Param name="Selected rows" updates="None" val="" valType="str"/>
-      <Param name="conditions" updates="None" val="None" valType="str"/>
-      <Param name="conditionsFile" updates="None" val="" valType="file"/>
-      <Param name="endPoints" updates="None" val="[0, 1]" valType="num"/>
-      <Param name="isTrials" updates="None" val="False" valType="bool"/>
-      <Param name="loopType" updates="None" val="sequential" valType="str"/>
-      <Param name="nReps" updates="None" val="2" valType="num"/>
-      <Param name="name" updates="None" val="testLoop" valType="code"/>
-      <Param name="random seed" updates="None" val="" valType="code"/>
-    </LoopInitiator>
-    <Routine name="Central_Fixation"/>
-    <Routine name="Test_Period"/>
-    <LoopTerminator name="testLoop"/>
+    <Routine name="Pre_Test_Attention_Getter"/>
+    <Routine name="Test_Event_1"/>
+    <Routine name="Mid_Test_Attention_Getter"/>
+    <Routine name="Test_Event_2"/>
     <LoopTerminator name="trialLoop"/>
     <Routine name="Stop_ET"/>
   </Flow>
