@@ -8,7 +8,8 @@
   - Check compatibility: [Tobii Pro SDK Eye Tracker Compatibility](https://developer.tobiipro.com/tobiiprosdk/eyetrackercompatibility.html)
   - If your device is on the **"Discontinued eye trackers"** list, you will need to use the experiment file named `MB5_ET_infant_controlled_v3.0_old_device.psyexp`
 - [Tobii Eye Tracker Manager](https://connect.tobii.com/s/etm-downloads-language=en_US)
-- PsychoPy (preferably v2025.2.4)
+- PsychoPy (preferably v2025.2.4 or newer)
+- for discontinued eye trackers try: https://github.com/psychopy/psychopy/releases/tag/2023.2.3
 
 ## Necessary Python Packages
 
