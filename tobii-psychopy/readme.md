@@ -13,7 +13,7 @@
 
 ## Necessary Python Packages
 
-- `tobii-research` — install from the Plugin Manager in PsychoPy, or `pip install`, making sure you install to the correct Python path
+- `tobii-research` — install from the Plugin Manager in PsychoPy, or `pip install`, making sure you install to the correct Python path (v1.10.1 for discontinued eye trackers)
 - `ffmpeg-python` — installed the same way as `tobii-research` (on Windows this should be installed by default)
 
 ## Stimuli, Assets, and PsychoPy Script
