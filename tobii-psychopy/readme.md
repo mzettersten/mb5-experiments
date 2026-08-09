@@ -18,12 +18,13 @@
 
 ## Stimuli, Assets, and PsychoPy Script
 
-Download all files from the link below and keep them in one folder on the machine you are using to run the experiment.
+Download all files from this repository and keep them in one folder on the machine you are using to run the experiment.
 
-<!-- TODO: Check this is still needed! 📁 [MB5 PsychoPy Builder Set Up — Google Drive](https://drive.google.com/drive/folders/   1MxtvPNrxcWdSX4aonC66vzK41BqXZl8a) -->
+! IMPORTANT: paste the trial lists assigned to your lab in the 'trials' folder.
+
+<!-- TODO: Check this is still needed! 📁 [MB5 PsychoPy Builder Set Up — Google Drive](https://drive.google.com/drive/folders/   1MxtvPNrxcWdSX4aonC66vzK41BqXZl8a) DONT THINK THIS IS NEEDED IF WE USE GITHUB -->
 
 ### Directory Structure
----> update to final design!!!
 ```
 MB5_PsychoPy_Builder_SetUp
 ├── data/                     # eye tracking data will be stored here
@@ -62,20 +63,31 @@ Below are screenshots to help you set everything up in your lab.
 
 ![Experiment Setting](set_up_imgs/experiment_settings.png)
 
-The experiment should now start. There are no participant instructions, as this is an infant-controlled design.
+The experiment should now start. There are no participant instructions. 
 
-- If the infant does not look at the screen during familiarization, the trial will continue after a fixed duration.
+Infant-controlled design:
+  - The trial continues either after 5/10/15 seconds accumulated looking time or a fixed time out.
+  - If the infant does not look at the screen during familiarization, the trial will continue after a fixed duration.
+
+Fixed-time design:
+  - The trial continues after 5/10/15 seconds. Disregarding attention to the screen.
 
 During the **laughing baby** video, the experimenter can use the following controls:
 
 | Key | Action |
 |-----|--------|
-| <kbd>Space</kbd> | Continue to the fixation screen and familiarization phase. |
+| <kbd>Space</kbd> | Continue to the familiarization phase. |
 | <kbd>P</kbd> | Pause the experiment and display the bunny image. |
 | <kbd>S</kbd> | Resume the experiment, returning from the bunny image to the laughing baby video. |
 
+During the **Pre-Test Attention Getter**, the experimenter can use the following controls:
 
-Let the trial run through to completion. At the end, you will see the bunnies image for a brief moment. Afterward, check the `data` folder for this participant's data — there should be an Excel file containing time series eye tracking data, with the participant identification information in the file name.
+| Key | Action |
+|-----|--------|
+| <kbd>Space</kbd> | Continue to the first test event. |
+
+
+Let the experiment run through to completion. At the end, you will see the bunnies image for a brief moment. Afterward, check the `data` folder for this participant's data — there should be an Excel file containing time series eye tracking data, with the participant identification information in the file name.
 
 ## Finding Your Python Path
 
@@ -84,5 +96,4 @@ If you do not know which Python path and version your PsychoPy installation is u
 ![Where to find your Python path](set_up_imgs/python_path_system_info.png)
 
 ---
-
-Thank you for helping test this set up! We very much appreciate your support of this Many Babies project.
+We very much appreciate your support of this Many Babies project.
