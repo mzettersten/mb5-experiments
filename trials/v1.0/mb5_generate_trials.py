@@ -161,9 +161,13 @@ def generate_trials(cur_seed=seed, num_labs=96):
     rel_image_path = 'stimuli/images/'
     img_ext = ".png"
 
-
+    #folder to hold trial lists per lab
     trial_lists_root = os.path.join(os.getcwd(), 'trial_lists')
     os.makedirs(trial_lists_root, exist_ok=True)
+
+    #create folder to hold combined lists per lab (created in parallel, for Experiment Builder)
+    combined_trial_lists_root = os.path.join(os.getcwd(), 'combined_trial_lists')
+    os.makedirs(combined_trial_lists_root, exist_ok=True)
 
     lab_assignments = make_lab_assignments(num_labs)
     trial_list_id = 1
@@ -172,6 +176,7 @@ def generate_trials(cur_seed=seed, num_labs=96):
         lab_name = f"lab{lab_number}"
         lab_dir = os.path.join(trial_lists_root, lab_name)
         os.makedirs(lab_dir, exist_ok=True)
+        combined_lab_dfs = []
 
         seed_group_number = assignment["seed_group_number"]
         cur_fribble_set = assignment["cur_fribble_set"]
@@ -373,7 +378,18 @@ def generate_trials(cur_seed=seed, num_labs=96):
                                     index=False
                                 )
 
+                                #copy and add to combined trial list for the current lab
+                                combined_cur_df = cur_df.copy()
+                                combined_cur_df['List'] = trial_list_id
+                                combined_lab_dfs.append(combined_cur_df)
+
                                 trial_list_id += 1
+        
+        #write the combined trial list
+        pandas.concat(combined_lab_dfs, ignore_index=True).to_csv(
+            os.path.join(combined_trial_lists_root, f'mb5_combined_trial_list_{lab_name}.csv'),
+            index=False
+            )
 
     return True
 
