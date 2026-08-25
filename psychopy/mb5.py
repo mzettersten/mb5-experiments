@@ -281,12 +281,24 @@ class Exp:
 						self.ag.stop()
 						self.ag.seek(0)
 						self.sounds['laughing_baby']['stim'].stop()
-						#restart
-						self.ag.play()
-						self.sounds['laughing_baby']['stim'].play()
 						
+						#restart
 						# Restart the maximum AG duration
 						clock.reset()
+						if video_preload != "none":
+							if video_preload == "image":
+								#set first frame of video while video loads
+								self.ag_still.draw()
+							elif video_preload == "movie":
+								self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/ag_no_audio_grey_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
+								self.ag_placeholder.play()
+							self.win.flip()
+							core.wait(video_still_dur)
+							#load movie
+							self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,units = "height",size=(1.333334,0.75),loop=True)
+
+						self.ag.play()
+						self.sounds['laughing_baby']['stim'].play()
 
 				# press space bar to advance
 				if 'space' in keys:
