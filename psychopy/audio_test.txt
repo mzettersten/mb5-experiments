@@ -1,0 +1,27 @@
+from psychopy import prefs
+
+# 1. Check current audio driver/library setting
+print("Audio library (in priority order):", prefs.hardware['audioLib'])
+print("Current audio driver preference:", prefs.hardware.get('audioDriver', 'not set'))
+
+# 2. List available audio devices
+# PsychoPy 2021.2+ uses PTB (Psychtoolbox) by default, which uses sounddevice under the hood
+import psychtoolbox.audio as audio
+devices = audio.get_devices()
+for i, d in enumerate(devices):
+    print(i, d['DeviceName'], '| in:', d['NrInputChannels'], 'out:', d['NrOutputChannels'])
+
+
+from psychopy import prefs
+
+# Set which audio library to use (order of preference)
+prefs.hardware['audioLib'] = ['PTB']  # or ['sounddevice'], ['pyo'], ['pygame']
+
+# Set the specific device (name or index — must match what you saw above)
+prefs.hardware['audioDevice'] = 'Your Device Name Here'
+
+# THEN import sound (order matters!)
+from psychopy import sound
+
+s = sound.Sound('A', secs=1)
+s.play()
