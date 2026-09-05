@@ -230,6 +230,7 @@ def generate_trials(cur_seed=seed, num_labs=96):
                                 cur_familiar_items = cur_familiar_fribble_items + cur_familiar_fractal_items
 
                                 # convert to image names
+                                # delete
                                 cur_familiar_fribble_images = [
                                     cur_familiar_fribble_items[i] + "_" + cur_complexity_list_1[i].capitalize()
                                     for i in range(len(cur_familiar_fribble_items))
@@ -251,6 +252,7 @@ def generate_trials(cur_seed=seed, num_labs=96):
                                 cur_novel_items = cur_novel_fribble_items + cur_novel_fractal_items
 
                                 # convert to image names
+                                #delete
                                 cur_novel_fribble_images = [
                                     cur_novel_fribble_items[i] + "_" + cur_complexity_list_1[i].capitalize()
                                     for i in range(len(cur_novel_fribble_items))
@@ -308,41 +310,56 @@ def generate_trials(cur_seed=seed, num_labs=96):
                                     )
                                 ]
 
-                                ordered_cur_familiar_images_path = [rel_image_path + im + img_ext for im in ordered_cur_familiar_images]
-                                ordered_cur_novel_images_path = [rel_image_path + im + img_ext for im in ordered_cur_novel_images]
+                                ordered_cur_familiar_image_names = [im + img_ext for im in ordered_cur_familiar_images]
+                                ordered_cur_novel_image_names = [im + img_ext for im in ordered_cur_novel_images]
 
-                                left_image_path_1 = [
+                                ordered_cur_familiar_images_path = [rel_image_path + im for im in ordered_cur_familiar_image_names]
+                                ordered_cur_novel_images_path = [rel_image_path + im for im in ordered_cur_novel_image_names]
+
+                                left_image_1 = [
                                     familiar_item if fam_location == "left" else novel_item
                                     for familiar_item, novel_item, fam_location in zip(
-                                        ordered_cur_familiar_images_path,
-                                        ordered_cur_novel_images_path,
+                                        ordered_cur_familiar_image_names,
+                                        ordered_cur_novel_image_names,
                                         ordered_cur_test_familiar_location_list
                                     )
                                 ]
-                                right_image_path_1 = [
+
+                                left_image_path_1 = [rel_image_path + im for im in left_image_1]
+
+                                right_image_1 = [
                                     familiar_item if fam_location == "right" else novel_item
                                     for familiar_item, novel_item, fam_location in zip(
-                                        ordered_cur_familiar_images_path,
-                                        ordered_cur_novel_images_path,
+                                        ordered_cur_familiar_image_names,
+                                        ordered_cur_novel_image_names,
                                         ordered_cur_test_familiar_location_list
                                     )
                                 ]
-                                left_image_path_2 = [
+
+                                right_image_path_1 = [rel_image_path + im for im in right_image_1]
+
+                                left_image_2 = [
                                     familiar_item if fam_location == "left" else novel_item
                                     for familiar_item, novel_item, fam_location in zip(
-                                        ordered_cur_familiar_images_path,
-                                        ordered_cur_novel_images_path,
+                                        ordered_cur_familiar_image_names,
+                                        ordered_cur_novel_image_names,
                                         switched_ordered_cur_test_familiar_location_list
                                     )
                                 ]
-                                right_image_path_2 = [
+
+                                left_image_path_2 = [rel_image_path + im for im in left_image_2]
+
+
+                                right_image_2 = [
                                     familiar_item if fam_location == "right" else novel_item
                                     for familiar_item, novel_item, fam_location in zip(
-                                        ordered_cur_familiar_images_path,
-                                        ordered_cur_novel_images_path,
+                                        ordered_cur_familiar_image_names,
+                                        ordered_cur_novel_image_names,
                                         switched_ordered_cur_test_familiar_location_list
                                     )
                                 ]
+
+                                right_image_path_2 = [rel_image_path + im for im in right_image_2]
 
                                 cur_data = {
                                     "trial_number": range(1, trial_num + 1),
@@ -380,6 +397,14 @@ def generate_trials(cur_seed=seed, num_labs=96):
 
                                 #copy and add to combined trial list for the current lab
                                 combined_cur_df = cur_df.copy()
+
+                                #add columns that only exist in the master list
+                                combined_cur_df['familiar_stimulus_image'] = ordered_cur_familiar_image_names
+                                combined_cur_df['novel_stimulus_image'] = ordered_cur_novel_image_names
+                                combined_cur_df['left_image_1'] = left_image_1
+                                combined_cur_df['right_image_1'] = right_image_1
+                                combined_cur_df['left_image_2'] = left_image_2
+                                combined_cur_df['right_image_2'] = right_image_2
                                 combined_cur_df['List'] = trial_list_id
                                 combined_lab_dfs.append(combined_cur_df)
 
