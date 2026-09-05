@@ -135,7 +135,6 @@ def generate_trials(cur_seed=seed, num_labs=96):
         'set_1': [["Tripod", "Diamond"], ["SimsDiamond", "Cylinder"], ["Pyramid", "Bowtie"], ["Pacman", "Arrow"], ["Crinkle", "Pumpkin"], ["Bowl", "Gumdrop"]],
         'set_2': [["Pacman", "Cylinder"], ["Bowtie", "Arrow"], ["Tripod", "Bowl"], ["Crinkle", "Diamond"], ["Pyramid", "Gumdrop"], ["SimsDiamond", "Pumpkin"]]
     }
-    fribble_sets = ["set_1", "set_2"]
 
     fractal_dict = {
         'set_1': [["1A", "1B"], ["2A", "2B"], ["3A", "3B"], ["4A", "4B"], ["5A", "5B"], ["6A", "6B"]]
@@ -156,7 +155,6 @@ def generate_trials(cur_seed=seed, num_labs=96):
         'loc_order_1': ["left", "right", "left", "right", "right", "left", "left", "right", "right", "left", "left", "right"],
         'loc_order_2': ["right", "left", "right", "left", "left", "right", "right", "left", "left", "right", "right", "left"]
     }
-    test_familiar_locations = ['loc_order_1', 'loc_order_2']
 
     rel_image_path = 'stimuli/images/'
     img_ext = ".png"
@@ -229,18 +227,6 @@ def generate_trials(cur_seed=seed, num_labs=96):
                                 cur_familiar_fractal_items = [pair[cur_familiar_role] for pair in fractal_dict[cur_fractal_set]]
                                 cur_familiar_items = cur_familiar_fribble_items + cur_familiar_fractal_items
 
-                                # convert to image names
-                                # delete
-                                cur_familiar_fribble_images = [
-                                    cur_familiar_fribble_items[i] + "_" + cur_complexity_list_1[i].capitalize()
-                                    for i in range(len(cur_familiar_fribble_items))
-                                ]
-                                cur_familiar_fractal_images = [
-                                    "Frac" + cur_familiar_fractal_items[i]+ "_" + cur_complexity_list_2[i].capitalize()  
-                                    for i in range(len(cur_familiar_fractal_items))
-                                ]
-                                cur_familiar_images = cur_familiar_fribble_images + cur_familiar_fractal_images
-
                                 # handle novel items
                                 if cur_familiar_role == 0:
                                     cur_novel_role = 1
@@ -250,18 +236,6 @@ def generate_trials(cur_seed=seed, num_labs=96):
                                 cur_novel_fribble_items = [pair[cur_novel_role] for pair in fribble_dict[cur_fribble_set]]
                                 cur_novel_fractal_items = [pair[cur_novel_role] for pair in fractal_dict[cur_fractal_set]]
                                 cur_novel_items = cur_novel_fribble_items + cur_novel_fractal_items
-
-                                # convert to image names
-                                #delete
-                                cur_novel_fribble_images = [
-                                    cur_novel_fribble_items[i] + "_" + cur_complexity_list_1[i].capitalize()
-                                    for i in range(len(cur_novel_fribble_items))
-                                ]
-                                cur_novel_fractal_images = [
-                                    "Frac" + cur_novel_fractal_items[i]+ "_" + cur_complexity_list_2[i].capitalize()
-                                    for i in range(len(cur_novel_fractal_items))
-                                ]
-                                cur_novel_images = cur_novel_fribble_images + cur_novel_fractal_images
 
                                 # First apply the lab-specific within-block shuffle ONLY to
                                 # the trial identity variables. Familiarization time, Complexity order and familiar
