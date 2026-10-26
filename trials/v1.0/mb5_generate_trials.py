@@ -145,6 +145,7 @@ def generate_trials(cur_seed=seed, num_labs=96):
     #there's 148 valid orders here - can't do all of them so choosing two "inverted" ones
     #there are 7 unique possibilites for the first 6 occurrences, with the constraint of 3x simple/complex and no more than twice in a row
     #there are only 3 unique orders of 6 occurrences with the additional constraints of (a) not starting with the same complexity level twice, (b) avoiding frontloading (3 of the first 4 are the same) and (c) avoiding true alternation ("suspicious coincidence")
+    #additional considerations for the two blocks of 6 occurrences: avoid exact duplicates of the 6-item order between the two, have each block start w/ a different complexity level, and avoid a given complexity level being strongly associated with one side wrt test location
     complexity_order_dict = {
         'order_1': ["simple", "complex", "complex", "simple", "complex", "simple", "complex", "simple", "simple", "complex", "simple", "complex"],
         'order_2': ["complex", "simple", "simple", "complex", "simple", "complex", "simple", "complex", "complex", "simple", "complex", "simple"]
@@ -174,6 +175,7 @@ def generate_trials(cur_seed=seed, num_labs=96):
         lab_name = f"lab{lab_number}"
         lab_dir = os.path.join(trial_lists_root, lab_name)
         os.makedirs(lab_dir, exist_ok=True)
+        lab_trial_dfs = [] #holds generated trial lists until additional shuffling occurs
         combined_lab_dfs = []
 
         seed_group_number = assignment["seed_group_number"]
@@ -364,10 +366,12 @@ def generate_trials(cur_seed=seed, num_labs=96):
                                     "trial_type": ordered_trial_type_list
                                 }
                                 cur_df = pandas.DataFrame(cur_data)
-                                cur_df.to_csv(
-                                    os.path.join(lab_dir, 'mb5_trial_list_' + str(trial_list_id) + '.csv'),
-                                    index=False
-                                )
+
+                                #no longer writing directly
+                                # cur_df.to_csv(
+                                #     os.path.join(lab_dir, 'mb5_trial_list_' + str(trial_list_id) + '.csv'),
+                                #     index=False
+                                # )
 
                                 #copy and add to combined trial list for the current lab
                                 combined_cur_df = cur_df.copy()
@@ -379,11 +383,39 @@ def generate_trials(cur_seed=seed, num_labs=96):
                                 combined_cur_df['right_image_1'] = right_image_1
                                 combined_cur_df['left_image_2'] = left_image_2
                                 combined_cur_df['right_image_2'] = right_image_2
-                                combined_cur_df['List'] = trial_list_id
-                                combined_lab_dfs.append(combined_cur_df)
+                                #combined_cur_df['List'] = trial_list_id
+                                #combined_lab_dfs.append(combined_cur_df)
+                                #trial_list_id += 1
 
-                                trial_list_id += 1
-        
+                                #store the individual and combined versions together.
+                                lab_trial_dfs.append((cur_df, combined_cur_df))
+                
+        # pair original lists (1,16), (2,15), ...
+        # this is to help ensure that we retain balance across the four within-lab counterbalancing levels even if a lab runs
+        # fewer than 16 infants, since these pairs are mirror images of each other in terms of counterbalancing levels (current list 16 uses the exact opposite levels for all factors compared to current list 1)
+        n_lists = len(lab_trial_dfs)
+        if n_lists != 16:
+            raise ValueError(f"Expected 16 lists for {lab_name}, got {n_lists}")
+        pairs = [[i, n_lists - 1 - i] for i in range(n_lists // 2)]
+
+        # shuffle pairs and independently shuffle the order of the two lists within each pair.
+        # this is to additionally avoid any issues related to systematic dropout or reduced infant number collection by lab
+        pair_rng = random.Random(cur_seed + 10000 + lab_number)
+        pair_rng.shuffle(pairs)
+        for pair in pairs:
+            pair_rng.shuffle(pair)
+
+        # write the trial lists from lab_trial_dfs in the new order, with globally unique list IDs.
+        for original_index in (i for pair in pairs for i in pair):
+            cur_df, combined_cur_df = lab_trial_dfs[original_index]
+            cur_df.to_csv(
+                os.path.join(lab_dir, 'mb5_trial_list_' + str(trial_list_id) + '.csv'),
+                index=False
+            )
+            combined_cur_df['List'] = trial_list_id
+            combined_lab_dfs.append(combined_cur_df)
+            trial_list_id += 1
+
         #write the combined trial list
         pandas.concat(combined_lab_dfs, ignore_index=True).to_csv(
             os.path.join(combined_trial_lists_root, f'mb5_combined_trial_list_{lab_name}.csv'),
