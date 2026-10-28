@@ -19,6 +19,10 @@ DURATION_COLUMNS = ['familiarization_stimulus_screen_time', 'familiarization_sti
     'test_1_looking_time_novel', 'test_1_looking_time_familiar', 'test_1_trial_time',
     'test_2_looking_time_novel', 'test_2_looking_time_familiar', 'test_2_trial_time']
 
+OPTIONAL_RAW_COLUMNS = ['Familiarization.started', 'Familiarization.stopped', 'Test_Period.started',
+    'Test_Period.stopped', 'gaze_time_ROI_familiarization', 'gaze_time_in_roi_left', 'gaze_time_in_roi_right',
+    'notes', 'familiar_location_1', 'familiar_location_2']
+
 FAMILIARIZATION_TYPES = ['infant-controlled', 'fixed-length']
 
 
@@ -50,6 +54,10 @@ def _novel_side(familiar_location):
 def file_to_trial_data(df):
     """Convert one raw PsychoPy/Tobii data frame to one row per trial."""
     df = df.reset_index(drop=True)
+    # cut-short sessions may lack columns that are only logged once a routine has run
+    for col in OPTIONAL_RAW_COLUMNS:
+        if col not in df.columns:
+            df[col] = np.nan
     df = df[df['trial_number'].notna()].copy()
     df['test_period_num'] = df['Test_Period.started'].notna().groupby(df['trial_number']).cumsum()
     for col in ['gaze_time_in_roi_left', 'gaze_time_in_roi_right']:
@@ -81,6 +89,11 @@ def file_to_trial_data(df):
             # stop timestamps are logged on a later row than the start, so pair the n-th start with the n-th stop
             starts, stops = t['Test_Period.started'].dropna(), t['Test_Period.stopped'].dropna()
             row[f'test_{n}_trial_time'] = stops.iloc[n - 1] - starts.iloc[n - 1] if min(len(starts), len(stops)) >= n else np.nan
+        missing = [c for c in ('familiarization_stimulus_screen_time', 'test_1_trial_time', 'test_2_trial_time')
+                   if pd.isna(row[c])]
+        if missing:
+            row['trial_error'] = 'error'
+            row['trial_error_info'] = 'missing duration data: ' + ', '.join(missing)
         rows.append(row)
     out = pd.DataFrame(rows, columns=TRIAL_DATA_COLUMNS)
     # raw timings are in seconds; report all measured durations in ms
@@ -153,7 +166,7 @@ def prompt_output_path(default_name='trial_data.csv'):
 def save_trial_data(df, path):
     """Write df to path as csv, creating parent folders if needed."""
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
-    df.to_csv(path, index=False)
+    df.to_csv(path, index=False, na_rep='NA')
     print(f'Saved {len(df)} rows to {path}')
 
 
