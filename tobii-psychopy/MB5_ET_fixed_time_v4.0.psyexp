@@ -106,13 +106,13 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="True" valType="bool" updates="constant" name="forceEndRoutine"/>
         <Param val="False" valType="bool" updates="None" name="loop"/>
-        <Param val="stimuli/movies/laughing_baby_no_audio_grey.mp4" valType="file" updates="set every repeat" name="movie"/>
+        <Param val="stimuli/movies/laughing_baby_alternate_grey_no_audio.mp4" valType="file" updates="set every repeat" name="movie"/>
         <Param val="baby_video" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="(1.3333, 0.75)" valType="list" updates="constant" name="size"/>
+        <Param val="(None, 1)" valType="list" updates="constant" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
         <Param val="0.1" valType="code" updates="None" name="startVal"/>
@@ -189,7 +189,7 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="stimuli/images/first_frame_baby.png" valType="file" updates="constant" name="image"/>
+        <Param val="stimuli/images/laughing_baby_alternate_grey_frame10.png" valType="file" updates="constant" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="first_frame_baby_set_up" valType="code" updates="None" name="name"/>
@@ -197,7 +197,7 @@
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="(1.3333, 0.75)" valType="list" updates="constant" name="size"/>
+        <Param val="(None, 1)" valType="list" updates="constant" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
