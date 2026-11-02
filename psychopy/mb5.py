@@ -1,4 +1,6 @@
-from psychopy import prefs
+from psychopy import prefs, __version__
+print(__version__)
+prefs.hardware["audioLib"] = ['ptb']
 prefs.general['measureFrameRate'] = False
 prefs.hardware['disableVideoSyncTest'] = True
 from psychopy import core, visual, event
@@ -14,61 +16,61 @@ from psychopy.hardware import keyboard
 from psychopy import logging
 logging.console.setLevel(logging.CRITICAL)
 #patch for "AttributeError: 'MovieStim' object has no attribute '_freePlayer'" issue in PsychoPy 2026.2.x
-# from psychopy.visual.movies import MovieStim as _MovieStim
-
-# _original_unload = _MovieStim.unload
-
-# def _patched_unload(self):
-# 	if not hasattr(self, '_freePlayer'):
-# 		self._freePlayer = lambda: None
-# 	_original_unload(self)
-
-# _MovieStim.unload = _patched_unload
-
-from psychopy.constants import NOT_STARTED
 from psychopy.visual.movies import MovieStim as _MovieStim
 
-# Compatibility shim for PsychoPy versions where MovieStim._freePlayer
-# is missing. Remove this shim when using a version with the upstream fix.
-if not hasattr(_MovieStim, "_freePlayer"):
+_original_unload = _MovieStim.unload
 
-    def _free_player(self):
-        player = getattr(self, "_player", None)
-        if player is None:
-            return
+def _patched_unload(self):
+	if not hasattr(self, '_freePlayer'):
+		self._freePlayer = lambda: None
+	_original_unload(self)
 
-        close_method = getattr(player, "close", None)
-        if not callable(close_method):
-            close_method = getattr(player, "close_player", None)
+_MovieStim.unload = _patched_unload
 
-        if not callable(close_method):
-            raise AttributeError(
-                f"No supported close method for {type(player).__name__}"
-            )
+# from psychopy.constants import NOT_STARTED
+# from psychopy.visual.movies import MovieStim as _MovieStim
 
-        close_method()
-        self._player = None
+# # Compatibility shim for PsychoPy versions where MovieStim._freePlayer
+# # is missing. Remove this shim when using a version with the upstream fix.
+# if not hasattr(_MovieStim, "_freePlayer"):
 
-    def _unload(self, log=True):
-        if not getattr(self, "_isLoaded", False):
-            return
+#     def _free_player(self):
+#         player = getattr(self, "_player", None)
+#         if player is None:
+#             return
 
-        self._freePlayer()
-        self._freeTextureBuffers()
-        self._cleanupAudioTrack()
-        self._isLoaded = False
+#         close_method = getattr(player, "close", None)
+#         if not callable(close_method):
+#             close_method = getattr(player, "close_player", None)
 
-    def _stop(self, log=True):
-        if getattr(self, "_player", None) is None:
-            return
+#         if not callable(close_method):
+#             raise AttributeError(
+#                 f"No supported close method for {type(player).__name__}"
+#             )
 
-        self.unload(log=log)
-        self.loadMovie(self._filename)
-        self._playbackStatus = NOT_STARTED
+#         close_method()
+#         self._player = None
 
-    _MovieStim._freePlayer = _free_player
-    _MovieStim.unload = _unload
-    _MovieStim.stop = _stop
+#     def _unload(self, log=True):
+#         if not getattr(self, "_isLoaded", False):
+#             return
+
+#         self._freePlayer()
+#         self._freeTextureBuffers()
+#         self._cleanupAudioTrack()
+#         self._isLoaded = False
+
+#     def _stop(self, log=True):
+#         if getattr(self, "_player", None) is None:
+#             return
+
+#         self.unload(log=log)
+#         self.loadMovie(self._filename)
+#         self._playbackStatus = NOT_STARTED
+
+#     _MovieStim._freePlayer = _free_player
+#     _MovieStim.unload = _unload
+#     _MovieStim.stop = _stop
 
 #end of path
 expName='mb5'
