@@ -13,7 +13,19 @@ from psychopy.hardware import keyboard
 
 from psychopy import logging
 logging.console.setLevel(logging.CRITICAL)
+#patch for "AttributeError: 'MovieStim' object has no attribute '_freePlayer'" issue in PsychoPy 2026.2.x
+from psychopy.visual.movies import MovieStim as _MovieStim
 
+_original_unload = _MovieStim.unload
+
+def _patched_unload(self):
+	if not hasattr(self, '_freePlayer'):
+		self._freePlayer = lambda: None
+	_original_unload(self)
+
+_MovieStim.unload = _patched_unload
+
+#end of path
 expName='mb5'
 
 class Exp:
