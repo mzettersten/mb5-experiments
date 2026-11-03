@@ -103,9 +103,9 @@
         <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="# positioning screen + infant calibration (tobii_calibration.py)&amp;#10;from tobii_calibration import run_infant_calibration&amp;#10;calib_ok = run_infant_calibration(win)&amp;#10;thisExp.addData('calibration_success', calib_ok)&amp;#10;continueRoutine = False" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="# positioning screen + infant calibration (tobii_calibration.py)&amp;#10;from tobii_calibration import run_infant_calibration&amp;#10;calib_ok = run_infant_calibration(win)&amp;#10;thisExp.addData('calibration_success', calib_ok)&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
         <Param val="Py" valType="str" updates="None" name="Code Type"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="continueRoutine = False" valType="extendedCode" updates="constant" name="Each Frame"/>
         <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
         <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>

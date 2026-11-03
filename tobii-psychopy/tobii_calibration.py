@@ -16,7 +16,7 @@ CALI_POINTS = [(-0.4, 0.4), (-0.4, -0.4), (0.0, 0.0), (0.4, 0.4), (0.4, -0.4)]
 
 def run_infant_calibration(win):
     aspect = win.size[0] / win.size[1]
-    points = [(x * 2 * aspect, y) for x, y in CALI_POINTS]  # to height units
+    points = [(x * aspect, y) for x, y in CALI_POINTS]  # to height units
     stims = sorted(glob.glob(os.path.join(STIM_DIR, "*.png")))
     grabber = visual.MovieStim(win, os.path.join(STIM_DIR, "Attentiongrabber.mp4"),
                                loop=True, size=(0.741, 0.417), units="height",
