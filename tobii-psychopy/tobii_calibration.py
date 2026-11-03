@@ -6,18 +6,6 @@ import glob
 import atexit
 from psychopy import visual, sound
 from psychopy_tobii_infant import TobiiInfantController
-from psychopy.visual.movies import MovieStim as _MovieStim
-
-_original_unload = _MovieStim.unload
-
-
-def _patched_unload(self):
-    if not hasattr(self, '_freePlayer'):
-        self._freePlayer = lambda: None
-    _original_unload(self)
-
-
-_MovieStim.unload = _patched_unload
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 STIM_DIR = os.path.join(HERE, "CalibrationStim")
