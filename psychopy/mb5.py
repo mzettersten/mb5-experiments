@@ -214,7 +214,7 @@ class Exp:
 			self.cleanup()
 			core.quit()
 	
-	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0, video_preload="movie"):
+	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0, video_preload="image"):
 
 		#parameters controlling presentation duration
 		cur_ag_duration = self.ag_duration
