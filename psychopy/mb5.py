@@ -87,11 +87,11 @@ class Exp:
 		self.cf_duration = .75
 		self.cf_max_duration = 5
 		#create attention getter related variables
-		self.ag_movie_path = "stimuli/movies/laughing_baby_alternate_grey_no_audio.mp4"
+		self.ag_movie_path = "stimuli/movies/laughing_baby_alternate_grey_808080_no_audio.mp4"
 		self.ag = visual.MovieStim(win=self.win,filename = self.ag_movie_path,units = "height",size=(None,0.75),loop=True)
-		self.ag_still=visual.ImageStim(self.win, 'stimuli/images/laughing_baby_alternate_grey_frame10.png',units = "height",size=(1.333334,0.75),mask=None,interpolate=True)
+		self.ag_still=visual.ImageStim(self.win, 'stimuli/images/laughing_baby_alternate_grey_808080_frame1.png',units = "height",size=(1.333334,0.75),mask=None,interpolate=True)
 		self.ag_still.setPos((0,0))
-		self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/laughing_baby_alternate_grey_no_audio_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
+		self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/laughing_baby_alternate_grey_808080_no_audio_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
 		self.ag_movie_border = visual.Rect(win=self.win,units="height",size=(1.333334,0.75),pos=(0.0,0.0),lineWidth=10, lineColor = "#808080",fillColor=None)
 		self.ag_duration = 2
 		self.ag_max_duration = 10
@@ -206,7 +206,7 @@ class Exp:
 			self.cleanup()
 			core.quit()
 	
-	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0, video_preload="image"):
+	def show_ag(self,curTrial,gaze_contingent=False,video_still_dur=0, video_preload="movie"):
 
 		#parameters controlling presentation duration
 		cur_ag_duration = self.ag_duration
@@ -220,7 +220,7 @@ class Exp:
 				#set first frame of video while video loads
 				self.ag_still.draw()
 			elif video_preload == "movie":
-				self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/laughing_baby_alternate_grey_no_audio_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
+				self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/laughing_baby_alternate_grey_808080_no_audio_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
 				self.ag_placeholder.play()
 			self.win.flip()
 			core.wait(video_still_dur)
@@ -313,7 +313,7 @@ class Exp:
 								#set first frame of video while video loads
 								self.ag_still.draw()
 							elif video_preload == "movie":
-								self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/laughing_baby_alternate_grey_no_audio_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
+								self.ag_placeholder = visual.MovieStim(win=self.win,filename = "stimuli/movies/laughing_baby_alternate_grey_808080_no_audio_first_frame.mp4",units = "height",size=(None,0.75),loop=True)
 								self.ag_placeholder.play()
 							self.win.flip()
 							core.wait(video_still_dur)
