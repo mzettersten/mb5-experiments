@@ -27,7 +27,7 @@ logging.console.setLevel(logging.CRITICAL)
 
 # _MovieStim.unload = _patched_unload
 
-#end of path
+#end of patch
 expName='mb5'
 
 class Exp:
