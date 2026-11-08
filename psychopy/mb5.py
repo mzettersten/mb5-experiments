@@ -119,9 +119,17 @@ class Exp:
 			import pyglet
 			self.pyglet_key = pyglet.window.key
 			self.pyglet_kb = self.pyglet_key.KeyStateHandler()
+			self.pyglet_space_events = [] #every space press (True) / release (False), in order, since last checked
+			def on_key_press(symbol, modifiers):
+				if symbol == self.pyglet_key.SPACE:
+					self.pyglet_space_events.append(True)
+			def on_key_release(symbol, modifiers):
+				if symbol == self.pyglet_key.SPACE:
+					self.pyglet_space_events.append(False)
 			for w in [self.win, getattr(self, "win2", None), getattr(self, "win3", None)]:
 				if w is not None:
 					w.winHandle.push_handlers(self.pyglet_kb)
+					w.winHandle.push_handlers(on_key_press=on_key_press, on_key_release=on_key_release)
 
 		#old instruction message
 		self.instructions_text = "Welcome to the ManyBabies 5 demo!\n\nWhen you see the laughing baby, hit space to advance to the next trial.\n\nDuring familiarization, for contingent trials, press the right arrow key when the infant is looking to the screen and the left arrow key when they look away. Otherwise, for fixed durations, the experiment will proceed at the end of the familiarization time.\n\nAfter the familiarization, a central fixation will appear. Hit the space bar to advance (once the infant is looking). The second central fixation in between the two test trial phases advances automatically.\n\nHit q to start the experiment! Press esc at any time to quit."
@@ -593,61 +601,64 @@ class Exp:
 				if self.kb is not None:
 					self.kb.clearEvents()
 					self.kb.clock.reset()
+				if self.keyboard == "pyglet":
+					del self.pyglet_space_events[:] #discard presses from before this trial (e.g., space used to end the AG)
 
 				#while loop that continues while:
 				#(a) there's still familiarization time left or the infant is not looking
 				#(b) and the familiarization max time/ timeout has not yet been reached
 				while (count_down_timer.getTime() > 0 or not looking) and overall_timer.getTime()<int(curTrial['familiarization_time_timeout']):
-					self.check_for_quit()
+					self.check_for_quit() 
 
-					if self.keyboard == "pyglet":
-						space_down = self.pyglet_kb[self.pyglet_key.SPACE]
+					if self.keyboard == "pyglet": 
+						#take every press/release since the last pass, in order
+						#this is to help make sure that no states are missed on pyglet
+						space_states = self.pyglet_space_events[:]
+						del self.pyglet_space_events[:]
+						if not space_states:
+							#no new events: use the current key state (same as the previous pyglet version)
+							space_states = [self.pyglet_kb[self.pyglet_key.SPACE]]
 					else:
-						space_down = self.kb.getState('space') #get the current state of the space bar
-					#print(space_down) #IMPORTANT: only uncomment this when debugging - logging these print statements can lead to lag on closing experiment in PsychoPy
+						space_states = [self.kb.getState('space')] #get the current state of the space bar
 
-					#what to do if the infant previously wasn't looking and now is registered as looking
-					if space_down and not looking:
-						clock.reset()
-						looking = True
-						#update countdown to reflect current time left (and start counting down)
-						count_down_timer = core.CountdownTimer(time_left)
-						#add a new keypress to the keypress list
-						keypress_list.append(('space_down', overall_timer.getTime())) # store timing of keypresses relative to overall time
-						#print(looking)
-						#print(time_left)
-						looks += 1 #add a new look to the look counter
+					for space_down in space_states:
 
+						#what to do if the infant previously wasn't looking and now is registered as looking
+						if space_down and not looking:
+							clock.reset()
+							looking = True
+							#update countdown to reflect current time left (and start counting down)
+							count_down_timer = core.CountdownTimer(time_left)
+							#add a new keypress to the keypress list
+							keypress_list.append(('space_down', overall_timer.getTime())) # store timing of keypresses relative to overall time
+							looks += 1 #add a new look to the look counter
 
-						if self.num_screens > 1:
-							#looking: visual feedback on experimenter monitor
-							square_skeleton.color = "green"
-							trialInfoStim.draw()
-							square_skeleton.draw()
-							self.win2.flip()
-					
-					#if the infant was previously looking but now is no longer registered as looking
-					if not space_down and looking:
-						cur_look_length = clock.getTime()
-						clock.reset()
-						looking = False
-						#update timing parameters of the (now completed) looking period and reset time left (for when countdown timer restarts)
-						total_held_time += cur_look_length
-						time_left = time_left - cur_look_length #countdown timer to use when the next look begins
-						keypress_list.append(('space_up', overall_timer.getTime())) # store timing of keypresses relative to overall time
-						#print(looking)
-						#print(time_left)
+							if self.num_screens > 1:
+								#looking: visual feedback on experimenter monitor
+								square_skeleton.color = "green"
+								trialInfoStim.draw()
+								square_skeleton.draw()
+								self.win2.flip()
 
+						#if the infant was previously looking but now is no longer registered as looking
+						if not space_down and looking:
+							cur_look_length = clock.getTime()
+							clock.reset()
+							looking = False
+							#update timing parameters of the (now completed) looking period and reset time left (for when countdown timer restarts)
+							total_held_time += cur_look_length
+							time_left = time_left - cur_look_length #countdown timer to use when the next look begins
+							keypress_list.append(('space_up', overall_timer.getTime())) # store timing of keypresses relative to overall time
 
-						if self.num_screens > 1:
-							#look away: visual feedback on experimenter monitor
-							square_skeleton.color = "red"
-							trialInfoStim.draw()
-							square_skeleton.draw()
-							self.win2.flip()
+							if self.num_screens > 1:
+								#look away: visual feedback on experimenter monitor
+								square_skeleton.color = "red"
+								trialInfoStim.draw()
+								square_skeleton.draw()
+								self.win2.flip()
 
-						#store last look
-						look_list.append(cur_look_length)
+							#store last look
+							look_list.append(cur_look_length)
 			else:
 				# right-left contingent looking coding (based on keypress only)
 				# right = infant started looking; left = infant looked away
