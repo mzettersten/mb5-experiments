@@ -1,6 +1,6 @@
 from psychopy import prefs, __version__
 print(__version__)
-prefs.hardware["audioLib"] = ['ptb']
+prefs.hardware["audioLib"] = ['ptb','pygame']
 prefs.general['measureFrameRate'] = False
 prefs.hardware['disableVideoSyncTest'] = True
 from psychopy import core, visual, event
@@ -12,65 +12,20 @@ import webbrowser as web
 from useful_functions_python3 import getKeyboardResponse, showText, setAndPresentStimulus, createDirectories, openOutputFile, openOutputFileCSV, printHeader, importTrialsWithHeader, calculateRectangularCoordinates, loadFiles, popupError, getRunTimeVars, evaluateLists, writeToFile, writeToFileCSV
 # from generateTrials import *
 from psychopy.hardware import keyboard
-
 from psychopy import logging
 logging.console.setLevel(logging.CRITICAL)
-#patch for "AttributeError: 'MovieStim' object has no attribute '_freePlayer'" issue in PsychoPy 2026.2.x
-from psychopy.visual.movies import MovieStim as _MovieStim
 
-_original_unload = _MovieStim.unload
-
-def _patched_unload(self):
-	if not hasattr(self, '_freePlayer'):
-		self._freePlayer = lambda: None
-	_original_unload(self)
-
-_MovieStim.unload = _patched_unload
-
-# from psychopy.constants import NOT_STARTED
+# #patch for "AttributeError: 'MovieStim' object has no attribute '_freePlayer'" issue in PsychoPy 2026.2.x
 # from psychopy.visual.movies import MovieStim as _MovieStim
 
-# # Compatibility shim for PsychoPy versions where MovieStim._freePlayer
-# # is missing. Remove this shim when using a version with the upstream fix.
-# if not hasattr(_MovieStim, "_freePlayer"):
+# _original_unload = _MovieStim.unload
 
-#     def _free_player(self):
-#         player = getattr(self, "_player", None)
-#         if player is None:
-#             return
+# def _patched_unload(self):
+# 	if not hasattr(self, '_freePlayer'):
+# 		self._freePlayer = lambda: None
+# 	_original_unload(self)
 
-#         close_method = getattr(player, "close", None)
-#         if not callable(close_method):
-#             close_method = getattr(player, "close_player", None)
-
-#         if not callable(close_method):
-#             raise AttributeError(
-#                 f"No supported close method for {type(player).__name__}"
-#             )
-
-#         close_method()
-#         self._player = None
-
-#     def _unload(self, log=True):
-#         if not getattr(self, "_isLoaded", False):
-#             return
-
-#         self._freePlayer()
-#         self._freeTextureBuffers()
-#         self._cleanupAudioTrack()
-#         self._isLoaded = False
-
-#     def _stop(self, log=True):
-#         if getattr(self, "_player", None) is None:
-#             return
-
-#         self.unload(log=log)
-#         self.loadMovie(self._filename)
-#         self._playbackStatus = NOT_STARTED
-
-#     _MovieStim._freePlayer = _free_player
-#     _MovieStim.unload = _unload
-#     _MovieStim.stop = _stop
+# _MovieStim.unload = _patched_unload
 
 #end of path
 expName='mb5'
@@ -81,7 +36,7 @@ class Exp:
 
 		while True:
 			runTimeVarOrder = ['participant','trial_list','method','num_screens','tv_screen','exp_screen','side_screen','image_size','lr_distance','keyboard','fam_audio']
-			runTimeVars = getRunTimeVars({'participant':'', 'trial_list': 1, 'method':["contingent","fixed"],'keyboard': ["default","event"],'num_screens': 3,'tv_screen': 2,'exp_screen': 0,'side_screen': 1,'image_size': 0.65,'lr_distance': 0.5,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
+			runTimeVars = getRunTimeVars({'participant':'', 'trial_list': 1, 'method':["contingent","fixed"],'keyboard': ["default","pyglet","event"],'num_screens': 3,'tv_screen': 2,'exp_screen': 0,'side_screen': 1,'image_size': 0.65,'lr_distance': 0.5,'fam_audio': ["audio","no audio"]},runTimeVarOrder,expName)
 			if runTimeVars['participant']=='':
 				popupError('Participant field is blank')
 			elif 'Choose' in list(runTimeVars.values()):
@@ -158,6 +113,15 @@ class Exp:
 			self.kb = keyboard.Keyboard()
 		else:
 			self.kb = None
+		
+		#create pyglet key state handler if using pyglet kb (e.g., for macOS)
+		if self.keyboard == "pyglet":
+			import pyglet
+			self.pyglet_key = pyglet.window.key
+			self.pyglet_kb = self.pyglet_key.KeyStateHandler()
+			for w in [self.win, getattr(self, "win2", None), getattr(self, "win3", None)]:
+				if w is not None:
+					w.winHandle.push_handlers(self.pyglet_kb)
 
 		#old instruction message
 		self.instructions_text = "Welcome to the ManyBabies 5 demo!\n\nWhen you see the laughing baby, hit space to advance to the next trial.\n\nDuring familiarization, for contingent trials, press the right arrow key when the infant is looking to the screen and the left arrow key when they look away. Otherwise, for fixed durations, the experiment will proceed at the end of the familiarization time.\n\nAfter the familiarization, a central fixation will appear. Hit the space bar to advance (once the infant is looking). The second central fixation in between the two test trial phases advances automatically.\n\nHit q to start the experiment! Press esc at any time to quit."
@@ -623,18 +587,23 @@ class Exp:
 			time_left = int(curTrial['familiarization_time'])
 			count_down_timer = core.CountdownTimer(time_left) #begins familiarization time count down
 
-			if self.keyboard == "default":
+			if self.keyboard in ("default", "pyglet"):
 				# Press-and-hold contingent coding (based on key pressed down)
 				# holding space = infant is looking; releasing space = infant looked away.
-				self.kb.clearEvents()
-				self.kb.clock.reset()
+				if self.kb is not None:
+					self.kb.clearEvents()
+					self.kb.clock.reset()
 
 				#while loop that continues while:
 				#(a) there's still familiarization time left or the infant is not looking
 				#(b) and the familiarization max time/ timeout has not yet been reached
 				while (count_down_timer.getTime() > 0 or not looking) and overall_timer.getTime()<int(curTrial['familiarization_time_timeout']):
 					self.check_for_quit()
-					space_down = self.kb.getState('space') #get the current state of the space bar
+
+					if self.keyboard == "pyglet":
+						space_down = self.pyglet_kb[self.pyglet_key.SPACE]
+					else:
+						space_down = self.kb.getState('space') #get the current state of the space bar
 					#print(space_down) #IMPORTANT: only uncomment this when debugging - logging these print statements can lead to lag on closing experiment in PsychoPy
 
 					#what to do if the infant previously wasn't looking and now is registered as looking
@@ -679,7 +648,6 @@ class Exp:
 
 						#store last look
 						look_list.append(cur_look_length)
-
 			else:
 				# right-left contingent looking coding (based on keypress only)
 				# right = infant started looking; left = infant looked away
