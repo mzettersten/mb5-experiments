@@ -20,7 +20,7 @@
     <Param val="True" valType="bool" updates="None" name="Save log file"/>
     <Param val="True" valType="bool" updates="None" name="Save psydat file"/>
     <Param val="True" valType="bool" updates="None" name="Save wide csv file"/>
-    <Param val="1" valType="num" updates="None" name="Screen"/>
+    <Param val="2" valType="num" updates="None" name="Screen"/>
     <Param val="True" valType="bool" updates="None" name="Show info dlg"/>
     <Param val="True" valType="bool" updates="None" name="Show mouse"/>
     <Param val="height" valType="str" updates="None" name="Units"/>
@@ -55,7 +55,7 @@
     <Param val="4242" valType="num" updates="None" name="gpPort"/>
     <Param val="ioHub" valType="str" updates="None" name="keyboardBackend"/>
     <Param val="data" valType="code" updates="None" name="logging level"/>
-    <Param val="False" valType="bool" updates="None" name="measureFrameRate"/>
+    <Param val="True" valType="bool" updates="None" name="measureFrameRate"/>
     <Param val="['MIDDLE_BUTTON']" valType="list" updates="None" name="mgBlink"/>
     <Param val="CONTINUOUS" valType="str" updates="None" name="mgMove"/>
     <Param val="0.5" valType="num" updates="None" name="mgSaccade"/>
@@ -103,7 +103,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="# positioning screen + infant calibration (tobii_calibration.py)&amp;#10;from tobii_calibration import run_infant_calibration&amp;#10;calib_ok = run_infant_calibration(win)&amp;#10;thisExp.addData('calibration_success', calib_ok)&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="# positioning screen + infant calibration (tobii_calibration.py)&amp;#10;from tobii_calibration import run_infant_calibration&amp;#10;calib_ok = run_infant_calibration(win, name=expInfo['participant'] + '_calibration')&amp;#10;thisExp.addData('calibration_success', calib_ok)&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
         <Param val="Py" valType="str" updates="None" name="Code Type"/>
         <Param val="continueRoutine = False" valType="extendedCode" updates="constant" name="Each Frame"/>
         <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
